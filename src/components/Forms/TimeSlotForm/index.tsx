@@ -81,82 +81,111 @@ export const TimeSlotForm: React.FunctionComponent<TimeSlotFormProps> = ({
   //   }
   // )
   // const timeSlots = data['availableTimeSlotsByClass']
+  {
+    /**==========================*/
+  }
+  {
+    /** 클래스 시간  */
+  }
+  {
+    /**=========================== */
+  }
 
   if (error) return <h1> 페이지를 불러 오는데 실패 했습니다. </h1>;
   if (!timeSlots && isValidating && !error) return <Spinner />;
   if (timeSlots) {
     return (
       <>
-        <Grid>
-          <Text h5 mt={1}>
-            {" "}
-            클래스 시간{" "}
-          </Text>
-        </Grid>
-        <Grid.Container style={{ marginTop: "1rem", overflow: "scroll" }}>
-          <div style={{ margin: "1rem" }}>
-            <Radio.Group
-              useRow
-              value={selectedTimeSlot}
-              onChange={(timeSlotId: string) => {
-                const selectedTimeslot = timeSlots?.timeSlots?.find(
-                  (v) => Number(v.id) === Number(timeSlotId)
-                );
-                setState(timeSlotId);
-                // handleSelectTimeSlot(DateTime.fromISO(value).toFormat('HH:mm'))
-                handleSelectTimeSlot(selectedTimeslot);
-              }}
-            >
-              {timeSlots?.timeSlots?.length > 0 ? (
-                timeSlots?.timeSlots?.map((timeslot: TimeSlotDTO) => {
-                  return (
-                    <div
-                      key={`${timeslot?.startDateTime.toString()}${
-                        timeslot?.id
-                      }`}
+        <div
+          className="timeslots-wrapper"
+          style={{
+            whiteSpace: "nowrap",
+            overflowX: "scroll",
+            margin: "1rem auto",
+          }}
+        >
+          {timeSlots?.timeSlots?.length > 0 ? (
+            timeSlots?.timeSlots?.map((timeslot: TimeSlotDTO) => {
+              return (
+                <a
+                  id={timeslot?.id}
+                  style={{
+                    marginRight: "1rem",
+                    width: "70px",
+                    border: "1px solid black",
+                    height: "36px",
+                    borderRadius: "6px",
+                    padding: "5px 1rem",
+                  }}
+                >
+                  {`${DateTime.fromISO(timeslot.startDateTime).toFormat(
+                    "HH:mm"
+                  )}`}
+                </a>
+              );
+            })
+          ) : (
+            <p>해당하는 클래스가 없습니다.</p>
+          )}
+        </div>
+        {/* <Radio.Group
+            useRow
+            value={selectedTimeSlot}
+            onChange={(timeSlotId: string) => {
+              const selectedTimeslot = timeSlots?.timeSlots?.find(
+                (v) => Number(v.id) === Number(timeSlotId)
+              );
+              setState(timeSlotId);
+              // handleSelectTimeSlot(DateTime.fromISO(value).toFormat('HH:mm'))
+              handleSelectTimeSlot(selectedTimeslot);
+            }}
+          >
+            {timeSlots?.timeSlots?.length > 0 ? (
+              timeSlots?.timeSlots?.map((timeslot: TimeSlotDTO) => {
+                return (
+                  <div
+                    key={`${timeslot?.startDateTime.toString()}${timeslot?.id}`}
+                    style={{
+                      border: "1px solid black",
+                      borderRadius: "10px",
+                      padding: "7px 13px",
+                      marginRight: "1rem",
+                    }}
+                  >
+                    <button id={timeslot?.id} color="primary">
+                      {`${DateTime.fromISO(timeslot.startDateTime).toFormat(
+                        "HH:mm"
+                      )}`}
+                    </button>
+                    <Radio
+                      id={timeslot?.id}
+                      value={timeslot.id}
+                      color="primary"
+                      size={2}
                       style={{
+                        marginLeft: "2px",
+                        fontSize: "2rem",
                         border: "1px solid black",
-                        borderRadius: "10px",
-                        padding: "7px 13px",
-                        marginRight: "1rem",
+                        marginRight: "7px",
                       }}
+                      name={"store"}
+                      type={"secondary"}
+                      disabled={
+                        timeslot?.currentBookingCount ===
+                        timeslot?.maximumBookingCount
+                      }
                     >
-                      <button id={timeslot?.id} color="primary">
-                        {`${DateTime.fromISO(timeslot.startDateTime).toFormat(
-                          "HH:mm"
-                        )}`}
-                      </button>
-                      <Radio
-                        id={timeslot?.id}
-                        value={timeslot.id}
-                        color="primary"
-                        size={2}
-                        style={{
-                          marginLeft: "2px",
-                          fontSize: "2rem",
-                          border: "1px solid black",
-                          marginRight: "7px",
-                        }}
-                        name={"store"}
-                        type={"secondary"}
-                        disabled={
-                          timeslot?.currentBookingCount ===
-                          timeslot?.maximumBookingCount
-                        }
-                      >
-                        {`${DateTime.fromISO(timeslot.startDateTime).toFormat(
-                          "HH:mm"
-                        )}`}
-                      </Radio>
-                    </div>
-                  );
-                })
-              ) : (
-                <p>해당하는 클래스가 없습니다.</p>
-              )}
-            </Radio.Group>
-          </div>
-        </Grid.Container>
+                      {`${DateTime.fromISO(timeslot.startDateTime).toFormat(
+                        "HH:mm"
+                      )}`}
+                    </Radio>
+                  </div>
+                );
+              })
+            ) : (
+              <p>해당하는 클래스가 없습니다.</p>
+            )}
+          </Radio.Group> */}
       </>
     );
   } else {

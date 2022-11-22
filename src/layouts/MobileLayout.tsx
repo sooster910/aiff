@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { useRouter } from 'next/router'
+import * as React from "react";
+import { useRouter } from "next/router";
 
 export interface MobileLayoutProps {
-  children: React.ReactNode
-  maxWidth: string
+  children: React.ReactNode;
+  maxWidth: string;
 }
 
 const MobileLayout: React.FunctionComponent<MobileLayoutProps> = ({
@@ -11,22 +11,25 @@ const MobileLayout: React.FunctionComponent<MobileLayoutProps> = ({
   children,
   ...props
 }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <div
+      className={router.pathname === "/booking" ? "bg" : "mobile"}
       style={{
         maxWidth:
-          router.pathname === '/adminDashboard' ||
-          router.pathname === '/adminWeeklySchedule'
-            ? '1200px'
+          router.pathname === "/adminDashboard" ||
+          router.pathname === "/adminWeeklySchedule"
+            ? "1200px"
             : maxWidth,
-        margin: '0 auto',
+        margin: "0 auto",
+        // boxShadow: "0 0 20px rgb(0 0 0 / 5%)",
+        // background: "#FAFBFC",
       }}
     >
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default MobileLayout
+export default MobileLayout;

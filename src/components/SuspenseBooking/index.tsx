@@ -1,13 +1,13 @@
 // import { useLazyLoadQuery } from 'react-relay'
 // import { graphql } from 'relay-runtime'
-import BookingForm from '../Forms/BookingForm'
-import { aiffAPI } from '../../utils/aiffAPI'
+import BookingForm from "../Forms/BookingForm";
+import { aiffAPI } from "../../utils/aiffAPI";
 // import { useEffect, useState } from 'react'
-import useSWR from 'swr'
-import { StoreDTO } from '../../types/store'
-import { Spinner } from '@geist-ui/core'
-import { BookingFormTest } from '../Forms/BookingFormTest'
-import { DateTime } from 'luxon'
+import useSWR from "swr";
+import { StoreDTO } from "../../types/store";
+import { Spinner } from "@geist-ui/core";
+import { BookingFormTest } from "../Forms/BookingFormTest";
+import { DateTime } from "luxon";
 interface SuspenseBookingProps {}
 
 const SuspenseBooking: React.FunctionComponent<SuspenseBookingProps> = ({}) => {
@@ -59,12 +59,11 @@ const SuspenseBooking: React.FunctionComponent<SuspenseBookingProps> = ({}) => {
 
   return (
     <>
-      {' '}
-      <main style={{ padding: '4rem 0' }}>
-        <h1>Booking</h1>
+      {" "}
+      <main>
         <BookingFormTest />
       </main>
     </>
-  )
-}
-export default SuspenseBooking
+  );
+};
+export default SuspenseBooking;
