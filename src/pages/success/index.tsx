@@ -53,8 +53,7 @@ const SuccessPage: React.FunctionComponent<SuccessPageProps> = (props) => {
           </Text>
 
           <Card.Footer style={{ flexDirection: "column" }}>
-            <h3> 이 페지이를 캡처하여 보관해 주세요.</h3>
-            <h3> 예약 안내 문자는 클래스 전날 해당 지점에서 보내드립니다.</h3>
+            <h3> 이 페이지를 캡처하여 보관해 주세요.</h3>
             <div>
               <Link href="/">홈으로 돌아가기</Link>
             </div>

@@ -317,6 +317,7 @@ export const BookingFormTest: React.FunctionComponent<
               const leftSeating =
                 Number(values.maximumBookingCount) -
                 Number(values.currentBookingCount);
+
               // prevent overbooking
               if (leftSeating < Number(values.qty)) {
                 help.resetForm();
@@ -653,7 +654,7 @@ export const BookingFormTest: React.FunctionComponent<
                               style={{ display: "flex", alignItems: "center" }}
                             >
                               <ImageComp
-                                src={`/static/${singleClass.name
+                                src={`/${singleClass.name
                                   .split(" ")
                                   .join("")
                                   .toLowerCase()
@@ -707,6 +708,7 @@ export const BookingFormTest: React.FunctionComponent<
                                       style={{
                                         fontSize: "16px",
                                         fontWeight: "600",
+                                        marginRight: "6px",
                                       }}
                                       scale={0.9}
                                       onClick={async () => {

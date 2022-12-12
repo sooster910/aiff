@@ -5,9 +5,13 @@ import { number } from "yup";
 
 export type AvailableRegularClassIds = string[];
 
-export const multiFetcher = (...urls) => {
+export const multiFetcher = async (...urls) => {
   console.log("urls", urls);
-  return Promise.all(urls.map((url) => aiffAPI.get(url)));
+  return Promise.all(
+    urls.map((url) => {
+      return aiffAPI.get(url);
+    })
+  );
 };
 
 export const useFetchTimeSlots = (date: string, storeId: string) => {
@@ -28,19 +32,20 @@ export const useFetchTimeSlots = (date: string, storeId: string) => {
     error: timeslotsError,
     isValidating: timeslotsIsValidating,
   } = useSWR(
-    () =>
-      data?.stores
-        ?.filter((store) => store.id === Number(storeId))[0]
-        .availableRegularClassIds?.map(
-          (rcId) =>
-            `/timeslotByClass?regularClassId=${rcId}&selectedDate=${date}&storeId=${storeId}`
-        ),
-    multiFetcher
+    data?.stores
+      ?.find((store) => store.id === Number(storeId))
+      ?.availableRegularClassIds?.map(
+        (rcId) =>
+          `/timeslotByClass?regularClassId=${rcId}&selectedDate=${date}&storeId=${storeId}`
+      ),
+    {
+      fetcher: multiFetcher,
+    }
   );
-  console.log("Dataddddddd", data);
-  console.log("timeslotssssss", timeslots);
+
   const timeslotsData = timeslots
-    ?.map((t) => t.data[0])
-    .filter((v) => v !== undefined);
+    ?.map((t) => t.data)
+    .filter((v) => v !== undefined)
+    .flat();
   return { data, timeslotsData, error, isValidating };
 };
