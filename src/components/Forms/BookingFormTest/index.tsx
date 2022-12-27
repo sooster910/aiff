@@ -408,7 +408,7 @@ export const BookingFormTest: React.FunctionComponent<
                       name="date"
                       value={selectedDate}
                       min="2022-07-01"
-                      max="2022-12-31"
+                      max="2023-12-31"
                       size={20}
                       style={{ width: "100%", height: "40px" }}
                       onChange={(e) => {
