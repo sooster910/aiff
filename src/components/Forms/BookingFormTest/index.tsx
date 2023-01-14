@@ -84,8 +84,6 @@ export const STORE_NAME = {
   "1": "용산점",
   "2": "판교점",
   "3": "대구점",
-  "4": "광명점",
-  "5": "위례점",
 } as const;
 
 const storeList = Array.from(
@@ -512,6 +510,7 @@ export const BookingFormTest: React.FunctionComponent<
                     }}
                   >
                     {data?.stores
+                      .filter((store) => STORE_NAME[store.id])
                       ?.sort((a, b) => Number(a.id) - Number(b.id))
                       .map((store) => {
                         return (
