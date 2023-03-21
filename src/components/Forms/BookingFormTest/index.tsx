@@ -84,6 +84,8 @@ export const STORE_NAME = {
   "1": "용산점",
   "2": "판교점",
   "3": "대구점",
+  "4": "광명점",
+  "5": "위례점",
 } as const;
 
 const storeList = Array.from(
@@ -138,7 +140,6 @@ export const BookingFormTest: React.FunctionComponent<
 
   useEffect(() => {}, [visibleBaneer]);
   useEffect(() => {
-    console.log("paymentmodal", paymentModal);
     const tossPaymentsProcess = async () => {
       const tossPayments = await loadTossPayments(NEXT_PUBLIC_TOSS_CLIENT_KEY);
       if (tossPayments && requestPaymentObj) {
@@ -157,7 +158,6 @@ export const BookingFormTest: React.FunctionComponent<
       tossPaymentsProcess();
     }
   }, [paymentModal, requestPaymentObj]);
-  console.log("timeslotsssssdata", timeslotsData);
   const filterTimeSlots = () => {
     let classes;
     if (data) {
@@ -175,10 +175,7 @@ export const BookingFormTest: React.FunctionComponent<
   const [visibleSelectedMonth, setVisibleSelectedMonth] =
     useState<boolean>(false);
   useEffect(() => {
-    console.log("setVisible useEffect!!!");
     if (data) {
-      console.log("setVisible data!!");
-
       const isOpen = data?.stores
         ?.find((v) => Number(v.id) === Number(selectedStore))
         ?.visible_months?.includes(DateTime.fromISO(selectedDate).month);
@@ -193,7 +190,6 @@ export const BookingFormTest: React.FunctionComponent<
     const res = data?.stores
       ?.find((v) => Number(v.id) === Number(selectedStore))
       ?.visible_months?.includes(DateTime.fromISO(selectedDate).month);
-    console.log("Res", res);
     return res;
   };
   const filteredTimeslots = useMemo(
@@ -222,20 +218,16 @@ export const BookingFormTest: React.FunctionComponent<
 
   const handleRegularClassClicked = (classId) => {
     setSelectedRegularClass(classId);
-    console.log("selectedRegularClass", selectedRegularClass);
   };
 
   const isSelectedStore = !!selectedStore;
   const filteredLocation = useMemo(() => {
-    console.log("filteredLocation triggered");
-    console.log("store", data?.stores);
     const store = data?.stores?.find(
       (store) => Number(store?.id) === Number(selectedStore ?? "1")
     );
     const filteredRegularClasses = store?.regularClasses.filter((rc) =>
       store.availableRegularClassIds?.includes(rc.id)
     );
-    console.log("filteredRegularClasses", filteredRegularClasses);
     return {
       ...store,
       regularClasses: filteredRegularClasses,
@@ -249,10 +241,8 @@ export const BookingFormTest: React.FunctionComponent<
 
   const handleDrawerOpen = (v) => {
     alert(v);
-    console.log("v", v);
     setStoreInfoOpen(v);
   };
-  console.log("filteredlocation", filteredLocation);
   const initialValues = {
     date: DateTime.fromISO(selectedDate).toJSDate(),
     store: selectedStore,
@@ -277,6 +267,31 @@ export const BookingFormTest: React.FunctionComponent<
     customerFullName: Yup.string().required("예약자 이름을 적어주세요."),
     phone: Yup.string().required("예약자 핸드폰 번호를 적어주세요."),
   });
+
+  const getImageWithASCII = (className: string) => {
+    const formattedClassName = className
+      .replace(/\s/g, "")
+      .toLowerCase()
+      .trim();
+
+    if (/젤리|gummy|bear/i.test(formattedClassName))
+      return `/giantgummybear.jpg`;
+
+    if (/이스터컵케익|eastercupcake/i.test(formattedClassName))
+      return `/eastercupcake.jpg`;
+
+    if (/이스터에그|easteregg/i.test(formattedClassName))
+      return `/easteregg.jpg`;
+
+    if (/티라미수|tiramisu/i.test(formattedClassName)) return `/tiramisu.jpg`;
+
+    if (/사탕|lolli/i.test(formattedClassName)) return `/lollipop.jpg`;
+    if (/에그타르트|eggtart/i.test(formattedClassName)) return `/eggtart.jpg`;
+    if (/버터링쿠키/i.test(formattedClassName)) return `/butteringcookie.jpg`;
+    if (/viennese/i.test(formattedClassName)) return `/viennesewhirls.jpg`;
+    if (/정글컵케익|jungle/i.test(formattedClassName))
+      return `/junglecupcake.jpg`;
+  };
   if (!data && !error) {
     return <Spinner />;
   }
@@ -287,14 +302,13 @@ export const BookingFormTest: React.FunctionComponent<
   }
 
   if (data) {
-    console.log("data", data);
     let store, rc;
     store =
       data?.stores?.find((store) => store.id == selectedStore) ?? undefined;
     rc = store?.regularClasses
       .filter((rc) => store.availableRegularClassIds?.includes(rc.id))
       .sort((a, b) => a.id - b.id);
-    console.log("rc", rc);
+
     return (
       <>
         <Formik
@@ -304,13 +318,10 @@ export const BookingFormTest: React.FunctionComponent<
           validateOnChange={false}
           onSubmit={async (values, help) => {
             try {
-              console.log("rc", rc);
-              console.log("selectedRegularClass", selectedRegularClass);
               const regularClassInfo = rc?.find(
                 (singleClass) =>
                   Number(singleClass.id) === Number(selectedRegularClass)
               );
-              console.log("regularClassInfo", regularClassInfo);
 
               const leftSeating =
                 Number(values.maximumBookingCount) -
@@ -332,11 +343,6 @@ export const BookingFormTest: React.FunctionComponent<
               const orderId = `${StorePrefix[storeName]}${new Date()
                 .getTime()
                 .toString()}`;
-              console.log("orerId", orderId);
-              // const timeSlotString = DateTime.fromISO(
-              //   timeSlotObj?.startDateTime
-              // ).toLocaleString(DateTime.DATETIME_SHORT)
-              console.log("modal event");
 
               setModalEvent({
                 orderId,
@@ -359,7 +365,6 @@ export const BookingFormTest: React.FunctionComponent<
                 successUrl: `${NEXT_PUBLIC_PAYMENT_SUCCESS_URL}/?timeslot=${values.timeSlot.toString()}&phone=${values.phone.toString()}&qty=${values.qty.toString()}&customerName=${customerFullName.toString()}`,
                 failUrl: `${NEXT_PUBLIC_PAYMENT_FAIL_URL}/`,
               });
-              console.log("help");
               help.setSubmitting(true);
               // confirm or cancel 버튼의 확인이 필요하다.
             } catch (error) {
@@ -410,8 +415,6 @@ export const BookingFormTest: React.FunctionComponent<
                       size={20}
                       style={{ width: "100%", height: "40px" }}
                       onChange={(e) => {
-                        console.log("change date", e.target.value);
-
                         if (e.currentTarget.validity.valid) {
                           const newValue = DateTime.fromISO(
                             e.currentTarget.value
@@ -510,7 +513,6 @@ export const BookingFormTest: React.FunctionComponent<
                     }}
                   >
                     {data?.stores
-                      .filter((store) => STORE_NAME[store.id])
                       ?.sort((a, b) => Number(a.id) - Number(b.id))
                       .map((store) => {
                         return (
@@ -653,11 +655,7 @@ export const BookingFormTest: React.FunctionComponent<
                               style={{ display: "flex", alignItems: "center" }}
                             >
                               <ImageComp
-                                src={`/${singleClass.name
-                                  .split(" ")
-                                  .join("")
-                                  .toLowerCase()
-                                  .trim()}.jpg`}
+                                src={getImageWithASCII(singleClass.name)}
                               />
                               <div>
                                 <Grid ml={1}>
@@ -698,20 +696,24 @@ export const BookingFormTest: React.FunctionComponent<
                                 )
                                 ?.map((timeslot) => {
                                   return (
-                                    <Button
+                                    <div
                                       className="timeslot"
                                       key={timeslot.id}
-                                      type="success"
-                                      ghost
-                                      auto
                                       style={{
                                         fontSize: "16px",
                                         fontWeight: "600",
                                         marginRight: "6px",
+                                        color:
+                                          values.timeSlot === timeslot.id
+                                            ? "#fff"
+                                            : "#0070f3",
+                                        backgroundColor:
+                                          values.timeSlot === timeslot.id
+                                            ? "#0070f3"
+                                            : "#fff",
+                                        border: "1px solid #0070f3",
                                       }}
-                                      scale={0.9}
                                       onClick={async () => {
-                                        console.log("timeslot", timeslot);
                                         handleRegularClassClicked(
                                           singleClass?.id
                                         );
@@ -750,7 +752,7 @@ export const BookingFormTest: React.FunctionComponent<
                                         timeslot.startDateTime
                                       ).toFormat("HH:mm")}`}
                                       {/* </span> */}
-                                    </Button>
+                                    </div>
                                   );
                                 })}
                             </div>

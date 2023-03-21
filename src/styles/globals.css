@@ -52,15 +52,19 @@ footer {
   scrollbar-width: none; /* Firefox */
 }
 .timeslot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 6px;
   border: solid 1px #0070f3;
-  background-color: #0070f3;
-  color: bisque;
+  /* background-color: #0070f3; */
+  color: #0070f3;
   overflow: hidden;
   width: 76px;
   height: 36px;
   text-align: center;
   font-weight: 500;
+  cursor: pointer;
 }
 .time {
   line-height: 36px;
