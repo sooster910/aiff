@@ -99,6 +99,11 @@ const main = async () => {
           icon_emoji: "slack",
         })
         .catch((err) => {
+          slack.chat.postMessage({
+            text: `${customerName}:${orderName}\n${orderId}\npaymentKey: ${paymentKey}\n 승인시간:${approvedAt}\naiff폰번호:${phone}\n가격:${totalAmount}* ${qty}`,
+            channel: "#order",
+            icon_emoji: "slack",
+          });
           console.log("err", err);
         });
 
@@ -140,8 +145,95 @@ const main = async () => {
         return res.send("no");
       }
     });
+    // TEST API for kakao
+    server.get("/api/test/order/approval", async (req, res) => {
+      const templateCodes = {
+        completeOrderForCust: "A00003",
+        completeOrderForStore: "A00002",
+      };
+      const storePhoneMapper = {
+        용산점: "01043941251",
+        대구점: "01057812869",
+        파주점: "01027529880",
+        판교점: "01031730082",
+      };
+      const storeName = orderName?.split("-")[0];
+
+      console.log(
+        "dateee",
+        DateTime.fromJSDate(new Date(orderName?.split("-")[3]))
+      );
+      const contents = {
+        forCust: `
+      [예약 완료]
+안녕하세요 ${customerName}님, 예약이 완료되었습니다!
+
+■ 이름 : ${customerName}
+■ 지점명 : ${storeName}
+■ 클래스명 :${orderName?.split("-")[1]}
+■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
+■ 인원 : ${qty}
+■ 결제금액 : ${balanceAmount}
+
+클래스 전날 예약하신 지점에서 찾아오는 길과 주차정보를 안내해 드리겠습니다.
+
+용산점 : 070-8887-1053
+판교점 : 031-697-8707
+대구점 : 0507-1348-2869 `,
+
+        forStore: `[예약 완료]
+
+안녕하세요 ${customerName}님의 ${storeName}예약이 완료되었습니다!
+
+■ 이름 : ${customerName}
+■ 지점명: ${storeName}
+■ 클래스명:${orderName?.split("-")[1]}
+■ 클래스 시작 날짜: ${orderName?.split("-")[3]}
+■ 인원: ${qty}
+■ 결제금액: ${balanceAmount}
+■ 핸드폰번호: ${phone}
+
+예약 스케줄에 차질이 없도록 기록/체크해 주시기 바랍니다.
+예약일 전 예약자에게 오시는길/주차정보를 안내해 주시기 바랍니다.
+감사합니다.`,
+      };
+
+      try {
+        const [
+          completeSlackNotification,
+          completeReservationNotification,
+          completeReservationNotificationToStore,
+        ] = await Promise.all([
+          send({
+            orderId,
+            orderName,
+            requestedAt,
+            phone,
+            paymentKey,
+            totalAmount: balanceAmount,
+            customerName,
+            qty,
+          }),
+          sendKakaoMessage(
+            {
+              content: contents.forCust,
+              templateCode: templateCodes.completeOrderForCust,
+            },
+            flatPhoneNumber(phone).slice(1)
+          ),
+          // sendKakaoMessage(
+          //   {
+          //     content: contents.forStore,
+          //     templateCode: templateCodes.completeOrderForStore,
+          //   },
+          //   `${flatPhoneNumber(storePhoneMapper[storeName])}`.slice(1)
+          // ),
+        ]);
+      } catch (err) {
+        console.log("test alimtalk err", err);
+      }
+    });
     server.get("/api/order/approval", async (req, res) => {
-      console.log("yesss!!!");
       const { orderId, amount, phone, paymentKey, qty, customerName } =
         req.query;
 
@@ -175,7 +267,6 @@ const main = async () => {
           { qty: Number(qty), ...resp?.body }
         );
         const { updated } = response.data;
-        console.log("orderName", orderName);
         if (!updated) {
           send({
             orderId,
@@ -203,7 +294,7 @@ const main = async () => {
       }
 
       const templateCodes = {
-        completeOrderForCust: "A00003",
+        completeOrderForCust: "A0004",
         completeOrderForStore: "A00002",
       };
       const storePhoneMapper = {
@@ -333,12 +424,21 @@ const main = async () => {
             timeout: 500,
           },
         };
-
         const res = await axios.post(bzPlusURL, body, options);
+        await slack.chat.postMessage({
+          text: `success sending kakao messageID: ${res?.data?.messageId}, TO:${res?.data?.to} status:${res?.data?.status}, text:${res?.data?.text}`,
+          channel: "#order",
+          icon_emoji: "slack",
+        });
         return res;
         // console.log(data);
       } catch (err) {
-        console.log("fail to send message", err);
+        console.log("fail to send message", error.response.data);
+        slack.chat.postMessage({
+          text: `error sending kakao messageID: ${error?.response?.data?.messageId}, TO:${error?.response?.data?.to} status:${error?.response?.data?.status}, text:${error?.response?.data?.text}`,
+          channel: "#order",
+          icon_emoji: "slack",
+        });
         send({
           orderId,
           orderName: `${orderName} :${err?.message} send notification error`,
@@ -388,5 +488,7 @@ const main = async () => {
     console.error(error);
   }
 };
+
+//generate random number
 
 main();

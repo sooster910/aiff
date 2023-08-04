@@ -268,6 +268,8 @@ export const BookingFormTest: React.FunctionComponent<
     phone: Yup.string().required("예약자 핸드폰 번호를 적어주세요."),
   });
 
+  const test = {};
+
   const getImageWithASCII = (className: string) => {
     const formattedClassName = className
       .replace(/\s/g, "")
@@ -291,6 +293,19 @@ export const BookingFormTest: React.FunctionComponent<
     if (/viennese/i.test(formattedClassName)) return `/viennesewhirls.jpg`;
     if (/정글컵케익|jungle/i.test(formattedClassName))
       return `/junglecupcake.jpg`;
+    if (/카네이션/i.test(formattedClassName)) return `/marshmallow.jpeg`;
+    if (/똥|poopy/i.test(formattedClassName)) return `/poopy.jpeg`;
+    if (/에르메식|herme/i.test(formattedClassName)) return `/herme.jpeg`;
+    if (/carnation/i.test(formattedClassName)) return `/carnation.jpeg`;
+    if (/사워도우빵|sourdough/i.test(formattedClassName))
+      return `/blacksourdough.jpg`;
+    if (/캐릭터컵케익|charactercupcakes|시나모롤/i.test(formattedClassName))
+      return `/charactercupcakes.jpg`;
+    if (/카툰케이크|cartoon/i.test(formattedClassName)) return `/cartoon.jpeg`;
+    if (/rainbow|레인보우|무지개/i.test(formattedClassName))
+      return `/rainbow.jpeg`;
+    if (/몬스터|monster/i.test(formattedClassName)) return `/monster.jpeg`;
+    if (/barbie|바비/i.test(formattedClassName)) return `/barbiecupcakes.jpg`;
   };
   if (!data && !error) {
     return <Spinner />;

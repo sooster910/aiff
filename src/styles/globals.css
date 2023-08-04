@@ -75,3 +75,17 @@ footer {
   background-image: url("/bg.svg");
   background-repeat: no-repeat;
 }
+
+.applyBtn {
+  color: "#FFE7DF" !important;
+  background-color: "transparent" !important;
+  border: "1px solid #FFE7DF" !important;
+  borderradius: "10px" !important;
+  cursor: "pointer" !important;
+  padding: "1rem 2rem" !important;
+  fontweight: "bold" !important ;
+}
+
+.applyBtn:hover {
+  background-color: "#FFE7DF" !important;
+}

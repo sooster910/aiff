@@ -21,6 +21,7 @@ const Home: NextPage = () => {
         <Text h2 style={{ marginTop: "2rem" }}>
           Welcome to AIFF!
         </Text>
+
         <Card width="100%" marginTop={"3rem"}>
           <Image
             src="/banner2.jpg"
