@@ -81,11 +81,8 @@ export type PaymentRequestDTO = {
 };
 
 export const STORE_NAME = {
-  "1": "용산점",
-  "2": "판교점",
-  "3": "대구점",
-  "4": "광명점",
-  "5": "위례점",
+  "1": "서초점",
+
 } as const;
 
 const storeList = Array.from(
@@ -115,6 +112,7 @@ export const BookingFormTest: React.FunctionComponent<
   BookingFormProps
 > = () => {
   const theme = useTheme();
+
   const { setToast } = useToasts();
   const confirmBooking = useModal();
   const [modalEvent, setModalEvent] = useState<Nullable<ReservationDTO>>(null);
@@ -150,7 +148,14 @@ export const BookingFormTest: React.FunctionComponent<
               // 취소 이벤트 처리
               console.log("error", error);
               setPaymentModal(false);
+              return;
             }
+            if (error.code === "INVALID_ORDER_NAME") {
+              // 유효하지 않은 'orderName' 처리하기
+            } else if (error.code === "INVALID_ORDER_ID") {
+              // 유효하지 않은 'orderId' 처리하기
+            }
+            console.log("결제창 error", error);
           });
       }
     };
@@ -306,6 +311,13 @@ export const BookingFormTest: React.FunctionComponent<
       return `/rainbow.jpeg`;
     if (/몬스터|monster/i.test(formattedClassName)) return `/monster.jpeg`;
     if (/barbie|바비/i.test(formattedClassName)) return `/barbiecupcakes.jpg`;
+    if (/fairy|garden|요정|가든 /i.test(formattedClassName))
+      return `/fairy_garden.jpg`;
+    if (/pumpkin|펌킨파이/i.test(formattedClassName)) return `/pumpkin_pie.jpg`;
+    if (/ginger|진저/i.test(formattedClassName))
+      return `/ginger_apple_cheesecake.jpg`;
+    if (/wholecake|컵케익으로/i.test(formattedClassName))
+      return `/cupcake_wholecake.jpg`;
   };
   if (!data && !error) {
     return <Spinner />;
@@ -355,9 +367,9 @@ export const BookingFormTest: React.FunctionComponent<
               const { totalAmount, customerFullName, store } = values;
               const storeName = data?.stores[Number(store) - 1]?.name;
               const className = regularClassInfo?.name;
-              const orderId = `${StorePrefix[storeName]}${new Date()
-                .getTime()
-                .toString()}`;
+              const orderId = `${
+                StorePrefix[storeName.replaceAll(" ", "")]
+              }${new Date().getTime().toString()}`;
 
               setModalEvent({
                 orderId,
@@ -378,7 +390,7 @@ export const BookingFormTest: React.FunctionComponent<
                 customerName: customerFullName,
                 // successUrl: 'http://localhost:3434/payment/success',
                 successUrl: `${NEXT_PUBLIC_PAYMENT_SUCCESS_URL}/?timeslot=${values.timeSlot.toString()}&phone=${values.phone.toString()}&qty=${values.qty.toString()}&customerName=${customerFullName.toString()}`,
-                failUrl: `${NEXT_PUBLIC_PAYMENT_FAIL_URL}/`,
+                failUrl: `${NEXT_PUBLIC_PAYMENT_FAIL_URL}`,
               });
               help.setSubmitting(true);
               // confirm or cancel 버튼의 확인이 필요하다.
@@ -670,7 +682,10 @@ export const BookingFormTest: React.FunctionComponent<
                               style={{ display: "flex", alignItems: "center" }}
                             >
                               <ImageComp
-                                src={getImageWithASCII(singleClass.name)}
+                                src={
+                                  singleClass?.imageURL ||
+                                  getImageWithASCII(singleClass.name)
+                                }
                               />
                               <div>
                                 <Grid ml={1}>

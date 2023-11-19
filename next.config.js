@@ -3,19 +3,11 @@ const nextConfig = {
   // reactStrictMode: true,
   // concurrentFeatures: true,
   // serverComponents: true,
-  reactMode: 'concurrent',
-  // experimental: {
-  //   runtime: 'nodejs',
-  //   serverComponents: true,
-  // },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/api/:path*',
-  //       destination: `https://staging.aiff.co.kr/api/:path*`,
-  //     },
-  //   ]
-  // },
-}
+  reactMode: "concurrent",
 
-module.exports = nextConfig
+  images: {
+    domains: ["aiff.co.kr", "aiff-image-upload.s3.us-east-1.amazonaws.com"],
+  },
+};
+
+module.exports = nextConfig;

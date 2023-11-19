@@ -12,7 +12,7 @@ import Footer from "@app/components/Footer";
 import Script from "next/script";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const environment = useEnvironment(pageProps.initialRecords);
+  const environment = useEnvironment(pageProps);
 
   return (
     <>

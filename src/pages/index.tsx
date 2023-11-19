@@ -33,13 +33,10 @@ const Home: NextPage = () => {
           <Text h4 mb={0}>
             클래스 예약
           </Text>
-          <Text type="secondary" small>
-            지금 여러 가맹점을 통해 예약하세요.
-          </Text>
           <Card.Footer>
             <Text h3>
               <Link href={`/booking`} style={{ font: "2rem" }}>
-                지금 예약 하러 가기
+                {"본점 시간표/예약"}
               </Link>
             </Text>
           </Card.Footer>

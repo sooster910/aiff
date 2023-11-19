@@ -100,7 +100,7 @@ const main = async () => {
         })
         .catch((err) => {
           slack.chat.postMessage({
-            text: `${customerName}:${orderName}\n${orderId}\npaymentKey: ${paymentKey}\n 승인시간:${approvedAt}\naiff폰번호:${phone}\n가격:${totalAmount}* ${qty}`,
+            text: `error- ${err.message}-${customerName}:${orderName}\n${orderId}\npaymentKey: ${paymentKey}\n 승인시간:${approvedAt}\naiff폰번호:${phone}\n가격:${totalAmount}* ${qty}`,
             channel: "#order",
             icon_emoji: "slack",
           });
@@ -148,7 +148,7 @@ const main = async () => {
     // TEST API for kakao
     server.get("/api/test/order/approval", async (req, res) => {
       const templateCodes = {
-        completeOrderForCust: "A00003",
+        completeOrderForCust: "A0004",
         completeOrderForStore: "A00002",
       };
       const storePhoneMapper = {
@@ -156,13 +156,48 @@ const main = async () => {
         대구점: "01057812869",
         파주점: "01027529880",
         판교점: "01031730082",
+        현수점: "01027529880",
       };
+      //1
+      const orderName =
+        "판교점-자이언트 곰 젤리-8828-2023.9.23오후3:00-01045785334";
+      const phone = "01045785334";
       const storeName = orderName?.split("-")[0];
+      const customerName = "이채원";
+      const qty = 1;
+      const balanceAmount = 60000;
+
+      //2.
+      // const orderName =
+      //   "용산 본점-Pumpkin Pie(원어민반)(추천수업)-8791-2023.9.24.오후2:00-01045785334";
+      // const phone = "01064820868";
+      // const storeName = orderName?.split("-")[0];
+      // const customerName = "이나라";
+      // const qty = 2;
+      // const balanceAmount = 120000;
+      //3.
+      // const orderName =
+      //   "용산 본점-Fairy Garden(원어민반)-8790-2023.9.24.오후1:00-01030695985";
+      // const phone = "01030695985";
+      // const storeName = orderName?.split("-")[0];
+      // const customerName = "이설아";
+      // const qty = 1;
+      // const balanceAmount = 60000;
+
+      //4.
+      // const orderName =
+      //   "용산 본점-Pumpkin Pie(원어민반)(추천수업)-8791-2023.9.24.오후2:00-01030695905";
+      // const phone = "01030695905";
+      // const storeName = orderName?.split("-")[0];
+      // const customerName = "이설아";
+      // const qty = 1;
+      // const balanceAmount = 60000;
 
       console.log(
         "dateee",
         DateTime.fromJSDate(new Date(orderName?.split("-")[3]))
       );
+
       const contents = {
         forCust: `
       [예약 완료]
@@ -204,35 +239,40 @@ const main = async () => {
           completeReservationNotification,
           completeReservationNotificationToStore,
         ] = await Promise.all([
-          send({
-            orderId,
-            orderName,
-            requestedAt,
-            phone,
-            paymentKey,
-            totalAmount: balanceAmount,
-            customerName,
-            qty,
-          }),
-          sendKakaoMessage(
+          // send({
+          //   orderId,
+          //   orderName,
+          //   requestedAt,
+          //   phone,
+          //   paymentKey,
+          //   totalAmount: balanceAmount,
+          //   customerName,
+          //   qty,
+          // }),
+          await sendKakaoMessage(
             {
               content: contents.forCust,
               templateCode: templateCodes.completeOrderForCust,
             },
             flatPhoneNumber(phone).slice(1)
           ),
-          // sendKakaoMessage(
+          // await sendKakaoMessage(
           //   {
           //     content: contents.forStore,
           //     templateCode: templateCodes.completeOrderForStore,
           //   },
-          //   `${flatPhoneNumber(storePhoneMapper[storeName])}`.slice(1)
+          //   `${flatPhoneNumber(storePhoneMapper["판교점"])}`.slice(1)
           // ),
         ]);
+
+        return res.redirect(
+          `/success?orderId=${orderId}&orderName=${orderName}&requestedAt=${requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${balanceAmount}&customerName=${customerName}&qty=${qty}`
+        );
       } catch (err) {
         console.log("test alimtalk err", err);
       }
     });
+
     server.get("/api/order/approval", async (req, res) => {
       const { orderId, amount, phone, paymentKey, qty, customerName } =
         req.query;
@@ -298,7 +338,7 @@ const main = async () => {
         completeOrderForStore: "A00002",
       };
       const storePhoneMapper = {
-        용산점: "01043941251",
+        용산본점: "01043941251",
         대구점: "01057812869",
         파주점: "01027529880",
         판교점: "01031730082",
@@ -359,29 +399,33 @@ const main = async () => {
             customerName,
             qty,
           }),
-          sendKakaoMessage(
-            {
-              content: contents.forCust,
-              templateCode: templateCodes.completeOrderForCust,
-            },
-            flatPhoneNumber(phone).slice(1)
-          ),
-          sendKakaoMessage(
-            {
-              content: contents.forStore,
-              templateCode: templateCodes.completeOrderForStore,
-            },
-            `${flatPhoneNumber(storePhoneMapper[storeName])}`.slice(1)
-          ),
+          //! NOTE: KAKAO MESSAGE IS BLOCKED FOR TEMPORARY
+          // sendKakaoMessage(
+          //   {
+          //     content: contents.forCust,
+          //     templateCode: templateCodes.completeOrderForCust,
+          //   },
+          //   flatPhoneNumber(phone).slice(1)
+          // ),
+          // sendKakaoMessage(
+          //   {
+          //     content: contents.forStore,
+          //     templateCode: templateCodes.completeOrderForStore,
+          //   },
+          //   `${flatPhoneNumber(
+          //     storePhoneMapper[storeName.replaceAll(" ", "")]
+          //   )}`.slice(1)
+          // ),
         ]);
 
         return res.redirect(
           `/success?orderId=${orderId}&orderName=${orderName}&requestedAt=${requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${balanceAmount}&customerName=${customerName}&qty=${qty}`
         );
       } catch (error) {
+        console.log("/api/order/approval error", error);
         send({
           orderId,
-          orderName: `${orderName} send notification error`,
+          orderName: `${orderName} send notification error ${error?.message}`,
           requestedAt,
           phone,
           paymentKey,
@@ -431,7 +475,6 @@ const main = async () => {
           icon_emoji: "slack",
         });
         return res;
-        // console.log(data);
       } catch (err) {
         console.log("fail to send message", error.response.data);
         slack.chat.postMessage({
