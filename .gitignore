@@ -35,3 +35,5 @@ jspm_packages
 
 db.json
 .env
+# Sentry Config File
+.sentryclirc
