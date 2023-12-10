@@ -49,7 +49,7 @@ const AboutPage: NextPage = (props) => {
               src="/about-1.jpg"
               width={500}
               height={250}
-              style={{ borderRadius: "4px" }}
+              // style={{ borderRadius: "4px" }}
             />
           </PageLayout>
         </ScrollHeightTransition>

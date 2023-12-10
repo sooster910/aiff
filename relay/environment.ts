@@ -7,6 +7,7 @@ import fetchGraphQL from "./fetchGraphQL";
 let relayEnvironment: Environment;
 
 const fetchRelay: FetchFunction = async (params, variables) => {
+
   console.log(`fetch query ${params.name} with ${JSON.stringify(variables)}`);
   return fetchGraphQL(params.text, variables);
 };
@@ -21,17 +22,17 @@ const createEnvironment = () => {
 type InitialRecords = ConstructorParameters<typeof RecordSource>[number];
 export const initEnvironment = (initialRecords?: InitialRecords) => {
   const environment = relayEnvironment ?? createEnvironment(); // #1
-
+  console.log("initEnvironment client",environment.getNetwork())
   if (initialRecords) {
     environment.getStore().publish(new RecordSource(initialRecords)); // #2
   }
-
+  console.log("1")
   if (typeof window === "undefined") return environment; // #3
-
+  console.log("2")
   if (!relayEnvironment) {
     relayEnvironment = environment; // #4
   }
-
+  console.log("3", relayEnvironment)
   return relayEnvironment;
 };
 

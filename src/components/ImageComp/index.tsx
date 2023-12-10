@@ -12,7 +12,7 @@ const ImageComp: React.FunctionComponent<ImageCompProps> = ({ src }) => {
       height="100%"
       width="100%"
       objectFit="cover"
-      style={{ borderRadius: "10px", margin: "0 auto" }}
+      // style={{ borderRadius: "10px", margin: "0 auto" }}
       alt={src}
     />
   );

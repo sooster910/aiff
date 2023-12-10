@@ -92,3 +92,10 @@ export const NEXT_PUBLIC_FRONTEND_API_URL = process.env.NEXT_PUBLIC_FRONTEND_API
  */
 
 export const SLACK_API_TOKEN = process.env.SLACK_API_TOKEN
+
+/**
+ * PRODUCTION BACKEND BASE URL
+ * 
+ */
+
+export const BACKEND_PRODUCTION_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_PRODUCTION_BASE_URL as string

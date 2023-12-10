@@ -11,7 +11,8 @@ import { useEnvironment } from "@app/../relay/environment";
 import Footer from "@app/components/Footer";
 import Script from "next/script";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps,router }: AppProps) {
+  const {pathname} = router;
   const environment = useEnvironment(pageProps);
 
   return (
@@ -28,8 +29,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                   gtag('config', 'G-X4P14LC53Q');`,
         }}
       />
-
-      <RelayEnvironmentProvider environment={environment}>
+  <RelayEnvironmentProvider environment={environment}>
+      
         <GeistProvider>
           <CssBaseline>
             <SWRConfig
@@ -50,7 +51,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             </SWRConfig>
           </CssBaseline>
         </GeistProvider>
-      </RelayEnvironmentProvider>
+
+      
+  </RelayEnvironmentProvider>
     </>
   );
 }
