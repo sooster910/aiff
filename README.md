@@ -55,3 +55,9 @@ To learn more about Next.js, take a look at the following resources:
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 
+---
+
+## Deploy 
+
+#### eb cli 를 이용한 aws elastic beanstalk 배포
+
