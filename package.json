@@ -10,7 +10,7 @@
     "dev-json": "yarn run next dev",
     "lint": "next lint",
     "clean": "rm -rf .next",
-    "start": "next build && next start",
+    "start": "npm run relay && next build && next start",
     "build": "yarn run clean && yarn run relay && next build",
     "deploy-dev": "yarn install && yarn run build && eb deploy test-production-aiff-front --staged"
   },
