@@ -1,0 +1,19 @@
+# .ebignore 파일 예시
+
+# node_modules 폴더 무시
+node_modules/
+
+# 로그 파일 무시
+*.log
+
+# 시스템 파일 무시
+.DS_Store
+Thumbs.db
+
+# 개발 환경 파일 무시
+.env
+.env.local
+
+# Git 관련 파일 및 폴더 무시
+.git
+.gitignore
