@@ -1,3 +1,6 @@
 {
-  "editor.acceptSuggestionOnEnter": "on"
+  "editor.acceptSuggestionOnEnter": "on",
+  "prettier.bracketSpacing": false,
+  "javascript.format.semicolons": "ignore",
+  "prettier.semi": false
 }

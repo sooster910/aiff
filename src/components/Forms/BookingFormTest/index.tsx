@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
-import { StoreDTO, RegularClassDTO, Nullable, StorePrefix } from "@app/types";
-import { TimeSlotDTO } from "@app/types/timeslot";
+import {StoreDTO, RegularClassDTO, Nullable, StorePrefix} from "@app/types"
+import {TimeSlotDTO} from "@app/types/timeslot"
 import {
   NEXT_PUBLIC_PAYMENT_FAIL_URL,
   NEXT_PUBLIC_PAYMENT_SUCCESS_URL,
   NEXT_PUBLIC_TOSS_CLIENT_KEY,
-} from "@app/utils/constants";
+} from "@app/utils/constants"
 import {
   useToasts,
   useModal,
@@ -21,15 +21,15 @@ import {
   Text,
   Modal,
   Drawer,
-} from "@geist-ui/core";
-import { loadTossPayments } from "@tosspayments/payment-sdk";
-import { DateTime } from "luxon";
-import { config } from "../../../config";
-import { useState, useEffect, useMemo, useCallback } from "react";
-import * as Yup from "yup";
-import CustomInput from "@app/components/CustomInput";
-import ImageComp from "@app/components/ImageComp";
-import { LocationDetailLayout } from "@app/layouts/LocationDetailLayout";
+} from "@geist-ui/core"
+import {loadTossPayments} from "@tosspayments/payment-sdk"
+import {DateTime} from "luxon"
+import {config} from "../../../config"
+import {useState, useEffect, useMemo, useCallback} from "react"
+import * as Yup from "yup"
+import CustomInput from "@app/components/CustomInput"
+import ImageComp from "@app/components/ImageComp"
+import {LocationDetailLayout} from "@app/layouts/LocationDetailLayout"
 import {
   Calendar,
   Navigation,
@@ -37,138 +37,141 @@ import {
   Users,
   InfoFill,
   XCircle,
-} from "@geist-ui/icons";
-import { Formik, Form, Field } from "formik";
+} from "@geist-ui/icons"
+import {Formik, Form, Field} from "formik"
 
-import { ControlFlow } from "../BookingForm/ControlFlow";
-import { TimeSlotForm } from "../TimeSlotForm";
-import { format } from "util";
-import { aiffAPI } from "@app/utils/aiffAPI";
-import { ChevronRightCircle } from "@geist-ui/icons";
+import {ControlFlow} from "../BookingForm/ControlFlow"
+import {TimeSlotForm} from "../TimeSlotForm"
+import {format} from "util"
+import {aiffAPI} from "@app/utils/aiffAPI"
+import {ChevronRightCircle} from "@geist-ui/icons"
 
-import useSWR from "swr";
-import { useFetchTimeSlots } from "@app/hooks/useFetchTimeSlots";
-import { AvailableRegularClassIds } from "../../../hooks/useFetchTimeSlots";
-import { CustomDrawer } from "@app/components/Drawer";
-import { DrawerPlacement } from "@geist-ui/core/esm/drawer/helper";
-import { Spinner } from "@geist-ui/core";
+import useSWR from "swr"
+import {useFetchTimeSlots} from "@app/hooks/useFetchTimeSlots"
+import {AvailableRegularClassIds} from "../../../hooks/useFetchTimeSlots"
+import {CustomDrawer} from "@app/components/Drawer"
+import {DrawerPlacement} from "@geist-ui/core/esm/drawer/helper"
+import {Spinner} from "@geist-ui/core"
 
 interface BookingFormProps {}
 type StoreData = {
-  stores?: StoreDTO[];
-};
+  stores?: StoreDTO[]
+}
 type ReservationDTO = {
-  date?: Date;
-  store?: string;
-  timeSlot?: string;
-  qty?: number;
-  custormerFullName?: string;
-  phone?: string;
-  classPrice?: number | RegularClassDTO;
-  totalAmount?: number;
-  orderId?: string;
-  className?: string;
-  time?: string;
-};
+  date?: Date
+  store?: string
+  timeSlot?: string
+  qty?: number
+  custormerFullName?: string
+  phone?: string
+  classPrice?: number | RegularClassDTO
+  totalAmount?: number
+  orderId?: string
+  className?: string
+  time?: string
+}
 
 export type PaymentRequestDTO = {
-  amount: number;
-  orderId: string;
-  orderName: string;
-  customerName: string;
-  successUrl: string;
-  failUrl: string;
-};
+  amount: number
+  orderId: string
+  orderName: string
+  customerName: string
+  successUrl: string
+  failUrl: string
+}
 
 export const STORE_NAME = {
   "1": "서초점",
-
-} as const;
+  "2": "대치점1",
+  "3": "대치점2",
+  "4": "도곡점",
+  "5": "압구정점",
+} as const
 
 const storeList = Array.from(
-  { length: 5 },
+  {length: 5},
   (v, i) => STORE_NAME[(i + 1).toString()]
-);
+)
 
 function compare(obj, date) {
-  const qsYear = DateTime.fromSQL(date as string).get("year");
-  const qsMonth = DateTime.fromSQL(date as string).get("month");
-  const qsDay = DateTime.fromSQL(date as string).get("day");
+  const qsYear = DateTime.fromSQL(date as string).get("year")
+  const qsMonth = DateTime.fromSQL(date as string).get("month")
+  const qsDay = DateTime.fromSQL(date as string).get("day")
 
   // console.log('year',year)
 
   return obj?.filter((timeslot: TimeSlotDTO) => {
-    const year = DateTime.fromSQL(timeslot?.startDate).get("year");
-    const month = DateTime.fromSQL(timeslot?.startDate).get("month");
-    const day = DateTime.fromSQL(timeslot?.startDate).get("day");
+    const year = DateTime.fromSQL(timeslot?.startDate).get("year")
+    const month = DateTime.fromSQL(timeslot?.startDate).get("month")
+    const day = DateTime.fromSQL(timeslot?.startDate).get("day")
 
     if (qsYear === year && qsMonth === month && qsDay === day) {
-      return true;
+      return true
     }
-    return false;
-  });
+    return false
+  })
 }
 export const BookingFormTest: React.FunctionComponent<
   BookingFormProps
 > = () => {
-  const theme = useTheme();
+  const theme = useTheme()
 
-  const { setToast } = useToasts();
-  const confirmBooking = useModal();
-  const [modalEvent, setModalEvent] = useState<Nullable<ReservationDTO>>(null);
-  const [selectedStore, setSelectedStore] = useState<string>("1");
-  const [selectedRegularClass, setSelectedRegularClass] = useState<string>("");
-  const [paymentModal, setPaymentModal] = useState<boolean>(false);
+  const {setToast} = useToasts()
+  const confirmBooking = useModal()
+  const [modalEvent, setModalEvent] = useState<Nullable<ReservationDTO>>(null)
+  const [selectedStore, setSelectedStore] = useState<string>("1")
+  const [selectedRegularClass, setSelectedRegularClass] = useState<string>("")
+  const [paymentModal, setPaymentModal] = useState<boolean>(false)
   const [requestPaymentObj, setRequestPaymentobj] =
-    useState<PaymentRequestDTO>(null);
+    useState<PaymentRequestDTO>(null)
   const [selectedDate, setSelectedDate] = useState<string>(
     DateTime.fromJSDate(new Date()).toFormat("yyyy-MM-dd")
-  );
-  const [visibleBaneer, setVisibleBanner] = useState<boolean>(false);
-  const [showStoreDetail, setShowStoreDetail] = useState<boolean>(false);
+  )
+  const [visibleBaneer, setVisibleBanner] = useState<boolean>(false)
+  const [showStoreDetail, setShowStoreDetail] = useState<boolean>(false)
 
-  const { data, timeslotsData, error, isValidating } = useFetchTimeSlots(
+  const {data, timeslotsData, error, isValidating} = useFetchTimeSlots(
     selectedDate,
     selectedStore
-  );
+  )
 
-  const [classInfoOpen, setClassInfoOpen] = useState(false);
-  const [placement, setPlacement] = useState("");
-  const [storeInfoOpen, setStoreInfoOpen] = useState(false);
+  const [classInfoOpen, setClassInfoOpen] = useState(false)
+  const [placement, setPlacement] = useState("")
+  const [storeInfoOpen, setStoreInfoOpen] = useState(false)
 
-  useEffect(() => {}, [visibleBaneer]);
+  useEffect(() => {}, [visibleBaneer])
   useEffect(() => {
     const tossPaymentsProcess = async () => {
-      const tossPayments = await loadTossPayments(NEXT_PUBLIC_TOSS_CLIENT_KEY);
+      const tossPayments = await loadTossPayments(NEXT_PUBLIC_TOSS_CLIENT_KEY)
       if (tossPayments && requestPaymentObj) {
         tossPayments
           .requestPayment(config?.PaymentMethod, requestPaymentObj)
           .catch((error) => {
             if (error.code === "USER_CANCEL") {
               // 취소 이벤트 처리
-              console.log("error", error);
-              setPaymentModal(false);
-              return;
+              console.log("error", error)
+              setPaymentModal(false)
+              return
             }
             if (error.code === "INVALID_ORDER_NAME") {
               // 유효하지 않은 'orderName' 처리하기
             } else if (error.code === "INVALID_ORDER_ID") {
               // 유효하지 않은 'orderId' 처리하기
             }
-            console.log("결제창 error", error);
-          });
+            console.log("결제창 error", error)
+          })
       }
-    };
-    if (paymentModal) {
-      tossPaymentsProcess();
     }
-  }, [paymentModal, requestPaymentObj]);
+    if (paymentModal) {
+      tossPaymentsProcess()
+    }
+  }, [paymentModal, requestPaymentObj])
   const filterTimeSlots = () => {
-    let classes;
+    let classes
     if (data) {
       classes = data?.stores?.find(
         (v) => Number(v.id) === Number(selectedStore)
-      )?.regularClasses;
+      )?.regularClasses
     }
 
     // console.log('classes', classes)
@@ -176,38 +179,38 @@ export const BookingFormTest: React.FunctionComponent<
     // console.log('regularClass', regularClass)
     // const timeSlotsList = compare(regularClass?.timeSlots, selectedDate)
     // return timeSlotsList
-  };
+  }
   const [visibleSelectedMonth, setVisibleSelectedMonth] =
-    useState<boolean>(false);
+    useState<boolean>(false)
   useEffect(() => {
     if (data) {
       const isOpen = data?.stores
         ?.find((v) => Number(v.id) === Number(selectedStore))
-        ?.visible_months?.includes(DateTime.fromISO(selectedDate).month);
-      console.log("isOpen", isOpen);
-      setVisibleSelectedMonth(isOpen);
+        ?.visible_months?.includes(DateTime.fromISO(selectedDate).month)
+      console.log("isOpen", isOpen)
+      setVisibleSelectedMonth(isOpen)
     }
-  }, [selectedStore, selectedDate]);
+  }, [selectedStore, selectedDate])
 
   //선택한 스토어와 선택한 날짜가 visible month로 설정되어 있다면 isOpen
   const isOpen = () => {
-    console.log("isOpen function is called", data);
+    console.log("isOpen function is called", data)
     const res = data?.stores
       ?.find((v) => Number(v.id) === Number(selectedStore))
-      ?.visible_months?.includes(DateTime.fromISO(selectedDate).month);
-    return res;
-  };
+      ?.visible_months?.includes(DateTime.fromISO(selectedDate).month)
+    return res
+  }
   const filteredTimeslots = useMemo(
     () => filterTimeSlots(),
     [selectedRegularClass, selectedDate, selectedStore]
-  );
+  )
 
   const confirmHandler = () => {
     // TODO : api 오더 정보 업데이트 하기
     // payment page로 보내기
-    confirmBooking.setVisible(false);
-    setPaymentModal(true);
-  };
+    confirmBooking.setVisible(false)
+    setPaymentModal(true)
+  }
   const handleLocationClicked = (
     id: string,
     setFieldValue: (
@@ -217,37 +220,37 @@ export const BookingFormTest: React.FunctionComponent<
     ) => void
   ) => {
     // TODO : request get timeslot query with date
-    setSelectedStore(id);
-    setFieldValue("store", id);
-  };
+    setSelectedStore(id)
+    setFieldValue("store", id)
+  }
 
   const handleRegularClassClicked = (classId) => {
-    setSelectedRegularClass(classId);
-  };
+    setSelectedRegularClass(classId)
+  }
 
-  const isSelectedStore = !!selectedStore;
+  const isSelectedStore = !!selectedStore
   const filteredLocation = useMemo(() => {
     const store = data?.stores?.find(
       (store) => Number(store?.id) === Number(selectedStore ?? "1")
-    );
+    )
     const filteredRegularClasses = store?.regularClasses.filter((rc) =>
       store.availableRegularClassIds?.includes(rc.id)
-    );
+    )
     return {
       ...store,
       regularClasses: filteredRegularClasses,
-    };
-  }, [selectedStore]);
+    }
+  }, [selectedStore])
 
   const openClassInfo = (text) => {
-    setPlacement(text);
-    setClassInfoOpen(true);
-  };
+    setPlacement(text)
+    setClassInfoOpen(true)
+  }
 
   const handleDrawerOpen = (v) => {
-    alert(v);
-    setStoreInfoOpen(v);
-  };
+    alert(v)
+    setStoreInfoOpen(v)
+  }
   const initialValues = {
     date: DateTime.fromISO(selectedDate).toJSDate(),
     store: selectedStore,
@@ -261,7 +264,7 @@ export const BookingFormTest: React.FunctionComponent<
     currentBookingCount: 0,
     maximumBookingCount: 6,
     startDateTime: new Date().toISOString(),
-  };
+  }
   const validationSchema = Yup.object().shape({
     date: Yup.date().required("날짜를 선택해 주세요."),
     store: Yup.string().required("지점을 다시 선택해 주세요."),
@@ -271,71 +274,74 @@ export const BookingFormTest: React.FunctionComponent<
       .required("인원 수를 선택해 주세요."),
     customerFullName: Yup.string().required("예약자 이름을 적어주세요."),
     phone: Yup.string().required("예약자 핸드폰 번호를 적어주세요."),
-  });
+  })
 
-  const test = {};
+  const test = {}
 
   const getImageWithASCII = (className: string) => {
-    const formattedClassName = className
-      .replace(/\s/g, "")
-      .toLowerCase()
-      .trim();
+    const formattedClassName = className.replace(/\s/g, "").toLowerCase().trim()
 
     if (/젤리|gummy|bear/i.test(formattedClassName))
-      return `/giantgummybear.jpg`;
+      return `/giantgummybear.jpg`
 
     if (/이스터컵케익|eastercupcake/i.test(formattedClassName))
-      return `/eastercupcake.jpg`;
+      return `/eastercupcake.jpg`
 
     if (/이스터에그|easteregg/i.test(formattedClassName))
-      return `/easteregg.jpg`;
+      return `/easteregg.jpg`
 
-    if (/티라미수|tiramisu/i.test(formattedClassName)) return `/tiramisu.jpg`;
+    if (/티라미수|tiramisu/i.test(formattedClassName)) return `/tiramisu.jpg`
 
-    if (/사탕|lolli/i.test(formattedClassName)) return `/lollipop.jpg`;
-    if (/에그타르트|eggtart/i.test(formattedClassName)) return `/eggtart.jpg`;
-    if (/버터링쿠키/i.test(formattedClassName)) return `/butteringcookie.jpg`;
-    if (/viennese/i.test(formattedClassName)) return `/viennesewhirls.jpg`;
+    if (/사탕|lolli/i.test(formattedClassName)) return `/lollipop.jpg`
+    if (/에그타르트|eggtart/i.test(formattedClassName)) return `/eggtart.jpg`
+    if (/버터링쿠키/i.test(formattedClassName)) return `/butteringcookie.jpg`
+    if (/viennese/i.test(formattedClassName)) return `/viennesewhirls.jpg`
     if (/정글컵케익|jungle/i.test(formattedClassName))
-      return `/junglecupcake.jpg`;
-    if (/카네이션/i.test(formattedClassName)) return `/marshmallow.jpeg`;
-    if (/똥|poopy/i.test(formattedClassName)) return `/poopy.jpeg`;
-    if (/에르메식|herme/i.test(formattedClassName)) return `/herme.jpeg`;
-    if (/carnation/i.test(formattedClassName)) return `/carnation.jpeg`;
+      return `/junglecupcake.jpg`
+    if (/카네이션/i.test(formattedClassName)) return `/marshmallow.jpeg`
+    if (/똥|poopy/i.test(formattedClassName)) return `/poopy.jpeg`
+    if (/에르메식|herme/i.test(formattedClassName)) return `/herme.jpeg`
+    if (/carnation/i.test(formattedClassName)) return `/carnation.jpeg`
     if (/사워도우빵|sourdough/i.test(formattedClassName))
-      return `/blacksourdough.jpg`;
+      return `/blacksourdough.jpg`
     if (/캐릭터컵케익|charactercupcakes|시나모롤/i.test(formattedClassName))
-      return `/charactercupcakes.jpg`;
-    if (/카툰케이크|cartoon/i.test(formattedClassName)) return `/cartoon.jpeg`;
+      return `/charactercupcakes.jpg`
+    if (/카툰케이크|cartoon/i.test(formattedClassName)) return `/cartoon.jpeg`
     if (/rainbow|레인보우|무지개/i.test(formattedClassName))
-      return `/rainbow.jpeg`;
-    if (/몬스터|monster/i.test(formattedClassName)) return `/monster.jpeg`;
-    if (/barbie|바비/i.test(formattedClassName)) return `/barbiecupcakes.jpg`;
+      return `/rainbow.jpeg`
+    if (/몬스터|monster/i.test(formattedClassName)) return `/monster.jpeg`
+    if (/barbie|바비/i.test(formattedClassName)) return `/barbiecupcakes.jpg`
     if (/fairy|garden|요정|가든 /i.test(formattedClassName))
-      return `/fairy_garden.jpg`;
-    if (/pumpkin|펌킨파이/i.test(formattedClassName)) return `/pumpkin_pie.jpg`;
+      return `/fairy_garden.jpg`
+    if (/pumpkin|펌킨파이/i.test(formattedClassName)) return `/pumpkin_pie.jpg`
     if (/ginger|진저/i.test(formattedClassName))
-      return `/ginger_apple_cheesecake.jpg`;
+      return `/ginger_apple_cheesecake.jpg`
     if (/wholecake|컵케익으로/i.test(formattedClassName))
-      return `/cupcake_wholecake.jpg`;
-  };
+      return `/cupcake_wholecake.jpg`
+  }
   if (!data && !error) {
-    return <Spinner />;
+    return <Spinner />
   }
   if (!data && error) {
     return (
       <div> 앗! 데이터 불러오기에 실패했어요. 잠시 후 다시 접속해 주세요.</div>
-    );
+    )
   }
 
   if (data) {
-    let store, rc;
+    let store, rc
     store =
-      data?.stores?.find((store) => store.id == selectedStore) ?? undefined;
+      data?.stores?.find((store) => store.id == selectedStore) ?? undefined
     rc = store?.regularClasses
       .filter((rc) => store.availableRegularClassIds?.includes(rc.id))
-      .sort((a, b) => a.id - b.id);
+      .sort((a, b) => a.id - b.id)
+    console.log("Rc", rc)
 
+    let regularClassDescriptions = rc
+      ?.find((r) => r.id === selectedRegularClass)
+      ?.description?.split("\r\n")
+      .map((v) => v.replace(/•/g, "").trim())
+    console.log("regularClassDescriptions", regularClassDescriptions)
     return (
       <>
         <Formik
@@ -348,28 +354,28 @@ export const BookingFormTest: React.FunctionComponent<
               const regularClassInfo = rc?.find(
                 (singleClass) =>
                   Number(singleClass.id) === Number(selectedRegularClass)
-              );
+              )
 
               const leftSeating =
                 Number(values.maximumBookingCount) -
-                Number(values.currentBookingCount);
+                Number(values.currentBookingCount)
 
               // prevent overbooking
               if (leftSeating < Number(values.qty)) {
-                help.resetForm();
-                setSelectedStore("");
-                setSelectedRegularClass("");
+                help.resetForm()
+                setSelectedStore("")
+                setSelectedRegularClass("")
                 return setToast({
                   text: "남은 자리 보다 더 많이 예약했어요!",
                   type: "error",
-                });
+                })
               }
-              const { totalAmount, customerFullName, store } = values;
-              const storeName = data?.stores[Number(store) - 1]?.name;
-              const className = regularClassInfo?.name;
+              const {totalAmount, customerFullName, store} = values
+              const storeName = data?.stores[Number(store) - 1]?.name
+              const className = regularClassInfo?.name
               const orderId = `${
                 StorePrefix[storeName.replaceAll(" ", "")]
-              }${new Date().getTime().toString()}`;
+              }${new Date().getTime().toString()}`
 
               setModalEvent({
                 orderId,
@@ -377,8 +383,8 @@ export const BookingFormTest: React.FunctionComponent<
                 time: values?.startDateTime,
                 className,
                 ...values,
-              });
-              await confirmBooking.setVisible(true);
+              })
+              await confirmBooking.setVisible(true)
               await setRequestPaymentobj({
                 amount: totalAmount,
                 orderId,
@@ -391,13 +397,13 @@ export const BookingFormTest: React.FunctionComponent<
                 // successUrl: 'http://localhost:3434/payment/success',
                 successUrl: `${NEXT_PUBLIC_PAYMENT_SUCCESS_URL}/?timeslot=${values.timeSlot.toString()}&phone=${values.phone.toString()}&qty=${values.qty.toString()}&customerName=${customerFullName.toString()}`,
                 failUrl: `${NEXT_PUBLIC_PAYMENT_FAIL_URL}`,
-              });
-              help.setSubmitting(true);
+              })
+              help.setSubmitting(true)
               // confirm or cancel 버튼의 확인이 필요하다.
             } catch (error) {
-              console.log("error", error);
+              console.log("error", error)
             } finally {
-              help.setSubmitting(false);
+              help.setSubmitting(false)
             }
           }}
         >
@@ -417,7 +423,7 @@ export const BookingFormTest: React.FunctionComponent<
             dirty,
           }) => (
             <>
-              <Form style={{ width: "90%", margin: "0 auto" }}>
+              <Form style={{width: "90%", margin: "0 auto"}}>
                 <div className="datetime-selector">
                   <Grid.Container
                     gap={1}
@@ -431,27 +437,27 @@ export const BookingFormTest: React.FunctionComponent<
                       <Text>{"날짜 선택"}</Text>
                     </Grid>
                   </Grid.Container>
-                  <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{display: "flex", justifyContent: "center"}}>
                     <input
                       type="date"
                       id="start"
                       name="date"
                       value={selectedDate}
                       min="2022-07-01"
-                      max="2023-12-31"
+                      max="2030-01-01"
                       size={20}
-                      style={{ width: "100%", height: "40px" }}
+                      style={{width: "100%", height: "40px"}}
                       onChange={(e) => {
                         if (e.currentTarget.validity.valid) {
                           const newValue = DateTime.fromISO(
                             e.currentTarget.value
-                          ).toJSDate();
+                          ).toJSDate()
                           setSelectedDate(
                             DateTime.fromISO(e.currentTarget.value).toFormat(
                               "yyyy-MM-dd"
                             )
-                          );
-                          setFieldValue("date", newValue);
+                          )
+                          setFieldValue("date", newValue)
                         }
                       }}
                     />
@@ -473,22 +479,22 @@ export const BookingFormTest: React.FunctionComponent<
                   gap={1}
                   justify="space-between"
                   alignItems="center"
-                  style={{ marginTop: "10px" }}
+                  style={{marginTop: "10px"}}
                 >
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                  <div style={{display: "flex", alignItems: "center"}}>
                     <Navigation size={22} />
-                    <Text style={{ fontWeight: "600" }} ml={1}>
+                    <Text style={{fontWeight: "600"}} ml={1}>
                       {/*select store name */}
                       {STORE_NAME[selectedStore]}{" "}
                     </Text>
                   </div>
                   <div
-                    style={{ display: "flex", alignItems: "center" }}
+                    style={{display: "flex", alignItems: "center"}}
                     onClick={() => {
-                      setStoreInfoOpen(() => true);
+                      setStoreInfoOpen(() => true)
                     }}
                   >
-                    <Text mr={0.2} style={{ fontWeight: "600" }}>
+                    <Text mr={0.2} style={{fontWeight: "600"}}>
                       {"지점 정보"}
                     </Text>
                     <ChevronRightCircle size={22} />
@@ -509,7 +515,7 @@ export const BookingFormTest: React.FunctionComponent<
                   >
                     <Drawer.Title>{store?.name}</Drawer.Title>
                     <Drawer.Content>
-                      {store?.description?.split("\\n").map((v, i) => {
+                      {store?.description?.split("\r\n").map((v, i) => {
                         return (
                           <Text
                             key={i.toString()}
@@ -518,11 +524,11 @@ export const BookingFormTest: React.FunctionComponent<
                             p
                             b
                             margin={0}
-                            style={{ color: "GrayText" }}
+                            style={{color: "GrayText"}}
                           >
                             {v}
                           </Text>
-                        );
+                        )
                       })}
                     </Drawer.Content>
                   </CustomDrawer>
@@ -547,7 +553,7 @@ export const BookingFormTest: React.FunctionComponent<
                             <Button
                               id={store?.id}
                               color="primary"
-                              style={{ marginLeft: "2px" }}
+                              style={{marginLeft: "2px"}}
                               name={"store"}
                               auto
                               onClick={(e) =>
@@ -557,7 +563,7 @@ export const BookingFormTest: React.FunctionComponent<
                               {store.name}
                             </Button>
                           </Grid>
-                        );
+                        )
                       })}
                   </div>
                 </Grid.Container>
@@ -625,6 +631,12 @@ export const BookingFormTest: React.FunctionComponent<
                           title={singleClass?.name}
                           id={singleClass.id}
                           key={singleClass?.id}
+                          style={{
+                            boxShadow: "0px 2px 50px rgba(0, 0, 0, 0.15)",
+                            borderRadius: "31px",
+                            padding: "2rem 1rem",
+                            marginBottom: "1rem",
+                          }}
                           //TODO: onClick shoud move to each time slot
                           // onClick={() => {
 
@@ -670,121 +682,151 @@ export const BookingFormTest: React.FunctionComponent<
                           <div
                             className="regularClass-container"
                             style={{
-                              // boxShadow: "0px 0px 18px #0000001a",
-                              boxShadow: "0px 2px 50px rgba(0, 0, 0, 0.15)",
-                              borderRadius: "31px",
-                              marginBottom: "10px",
-                              padding: "1rem",
+                              display: "flex",
+                              flexDirection: "column",
                             }}
                           >
                             <div
                               className="class-wrapper"
-                              style={{ display: "flex", alignItems: "center" }}
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                margin: "0 auto",
+                              }}
                             >
-                              <ImageComp
-                                src={
-                                  singleClass?.imageURL ||
-                                  getImageWithASCII(singleClass.name)
-                                }
-                              />
-                              <div>
-                                <Grid ml={1}>
-                                  <Text
-                                    style={{
-                                      fontSize: "18px",
-                                      fontWeight: "600",
-                                    }}
-                                  >
-                                    {singleClass.name}
-                                  </Text>
-                                </Grid>
-                                <Grid ml={1}>
-                                  <Button
-                                    auto
-                                    onClick={() => {
-                                      openClassInfo("bottom");
-                                      handleRegularClassClicked(
-                                        singleClass?.id
-                                      );
-                                    }}
-                                    scale={1 / 2}
-                                    mr="10px"
-                                  >
-                                    클래스 정보 보기
-                                  </Button>
-                                </Grid>
-                              </div>
-                            </div>
+                              <div style={{display: "flex", gap: "10px"}}>
+                                <div
+                                  style={{
+                                    flexShrink: 0,
+                                    width: "95px",
+                                    height: "95px",
+                                  }}
+                                >
+                                  <ImageComp
+                                    src={
+                                      singleClass?.imageURL ||
+                                      getImageWithASCII(singleClass.name)
+                                    }
+                                  />
+                                </div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <Grid>
+                                    {singleClass.name
 
-                            <div
-                              className="timeslots-wrapper"
-                              style={{ display: "flex", flexWrap: "nowrap" }}
-                            >
-                              {timeslotsData
-                                ?.filter(
-                                  (t) => t.regularClassId === singleClass.id
-                                )
-                                ?.map((timeslot) => {
-                                  return (
-                                    <div
-                                      className="timeslot"
-                                      key={timeslot.id}
-                                      style={{
-                                        fontSize: "16px",
-                                        fontWeight: "600",
-                                        marginRight: "6px",
-                                        color:
-                                          values.timeSlot === timeslot.id
-                                            ? "#fff"
-                                            : "#0070f3",
-                                        backgroundColor:
-                                          values.timeSlot === timeslot.id
-                                            ? "#0070f3"
-                                            : "#fff",
-                                        border: "1px solid #0070f3",
-                                      }}
-                                      onClick={async () => {
+                                      ?.split("(")
+                                      ?.map((v, i) => (
+                                        <Text
+                                          key={v}
+                                          style={{
+                                            fontSize: "1.1rem",
+                                            fontWeight: "600",
+                                            fontFamily: "inherit",
+                                            margin: "0.1rem",
+                                          }}
+                                        >
+                                          {v.indexOf(")") !== -1
+                                            ? `(${v}`
+                                            : `${v}`}
+                                        </Text>
+                                      ))}
+                                  </Grid>
+                                  <Grid>
+                                    <Button
+                                      auto
+                                      onClick={() => {
+                                        openClassInfo("bottom")
                                         handleRegularClassClicked(
                                           singleClass?.id
-                                        );
-                                        await setFieldValue(
-                                          "timeSlot",
-                                          timeslot?.id
-                                        );
-                                        await setFieldValue(
-                                          "maximumBookingCount",
-                                          Number(timeslot?.maximumBookingCount)
-                                        );
-                                        await setFieldValue(
-                                          "currentBookingCount",
-                                          Number(timeslot?.currentBookingCount)
-                                        );
-                                        await setFieldValue(
-                                          "startDateTime",
-                                          timeslot?.startDateTime
-                                        );
-                                        setFieldValue(
-                                          "classPrice",
-                                          singleClass?.price
-                                        );
-
-                                        if (Number(values?.qty) > 0) {
-                                          setFieldValue(
-                                            "totalAmount",
-                                            Number(values?.qty) *
-                                              Number(values?.classPrice)
-                                          );
-                                        }
+                                        )
                                       }}
+                                      scale={1 / 2}
+                                      mr="10px"
                                     >
-                                      {/* <span className="time"> */}
-                                      {`${DateTime.fromISO(
-                                        timeslot.startDateTime
-                                      ).toFormat("HH:mm")}`}
-                                      {/* </span> */}
-                                    </div>
-                                  );
-                                })}
+                                      클래스 정보 보기
+                                    </Button>
+                                  </Grid>
+                                </div>
+                              </div>
+                              <div
+                                className="timeslots-wrapper"
+                                style={{display: "flex", flexWrap: "nowrap"}}
+                              >
+                                {timeslotsData
+                                  ?.filter(
+                                    (t) => t.regularClassId === singleClass.id
+                                  )
+                                  ?.map((timeslot) => {
+                                    return (
+                                      <div
+                                        className="timeslot"
+                                        key={timeslot.id}
+                                        style={{
+                                          fontSize: "16px",
+                                          fontWeight: "600",
+                                          marginRight: "6px",
+                                          color:
+                                            values.timeSlot === timeslot.id
+                                              ? "#fff"
+                                              : "#0070f3",
+                                          backgroundColor:
+                                            values.timeSlot === timeslot.id
+                                              ? "#0070f3"
+                                              : "#fff",
+                                          border: "1px solid #0070f3",
+                                        }}
+                                        onClick={async () => {
+                                          handleRegularClassClicked(
+                                            singleClass?.id
+                                          )
+                                          await setFieldValue(
+                                            "timeSlot",
+                                            timeslot?.id
+                                          )
+                                          await setFieldValue(
+                                            "maximumBookingCount",
+                                            Number(
+                                              timeslot?.maximumBookingCount
+                                            )
+                                          )
+                                          await setFieldValue(
+                                            "currentBookingCount",
+                                            Number(
+                                              timeslot?.currentBookingCount
+                                            )
+                                          )
+                                          await setFieldValue(
+                                            "startDateTime",
+                                            timeslot?.startDateTime
+                                          )
+                                          setFieldValue(
+                                            "classPrice",
+                                            singleClass?.price
+                                          )
+
+                                          if (Number(values?.qty) > 0) {
+                                            setFieldValue(
+                                              "totalAmount",
+                                              Number(values?.qty) *
+                                                Number(values?.classPrice)
+                                            )
+                                          }
+                                        }}
+                                      >
+                                        {/* <span className="time"> */}
+                                        {`${DateTime.fromISO(
+                                          timeslot.startDateTime
+                                        ).toFormat("HH:mm")}`}
+                                        {/* </span> */}
+                                      </div>
+                                    )
+                                  })}
+                              </div>
                             </div>
 
                             {/* <TimeSlotForm
@@ -843,28 +885,59 @@ export const BookingFormTest: React.FunctionComponent<
                       drawerOpen={classInfoOpen}
                       setDrawerOpen={setClassInfoOpen}
                     >
-                      <Drawer.Title>
-                        {rc?.find((r) => r.id === selectedRegularClass)?.name}
-                      </Drawer.Title>
-                      <Drawer.Content>
+                      <Drawer.Title
+                        className="regularClass_title"
+                        style={{
+                          fontFamily: "inherit",
+                          fontSize: "1.3rem",
+                          justifyContent: "left",
+                          textAlign: "left",
+                        }}
+                      >
                         {rc
                           ?.find((r) => r.id === selectedRegularClass)
-                          ?.description?.split("\\n")
-                          .map((v, i) => {
-                            return (
-                              <Text
-                                key={i.toString()}
-                                font={0.8}
-                                paddingLeft={0.4}
-                                p
-                                b
-                                margin={0}
-                                style={{ color: "GrayText" }}
+                          ?.name?.split(/(\([^)]*\))/)
+                          .filter((part) => part.trim() !== "")
+                          .map((v, i) => (
+                            <>
+                              {v}
+                              <br />
+                            </>
+                          ))}
+                      </Drawer.Title>
+                      <Drawer.Content>
+                        <ul className="regularClass_desc">
+                          {regularClassDescriptions?.map((v, i) => (
+                            <li
+                              key={i.toString()}
+                              style={{
+                                margin: 0,
+                                fontSize: "0.8rem",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  margin: 0,
+                                  color: "GrayText",
+                                  fontFamily: "inherit",
+                                }}
                               >
                                 {v}
-                              </Text>
-                            );
-                          })}
+                              </p>
+                            </li>
+                          )) ?? (
+                            <Text
+                              font={0.8}
+                              paddingLeft={0.4}
+                              p
+                              b
+                              margin={0}
+                              style={{color: "GrayText"}}
+                            >
+                              {"내용을 준비 중이에요."}
+                            </Text>
+                          )}
+                        </ul>
                       </Drawer.Content>
                     </CustomDrawer>
 
@@ -893,11 +966,11 @@ export const BookingFormTest: React.FunctionComponent<
                       touched={touched}
                       placeholder="인원/명"
                       onChange={(e) => {
-                        setFieldValue("qty", e.target.value);
+                        setFieldValue("qty", e.target.value)
                         setFieldValue(
                           "totalAmount",
                           Number(e.target.value) * Number(values.classPrice)
-                        );
+                        )
                       }}
                     />
                   </LocationDetailLayout>
@@ -924,7 +997,7 @@ export const BookingFormTest: React.FunctionComponent<
                         placeholder="이름"
                         errors={errors}
                         touched={touched}
-                        style={{ width: "100%" }}
+                        style={{width: "100%"}}
                       />
                     </Grid>
                     <Grid xs={24} mt={1}>
@@ -940,18 +1013,18 @@ export const BookingFormTest: React.FunctionComponent<
                     </Grid>
                     <Grid>
                       <Divider />
-                      <p style={{ textAlign: "center", color: "GrayText" }}>
+                      <p style={{textAlign: "center", color: "GrayText"}}>
                         환불 규정
                       </p>
-                      <Text p small mt={0} style={{ color: "GrayText" }}>
-                        수업 7일전까지 알려주시면 100%환불가능하며 선재료준비로
-                        인해 6일전-3일전까지는 50%가 환불됩니다. 그 이후에는
-                        환불불가하며 당일 No Show인 경우에도 환불이 어렵습니다.
-                        여러사정으로 당일 취소를 원하시는 분들도 계시겠지만
-                        그런경우 다른 분들에게 기회를 드리지 못하는 부분이
-                        발생되어 원활한 수업진행을 위한 환불규정이오니 양해를
-                        부탁드립니다. 감사합니다.
-                      </Text>
+                      <p style={{color: "GrayText", fontFamily: "inherit"}}>
+                        수업 7일 전까지 알려주시면 100% 환불 가능하며 선재료
+                        준비로 인해 6일전~ 3일전까지는 50%가 환불됩니다. 그
+                        이후에는 환불 불가하며 당일 No Show인 경우에도 환불이
+                        어렵습니다. 여러 사정으로 당일 취소를 원하시는 분들도
+                        계시겠지만 그런 경우 다른 분들에게 기회를 드리지 못하는
+                        부분이 발생되어 원활한 수업 진행을 위한 환불 규정 이오니
+                        양해를 부탁드립니다. 감사합니다.
+                      </p>
                     </Grid>
                   </Grid.Container>
                   <Divider mt={4} />
@@ -1046,7 +1119,7 @@ export const BookingFormTest: React.FunctionComponent<
           <Modal.Action
             onClick={async () => {
               try {
-                confirmHandler();
+                confirmHandler()
                 // setToasts({
                 //   type: 'success',
                 //   text: '결제가 정상 처리 되었어요',
@@ -1070,29 +1143,29 @@ export const BookingFormTest: React.FunctionComponent<
           onClose={() => setVisibleBanner(false)}
           placement={"bottom"}
           disableBackdropClick={true}
-          style={{ width: "500px", margin: "0 auto" }}
+          style={{width: "500px", margin: "0 auto"}}
         >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{display: "flex", justifyContent: "space-between"}}>
             <div></div>
             <XCircle
               size={36}
-              style={{ marginLeft: "auto" }}
+              style={{marginLeft: "auto"}}
               onClick={() => setVisibleBanner(false)}
             />
           </div>
           <Drawer.Title> 예약 전 읽어주세요! </Drawer.Title>
 
           <Drawer.Content>
-            <div style={{ margin: "0 auto", textAlign: "center" }}>
+            <div style={{margin: "0 auto", textAlign: "center"}}>
               {" "}
               <img
                 src={"./popup.svg"}
-                style={{ width: "100%", objectFit: "contain" }}
+                style={{width: "100%", objectFit: "contain"}}
               />
             </div>
           </Drawer.Content>
         </Drawer>
       </>
-    );
+    )
   }
-};
+}

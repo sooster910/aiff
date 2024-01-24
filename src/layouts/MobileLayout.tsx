@@ -1,9 +1,9 @@
-import * as React from "react";
-import { useRouter } from "next/router";
+import * as React from "react"
+import {useRouter} from "next/router"
 
 export interface MobileLayoutProps {
-  children: React.ReactNode;
-  maxWidth: string;
+  children: React.ReactNode
+  maxWidth: string
 }
 
 const MobileLayout: React.FunctionComponent<MobileLayoutProps> = ({
@@ -11,7 +11,7 @@ const MobileLayout: React.FunctionComponent<MobileLayoutProps> = ({
   children,
   ...props
 }) => {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <div
@@ -29,7 +29,7 @@ const MobileLayout: React.FunctionComponent<MobileLayoutProps> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default MobileLayout;
+export default MobileLayout

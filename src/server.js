@@ -145,6 +145,26 @@ const main = async () => {
         return res.send("no");
       }
     });
+
+    //TEST API for slack
+    server.get("/api/test/slack", async (req, res) => {
+      console.log("test slack");
+      try {
+        const result = send({
+          orderId: "test",
+          orderName: "test",
+          paymentKey: "test",
+          approvedAt: "test",
+          totalAmount: "test",
+          qty: "test",
+          customerName: "test",
+          phone: "test",
+        });
+        return res.send({ data: "done" });
+      } catch (error) {
+        console.log("error", error);
+      }
+    });
     // TEST API for kakao
     server.get("/api/test/order/approval", async (req, res) => {
       const templateCodes = {
@@ -192,11 +212,6 @@ const main = async () => {
       // const customerName = "이설아";
       // const qty = 1;
       // const balanceAmount = 60000;
-
-      console.log(
-        "dateee",
-        DateTime.fromJSDate(new Date(orderName?.split("-")[3]))
-      );
 
       const contents = {
         forCust: `
@@ -276,7 +291,7 @@ const main = async () => {
     server.get("/api/order/approval", async (req, res) => {
       const { orderId, amount, phone, paymentKey, qty, customerName } =
         req.query;
-
+      console.log("orderId", orderId);
       const secretKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
 
       const resp = await got
@@ -334,37 +349,28 @@ const main = async () => {
       }
 
       const templateCodes = {
-        completeOrderForCust: "A0004",
+        completeOrderForCust: "A00005", // updated 2024.01.01. 서초점만 사용
         completeOrderForStore: "A00002",
       };
       const storePhoneMapper = {
-        용산본점: "01043941251",
-        대구점: "01057812869",
-        파주점: "01027529880",
-        판교점: "01031730082",
+        서초점: "01043941251",
       };
       const storeName = orderName?.split("-")[0];
       console.log(
         "dateee",
         DateTime.fromJSDate(new Date(orderName?.split("-")[3]))
       );
+
       const contents = {
-        forCust: `
-      [예약 완료]
-안녕하세요 ${customerName}님, 예약이 완료되었습니다!
-
-■ 이름 : ${customerName}
-■ 지점명 : ${storeName}
-■ 클래스명 :${orderName?.split("-")[1]}
-■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
-■ 인원 : ${qty}
-■ 결제금액 : ${balanceAmount}
-
-클래스 전날 예약하신 지점에서 찾아오는 길과 주차정보를 안내해 드리겠습니다.
-
-용산점 : 070-8887-1053
-판교점 : 031-697-8707
-대구점 : 0507-1348-2869 `,
+        forCust: `[예약 완료]
+        안녕하세요  ${customerName}님, 예약이 완료되었습니다!
+        
+        ■ 이름 : ${customerName}
+        ■ 지점명 : ${storeName}
+        ■ 클래스명 :${orderName?.split("-")[1]}
+        ■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
+        ■ 인원 : ${qty}
+        ■ 결제금액 : ${balanceAmount}`,
 
         forStore: `[예약 완료]
 
@@ -399,23 +405,23 @@ const main = async () => {
             customerName,
             qty,
           }),
-          //! NOTE: KAKAO MESSAGE IS BLOCKED FOR TEMPORARY
-          // sendKakaoMessage(
-          //   {
-          //     content: contents.forCust,
-          //     templateCode: templateCodes.completeOrderForCust,
-          //   },
-          //   flatPhoneNumber(phone).slice(1)
-          // ),
-          // sendKakaoMessage(
-          //   {
-          //     content: contents.forStore,
-          //     templateCode: templateCodes.completeOrderForStore,
-          //   },
-          //   `${flatPhoneNumber(
-          //     storePhoneMapper[storeName.replaceAll(" ", "")]
-          //   )}`.slice(1)
-          // ),
+
+          sendKakaoMessage(
+            {
+              content: contents.forCust,
+              templateCode: templateCodes.completeOrderForCust,
+            },
+            flatPhoneNumber(phone).slice(1)
+          ),
+          sendKakaoMessage(
+            {
+              content: contents.forStore,
+              templateCode: templateCodes.completeOrderForStore,
+            },
+            `${flatPhoneNumber(
+              storePhoneMapper[storeName.replaceAll(" ", "")]
+            )}`.slice(1)
+          ),
         ]);
 
         return res.redirect(
@@ -475,7 +481,7 @@ const main = async () => {
           icon_emoji: "slack",
         });
         return res;
-      } catch (err) {
+      } catch (error) {
         console.log("fail to send message", error.response.data);
         slack.chat.postMessage({
           text: `error sending kakao messageID: ${error?.response?.data?.messageId}, TO:${error?.response?.data?.to} status:${error?.response?.data?.status}, text:${error?.response?.data?.text}`,
@@ -484,7 +490,7 @@ const main = async () => {
         });
         send({
           orderId,
-          orderName: `${orderName} :${err?.message} send notification error`,
+          orderName: `${orderName} :${error?.message} send notification error`,
           requestedAt,
           phone,
           paymentKey,

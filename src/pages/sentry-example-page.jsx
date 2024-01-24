@@ -1,5 +1,5 @@
-import Head from "next/head";
-import * as Sentry from "@sentry/nextjs";
+import Head from "next/head"
+import * as Sentry from "@sentry/nextjs"
 
 export default function Page() {
   return (
@@ -18,7 +18,7 @@ export default function Page() {
           alignItems: "center",
         }}
       >
-        <h1 style={{ fontSize: "4rem", margin: "14px 0" }}>
+        <h1 style={{fontSize: "4rem", margin: "14px 0"}}>
           <svg
             style={{
               height: "1em",
@@ -46,23 +46,19 @@ export default function Page() {
             fontSize: "14px",
             margin: "18px",
           }}
-          onClick={async () => {
-            const transaction = Sentry.startTransaction({
-              name: "Example Frontend Transaction",
-            });
-
-            Sentry.configureScope((scope) => {
-              scope.setSpan(transaction);
-            });
-
-            try {
-              const res = await fetch("/api/sentry-example-api");
-              if (!res.ok) {
-                throw new Error("Sentry Example Frontend Error");
+          onClick={() => {
+            Sentry.startSpan(
+              {
+                name: "Example Frontend Span",
+                op: "test",
+              },
+              async () => {
+                const res = await fetch("/api/sentry-example-api")
+                if (!res.ok) {
+                  throw new Error("Sentry Example Frontend Error")
+                }
               }
-            } finally {
-              transaction.finish();
-            }
+            )
           }}
         >
           Throw error!
@@ -70,9 +66,12 @@ export default function Page() {
 
         <p>
           Next, look for the error on the{" "}
-          <a href="https://aiff.sentry.io/issues/?project=4506262301769728">Issues Page</a>.
+          <a href="https://aiff.sentry.io/issues/?project=4506262301769728">
+            Issues Page
+          </a>
+          .
         </p>
-        <p style={{ marginTop: "24px" }}>
+        <p style={{marginTop: "24px"}}>
           For more information, see{" "}
           <a href="https://docs.sentry.io/platforms/javascript/guides/nextjs/">
             https://docs.sentry.io/platforms/javascript/guides/nextjs/
@@ -80,5 +79,5 @@ export default function Page() {
         </p>
       </main>
     </div>
-  );
+  )
 }

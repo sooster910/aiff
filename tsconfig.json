@@ -17,7 +17,8 @@
     "baseUrl": "./src",
     "paths": {
       "@app/*": ["./*"],
-      "@shared": ["./shared"]
+      "@shared": ["./shard"],
+      "@server/*": ["./server/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/setupProxy.js"],
