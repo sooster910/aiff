@@ -1,5 +1,5 @@
-import { PaymentMethod } from './types/order';
+import {PaymentMethod} from "./types/order"
 export const config = {
-    PaymentMethod: PaymentMethod.CARD
+  PaymentMethod: PaymentMethod.CARD,
+  DISCOUNT_PRICE: 40000,
 }
-

@@ -21,6 +21,7 @@ import {
   Text,
   Modal,
   Drawer,
+  Checkbox,
 } from "@geist-ui/core"
 import {loadTossPayments} from "@tosspayments/payment-sdk"
 import {DateTime} from "luxon"
@@ -37,6 +38,7 @@ import {
   Users,
   InfoFill,
   XCircle,
+  CheckSquare,
 } from "@geist-ui/icons"
 import {Formik, Form, Field} from "formik"
 
@@ -52,6 +54,7 @@ import {AvailableRegularClassIds} from "../../../hooks/useFetchTimeSlots"
 import {CustomDrawer} from "@app/components/Drawer"
 import {DrawerPlacement} from "@geist-ui/core/esm/drawer/helper"
 import {Spinner} from "@geist-ui/core"
+import {AIFFCheckboxField} from "@app/components/AIFFCheckboxField"
 
 interface BookingFormProps {}
 type StoreData = {
@@ -69,6 +72,7 @@ type ReservationDTO = {
   orderId?: string
   className?: string
   time?: string
+  isDiscounted?: boolean
 }
 
 export type PaymentRequestDTO = {
@@ -158,6 +162,7 @@ export const BookingFormTest: React.FunctionComponent<
             } else if (error.code === "INVALID_ORDER_ID") {
               // 유효하지 않은 'orderId' 처리하기
             }
+
             console.log("결제창 error", error)
           })
       }
@@ -264,6 +269,7 @@ export const BookingFormTest: React.FunctionComponent<
     currentBookingCount: 0,
     maximumBookingCount: 6,
     startDateTime: new Date().toISOString(),
+    isDiscounted: false,
   }
   const validationSchema = Yup.object().shape({
     date: Yup.date().required("날짜를 선택해 주세요."),
@@ -341,7 +347,6 @@ export const BookingFormTest: React.FunctionComponent<
       ?.find((r) => r.id === selectedRegularClass)
       ?.description?.split("\r\n")
       .map((v) => v.replace(/•/g, "").trim())
-    console.log("regularClassDescriptions", regularClassDescriptions)
     return (
       <>
         <Formik
@@ -969,11 +974,40 @@ export const BookingFormTest: React.FunctionComponent<
                         setFieldValue("qty", e.target.value)
                         setFieldValue(
                           "totalAmount",
-                          Number(e.target.value) * Number(values.classPrice)
+                          values.isDiscounted
+                            ? Number(e.target.value) * config.DISCOUNT_PRICE
+                            : Number(e.target.value) * Number(values.classPrice)
                         )
                       }}
                     />
                   </LocationDetailLayout>
+                  <Grid.Container
+                    gap={1}
+                    justify="flex-start"
+                    alignItems="center"
+                    mt={2}
+                  >
+                    <Grid>
+                      <CheckSquare />
+                    </Grid>
+                    <Grid>
+                      <Text>
+                        {"회원이시면 아래의 회원가 적용 체크 해주세요."}
+                      </Text>
+                    </Grid>
+                  </Grid.Container>
+
+                  <Field
+                    style={{
+                      width: "100%",
+                      height: "1.3rem",
+                      marginLeft: "-0.5rem",
+                    }}
+                    name="isDiscounted"
+                    type="checkbox"
+                    label="회원가 40000원 적용"
+                    component={AIFFCheckboxField} // as prop을 사용하여 커스텀 컴포넌트를 지정
+                  />
 
                   <Grid.Container
                     gap={1}
@@ -1038,9 +1072,18 @@ export const BookingFormTest: React.FunctionComponent<
                           }}
                         >
                           <Text> 클래스 가격 : </Text>
-                          <Text>
-                            {Number(values?.classPrice).toLocaleString()}
-                          </Text>
+                          {values?.isDiscounted ? (
+                            <Text>
+                              <span style={{color: "gray", fontSize: "0.8rem"}}>
+                                회원가 적용
+                              </span>{" "}
+                              {values?.classPrice ? config.DISCOUNT_PRICE : 0}
+                            </Text>
+                          ) : (
+                            <Text>
+                              {Number(values?.classPrice).toLocaleString()}
+                            </Text>
+                          )}
                         </div>
                         <div
                           style={{
@@ -1060,7 +1103,9 @@ export const BookingFormTest: React.FunctionComponent<
                           }}
                         >
                           <Text>Total Amount</Text>
-                          <Text>{values?.totalAmount}</Text>
+                          <Text>
+                            {values.startDateTime ? values?.totalAmount : 0}
+                          </Text>
                         </div>
                       </Card>
                     </Grid>
@@ -1109,7 +1154,12 @@ export const BookingFormTest: React.FunctionComponent<
               예약 시간:
               {DateTime.fromISO(modalEvent?.time).toFormat("HH:mm")}
             </Text>
-            <Text>수업 가격: {modalEvent?.classPrice as number} </Text>
+            <Text>
+              수업 가격:{" "}
+              {modalEvent?.isDiscounted
+                ? config.DISCOUNT_PRICE
+                : (modalEvent?.classPrice as number)}{" "}
+            </Text>
             <Text> 인 원 : {modalEvent?.qty} </Text>
             <Text> 총 가격 : {modalEvent?.totalAmount} </Text>
           </Modal.Content>

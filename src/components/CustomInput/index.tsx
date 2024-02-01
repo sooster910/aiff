@@ -1,10 +1,11 @@
-import { Grid, Input, Note, Spacer } from '@geist-ui/core'
-import { FormikErrors, FormikTouched } from 'formik'
-import * as React from 'react'
+import {Grid, Input, Note, Spacer} from "@geist-ui/core"
+import {FormikErrors, FormikTouched} from "formik"
+import * as React from "react"
 
 type Props = {
   label: string
   name: string
+  type?: string
   htmlType?: string
   min?: number
   max?: number
@@ -12,13 +13,14 @@ type Props = {
     name: string
     value: string
   }
-  touched?: FormikTouched<{ [field: string]: any }>
-  errors?: FormikErrors<{ [field: string]: any }>
+  touched?: FormikTouched<{[field: string]: any}>
+  errors?: FormikErrors<{[field: string]: any}>
 }
 
 const CustomInput: React.FunctionComponent<Props> = ({
   label,
   name,
+  type,
   htmlType,
   min,
   max,
@@ -28,7 +30,7 @@ const CustomInput: React.FunctionComponent<Props> = ({
   ...rest
 }) => {
   const isError = errors?.[name] && touched?.[name]
-  console.log('isError', isError)
+  console.log("isError", isError)
   return (
     <>
       <Grid>
