@@ -992,20 +992,22 @@ export const BookingFormTest: React.FunctionComponent<
                     </Grid>
                     <Grid>
                       <Text>
-                        {"회원이시면 아래의 회원가 적용 체크 해주세요."}
+                        {
+                          "블루타이거 정회원이시면 아래의 블루타이거 정회원가 적용 체크 해주세요."
+                        }
                       </Text>
                     </Grid>
                   </Grid.Container>
 
                   <Field
                     style={{
-                      width: "100%",
+                      width: "40px",
                       height: "1.3rem",
-                      marginLeft: "-0.5rem",
+                      marginLeft: "-0.3rem",
                     }}
                     name="isDiscounted"
                     type="checkbox"
-                    label="회원가 40000원 적용"
+                    label="블루타이거 정회원가 40000원 적용"
                     component={AIFFCheckboxField} // as prop을 사용하여 커스텀 컴포넌트를 지정
                   />
 
@@ -1075,7 +1077,7 @@ export const BookingFormTest: React.FunctionComponent<
                           {values?.isDiscounted ? (
                             <Text>
                               <span style={{color: "gray", fontSize: "0.8rem"}}>
-                                회원가 적용
+                                블루타이거 정회원가 적용
                               </span>{" "}
                               {values?.classPrice ? config.DISCOUNT_PRICE : 0}
                             </Text>
