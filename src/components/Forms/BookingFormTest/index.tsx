@@ -270,6 +270,7 @@ export const BookingFormTest: React.FunctionComponent<
     maximumBookingCount: 6,
     startDateTime: new Date().toISOString(),
     isDiscounted: false,
+    agreement: false,
   }
   const validationSchema = Yup.object().shape({
     date: Yup.date().required("날짜를 선택해 주세요."),
@@ -280,6 +281,7 @@ export const BookingFormTest: React.FunctionComponent<
       .required("인원 수를 선택해 주세요."),
     customerFullName: Yup.string().required("예약자 이름을 적어주세요."),
     phone: Yup.string().required("예약자 핸드폰 번호를 적어주세요."),
+    agreement: Yup.boolean().oneOf([true], "약관에 동의해 주세요."),
   })
 
   const test = {}
@@ -981,23 +983,20 @@ export const BookingFormTest: React.FunctionComponent<
                       }}
                     />
                   </LocationDetailLayout>
-                  <Grid.Container
-                    gap={1}
-                    justify="flex-start"
-                    alignItems="center"
-                    mt={2}
-                  >
-                    <Grid>
-                      <CheckSquare />
-                    </Grid>
-                    <Grid>
-                      <Text>
-                        {
-                          "블루타이거 정회원이시면 아래의 블루타이거 정회원가 적용 체크 해주세요."
-                        }
-                      </Text>
-                    </Grid>
-                  </Grid.Container>
+                
+                    <Grid.Container
+                      gap={1}
+                      justify="flex-start"
+                      alignItems="center"
+                      mt={2}
+                    >
+                      <Grid>
+                        <CheckSquare size={24} />
+                      </Grid>
+                      <Grid>
+                        <Text>{"회원가 적용 선택"}</Text>
+                      </Grid>
+                    </Grid.Container>
 
                   <Field
                     style={{
@@ -1005,10 +1004,23 @@ export const BookingFormTest: React.FunctionComponent<
                       height: "1.3rem",
                       marginLeft: "-0.3rem",
                     }}
+
+                    inputStyle={{display: "flex",alignItems:"center"}}
                     name="isDiscounted"
                     type="checkbox"
                     label="블루타이거 정회원가 40000원 적용"
                     component={AIFFCheckboxField} // as prop을 사용하여 커스텀 컴포넌트를 지정
+                    onChange= {(e)=>{
+                      const isDiscounted = e.target.checked
+                      setFieldValue("isDiscounted", e.target.checked)
+                      setFieldValue(
+                        "totalAmount",
+                        isDiscounted
+                          ? values.qty * config.DISCOUNT_PRICE
+                          : values.qty * values.classPrice
+                      )
+                    }
+                  }
                   />
 
                   <Grid.Container
@@ -1048,7 +1060,47 @@ export const BookingFormTest: React.FunctionComponent<
                       />
                     </Grid>
                     <Grid>
-                      <Divider />
+                      <Field
+                            style={{
+                              width: "3rem",
+                              height: "1.3rem",
+                              marginLeft: "-0.3rem",
+                              marginTop:"1.7rem"
+                            }}
+                            inputStyle={{display: "flex"}}
+                            name="agreement"
+                            type="checkbox"
+                            label= {<Collapse.Group>
+                            <Collapse title="개인정보 수집 및 이용동의">
+                                <div style={{color: "GrayText", fontFamily: "inherit", fontSize:"12px"}}>
+                                  <p>아이프에서는 「클래스 수강」과 관련하여 귀하의 개인정보를 아래와 같이 수집·이용하고자 합니다.</p>
+                                  <p>다음의 사항에 대해 충분히 읽어보신 후 동의 여부를 체크, 서명하여 주시기 바랍니다.</p>
+                                  <span style={{fontSize:"10px"}}>▶ 개인정보 수집 및 이용 동의 [고유식별정보]<br/> </span>                       
+                                  <span style={{fontSize:"10px"}}>수집·이용하려는 개인정보의 항목: 성명, 연락처<br/></span>
+                                  <span style={{fontSize:"10px"}}>개인정보의 수집·이용 목적: 수강예약 및 안내 사항 전달</span><br/>
+                                  <span style={{fontSize:"10px"}}>개인정보 이용기간 및 보유기간:3개월</span><br/>
+                                  <span style={{fontSize:"8px"}}>수탁 업체: 인포뱅크 비즈플러스 위탁 업무: 카카오톡 메시지 발송 업무</span><br/>
+                                  <span style={{fontSize:"10px"}}>※ 귀하께서는 개인정보 제공 및 활용에 거부할 권리가 있습니다.</span><br/>
+                                  <span style={{fontSize:"10px"}}>☞ 동의 거부시 불이익 안내 : 동의하시지 않을 경우 신청 자격은 제외됩니다. 양도 등의 문제를 피하기 위함입니다.  클래스 업무 이외의 다른 목적으로 사용하지 않습니다.</span>
+                              </div>
+                            </Collapse>
+                          </Collapse.Group>}
+                            component={AIFFCheckboxField} // as prop을 사용하여 커스텀 컴포넌트를 지정
+                            onChange= {(e)=>{
+                              setFieldValue("agreement", e.target.checked)
+                            }}
+                          />
+                           {errors?.agreement && (
+                    <>
+                      <Spacer />
+                      <Note label="" type="error">
+                        {errors.agreement}
+                      </Note>
+                    </>
+                  )}
+                    </Grid>
+                    <Grid>
+                    
                       <p style={{textAlign: "center", color: "GrayText"}}>
                         환불 규정
                       </p>
