@@ -1,0 +1,521 @@
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+"""TimeSlot form Input"""
+input AddTimeSlotInput {
+  """duration(mins)"""
+  duration: Int!
+
+  """endDateTime"""
+  endDateTime: DateTime!
+
+  """maximumBookingCount"""
+  maximumBookingCount: Int!
+
+  """name"""
+  name: String
+
+  """price"""
+  price: Float!
+
+  """regularClassId"""
+  regularClassId: Int!
+
+  """startDateTime"""
+  startDateTime: DateTime!
+
+  """status"""
+  status: TimeSlotStatus!
+
+  """storeId"""
+  storeId: Int!
+}
+
+"""어드민 전용 Mutation"""
+type AdminMutation {
+  """타임슬롯을 생성합니다"""
+  addTimeSlot(data: AddTimeSlotInput!): ResultAddTimeSlot
+
+  """위클리 타임슬롯을 베이스로 한 monthly타임슬롯을 생성합니다."""
+  generateMonthlyTimeslots(input: GenerateMonthlyTimeslotsInput!): ResultAddTimeSlot
+
+  """true를 반환합니다"""
+  ping: Boolean!
+}
+
+"""어드민 전용 Query"""
+type AdminQuery {
+  """avaiableTimeSlotsByDate"""
+  availableTimeSlotsByDate(where: AvailableTimeSlotsByDateInput!): [TimeSlot!]
+
+  """ID 값으로 Object를 가져옵니다 (Global Object Identification)"""
+  node(id: ID!): Node
+
+  """ID 값의 목록으로 Object를 Batch 합니다 (Global Object Identification)"""
+  nodesByIds(ids: [ID!]!): [Node]!
+
+  """true를 반환합니다"""
+  ping: Boolean!
+}
+
+"""
+"
+상점 어드민
+"""
+type AdminUser implements Node {
+  """_id"""
+  _id: String!
+
+  """Node ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """phone"""
+  phone: String!
+}
+
+input AvailableClassesWhereInput {
+  date: Date!
+  regularClass: String!
+}
+
+input AvailableTimeSlotsByDateInput {
+  date: Date!
+  regularClass: String
+  store: String!
+}
+
+input AvailableTimeSlotsFilterInput {
+  status: TimeSlotStatus
+}
+
+input AvailableTimeSlotsWhereInput {
+  date: DateTime!
+  regularClass: String!
+  store: String!
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format
+outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for
+representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
+`date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
+8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+"""요일"""
+enum Day {
+  """금요일"""
+  FRI
+
+  """월요일"""
+  MON
+
+  """토요일"""
+  SAT
+
+  """일요일"""
+  SUN
+
+  """목요일"""
+  THU
+
+  """화요일"""
+  TUE
+
+  """수요일"""
+  WED
+}
+
+"""Generate monthly timeslots input"""
+input GenerateMonthlyTimeslotsInput {
+  """storeId"""
+  storeId: Int!
+}
+
+"""뮤테이션 (정보를 가공할 때 사용합니다)"""
+type Mutation {
+  """어드민 전용 Mutation"""
+  admin: AdminMutation!
+
+  """강제로 에러를 발생시킵니다"""
+  throw: Boolean!
+}
+
+interface Node {
+  """스키마에서 유일한 ID 값입니다 (Global Object Identification)"""
+  id: ID!
+}
+
+"""
+PageInfo cursor, as defined in https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+"""
+type PageInfo {
+  """
+  The cursor corresponding to the last nodes in edges. Null if the connection is empty.
+  """
+  endCursor: String
+
+  """
+  Used to indicate whether more edges exist following the set defined by the clients arguments.
+  """
+  hasNextPage: Boolean!
+
+  """
+  Used to indicate whether more edges exist prior to the set defined by the clients arguments.
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  The cursor corresponding to the first nodes in edges. Null if the connection is empty.
+  """
+  startCursor: String
+}
+
+"""쿼리 (정보를 가져올때 사용합니다)"""
+type Query {
+  """어드민 전용 Query"""
+  admin: AdminQuery!
+
+  """allRegularClasses"""
+  allRegularClasses: [RegularClass]
+
+  """availableTimeSlots"""
+  availableTimeSlotsByClass(filter: AvailableTimeSlotsFilterInput, where: AvailableTimeSlotsWhereInput): [TimeSlot!]
+
+  """avaiableTimeSlotsByDate"""
+  availableTimeSlotsByDate(where: AvailableTimeSlotsByDateInput!): [TimeSlot!]
+
+  """ID 값으로 Object를 가져옵니다 (Global Object Identification)"""
+  node(id: ID!): Node
+
+  """true를 반환합니다"""
+  ping: Boolean!
+
+  """regularClass by condition"""
+  regularClass(where: RegularClassWhereInput!): RegularClass
+
+  """regularClassById by Global ID"""
+  regularClassById(id: ID): RegularClass
+
+  """regularClasses"""
+  regularClasses(after: String, filter: RegularClassesFilterInput, first: Int!, where: RegularClassesWhereInput): [RegularClass!]!
+
+  """storeById by condition"""
+  store(where: StoreWhereInput!): Store
+
+  """storeById by Global ID"""
+  storeById(id: ID): Store
+
+  """stores"""
+  stores(after: String, filter: StoresFilterInput, first: Int!, where: StoresWhereInput!): [Store!]!
+
+  """강제로 에러를 발생시킵니다"""
+  throw: Boolean!
+
+  """single timeSlot"""
+  timeSlot(where: TimeSlotWhereInput!): TimeSlot!
+
+  """현재 서버의 버전 (Git Hash 값)"""
+  version: String!
+}
+
+"""정규 클래스"""
+type RegularClass implements Node {
+  """_id"""
+  _id: String!
+
+  """description"""
+  description: String!
+
+  """duration(mins)"""
+  duration: Int!
+
+  """Node ID"""
+  id: ID!
+
+  """maximumClassSize"""
+  maximumClassSize: Int!
+
+  """minimumClassSize"""
+  minimumClassSize: Int!
+
+  """name"""
+  name: String!
+
+  """price"""
+  price: Float!
+
+  """storeId"""
+  storeId: ID!
+
+  """timeSlots"""
+  timeSlots(filter: RegularClassTimeSlotsFilterInput, where: RegularClassTimeSlotsWhereInput!): [TimeSlot!]
+}
+
+input RegularClassesFilterInput {
+  availableDays: [Day!]
+}
+
+input RegularClassesWhereInput {
+  _id: String!
+  className: String
+  notUsedyet: String
+  storeId: String
+}
+
+input RegularClassTimeSlotsFilterInput {
+  status: TimeSlotStatus
+}
+
+input RegularClassTimeSlotsWhereInput {
+  """예약일"""
+  day: Date!
+
+  """클래스 ID"""
+  regularClass: String
+
+  """가맹점 ID"""
+  store: String
+}
+
+input RegularClassWhereInput {
+  _id: String
+  className: String
+  storeId: String
+}
+
+"""예약"""
+type Reservation implements Node {
+  """_id"""
+  _id: String!
+
+  """Node ID"""
+  id: ID!
+
+  """numberOfSeats"""
+  numberOfSeats: Int!
+
+  """regularClass"""
+  regularClass: RegularClass!
+
+  """reservationAt"""
+  reservationAt: DateTime!
+
+  """store"""
+  store: Store!
+
+  """totalPaymentPrice"""
+  totalPaymentPrice: Float!
+
+  """user"""
+  user: User!
+}
+
+type ReservationConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ReservationEdge!]!
+
+  """Flattened list of Reservation type"""
+  nodes: [Reservation!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
+type ReservationEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: Reservation!
+}
+
+type ResultAddTimeSlot {
+  isUpdated: Boolean!
+}
+
+"""상점"""
+type Store implements Node {
+  """_id"""
+  _id: String!
+
+  """address"""
+  address: String!
+
+  """availableDays"""
+  availableDays: [Day!]!
+
+  """breakTime"""
+  breakTimes: [Time!]
+
+  """closeTime"""
+  closeTime: Time!
+
+  """description"""
+  description: String
+
+  """holidays"""
+  holidays: [Date!]
+
+  """Node ID"""
+  id: ID!
+
+  """name"""
+  name: String!
+
+  """openTime"""
+  openTime: Time!
+
+  """regularClasses"""
+  regularClasses: [RegularClass!]!
+}
+
+type StoreConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [StoreEdge!]!
+
+  """Flattened list of Store type"""
+  nodes: [Store!]!
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
+type StoreEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: Store!
+}
+
+input StoresFilterInput {
+  availableDays: [Day!]
+}
+
+input StoresWhereInput {
+  notUsedyet: String
+}
+
+input StoreWhereInput {
+  _id: String!
+}
+
+"""
+A time string at UTC, such as 10:15:30Z, compliant with the `full-time` format
+outlined in section 5.6 of the RFC 3339profile of the ISO 8601 standard for
+representation of dates and times using the Gregorian calendar.
+"""
+scalar Time
+
+type TimeSlot implements Node {
+  """_id"""
+  _id: String!
+
+  """currentBookingCount"""
+  currentBookingCount: Int!
+
+  """duration(mins)"""
+  duration: Int!
+
+  """endDateTime"""
+  endDateTime: DateTime!
+
+  """Node ID"""
+  id: ID!
+
+  """isBusinessDay"""
+  isBusinessDay: Boolean!
+
+  """isHoliday"""
+  isHoliday: Boolean!
+
+  """isUnset"""
+  isUnset: Boolean
+
+  """maximumBookingCount"""
+  maximumBookingCount: Int!
+
+  """minimumBookingCount"""
+  minimumBookingCount: Int!
+
+  """name"""
+  name: String
+
+  """price"""
+  price: Float!
+
+  """regularClass"""
+  regularClass: RegularClass
+
+  """regularClassId"""
+  regularClassId: Int!
+
+  """skip"""
+  skip: Boolean
+
+  """startDateTime"""
+  startDateTime: DateTime!
+
+  """status"""
+  status: TimeSlotStatus!
+
+  """store"""
+  store: Store
+
+  """storeId"""
+  storeId: Int!
+}
+
+"""TimeSlotStatus"""
+enum TimeSlotStatus {
+  """예약 가능"""
+  ON_SALE
+
+  """임시 휴게"""
+  TEMPORARY_BREAK
+}
+
+input TimeSlotWhereInput {
+  _id: String!
+  skip: Boolean!
+}
+
+"""유저"""
+type User implements Node {
+  """_id"""
+  _id: String!
+
+  """address"""
+  address: String!
+
+  """Node ID"""
+  id: ID!
+
+  """myReservations"""
+  myReservations: ReservationConnection!
+
+  """name"""
+  name: String!
+}
+

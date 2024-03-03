@@ -82,7 +82,6 @@ export type PaymentRequestDTO = {
 
 export const STORE_NAME = {
   "1": "서초점",
-
 } as const;
 
 const storeList = Array.from(
@@ -626,47 +625,7 @@ export const BookingFormTest: React.FunctionComponent<
                           id={singleClass.id}
                           key={singleClass?.id}
                           //TODO: onClick shoud move to each time slot
-                          // onClick={() => {
-
-                          //   setFieldValue("classPrice", singleClass?.price);
-                          //   handleRegularClassClicked(singleClass?.id);
-                          // }}
                         >
-                          {/* <Card width="98%" shadow>
-                            <div
-                              style={{
-                                width: "100%",
-                              }}
-                            >
-                              <ImageComp
-                                src={`/static/${singleClass.name
-                                  .split(" ")
-                                  .join("")
-                                  .toLowerCase()
-                                  .trim()}.jpg`}
-                              />
-
-                              <Grid style={{ width: "80%" }}>
-                                {singleClass?.description &&
-                                  singleClass?.description
-                                    ?.split("\\n")
-                                    .map((v, i) => (
-                                      <Text
-                                        key={i.toString()}
-                                        font={0.8}
-                                        paddingLeft={0.4}
-                                        p
-                                        b
-                                        margin={0}
-                                        style={{ color: "GrayText" }}
-                                      >
-                                        {v}
-                                      </Text>
-                                    ))}
-                              </Grid>
-                            </div>
-                          </Card> */}
-
                           <div
                             className="regularClass-container"
                             style={{
