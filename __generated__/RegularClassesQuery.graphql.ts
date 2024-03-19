@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4e36b2778fcd6fc1e98913446fc26baf>>
+ * @generated SignedSource<<fdf48942408b53f9c994940ad2145aac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,17 +15,17 @@ export type AvailableTimeSlotsByDateInput = {
   regularClass?: string | null;
   store: string;
 };
-export type AvailableTimeSlotsQuery$variables = {
+export type RegularClassesQuery$variables = {
   where: AvailableTimeSlotsByDateInput;
 };
-export type AvailableTimeSlotsQuery$data = {
+export type RegularClassesQuery$data = {
   readonly availableTimeSlotsByDate: ReadonlyArray<{
     readonly " $fragmentSpreads": FragmentRefs<"TimeSlotFragment">;
   }> | null;
 };
-export type AvailableTimeSlotsQuery = {
-  response: AvailableTimeSlotsQuery$data;
-  variables: AvailableTimeSlotsQuery$variables;
+export type RegularClassesQuery = {
+  response: RegularClassesQuery$data;
+  variables: RegularClassesQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -76,7 +76,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AvailableTimeSlotsQuery",
+    "name": "RegularClassesQuery",
     "selections": [
       {
         "alias": null,
@@ -102,7 +102,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AvailableTimeSlotsQuery",
+    "name": "RegularClassesQuery",
     "selections": [
       {
         "alias": null,
@@ -186,16 +186,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "19f4cbbff5ddda2a2788407614f38b8d",
+    "cacheID": "5ff902b8e0de6f8144701ddea2f9d37c",
     "id": null,
     "metadata": {},
-    "name": "AvailableTimeSlotsQuery",
+    "name": "RegularClassesQuery",
     "operationKind": "query",
-    "text": "query AvailableTimeSlotsQuery(\n  $where: AvailableTimeSlotsByDateInput!\n) {\n  availableTimeSlotsByDate(where: $where) {\n    ...TimeSlotFragment\n    id\n  }\n}\n\nfragment TimeSlotFragment on TimeSlot {\n  _id\n  id\n  name\n  startDateTime\n  endDateTime\n  regularClassId\n  price\n  currentBookingCount\n  maximumBookingCount\n  regularClass {\n    _id\n    description\n    duration\n    name\n    price\n    id\n  }\n}\n"
+    "text": "query RegularClassesQuery(\n  $where: AvailableTimeSlotsByDateInput!\n) {\n  availableTimeSlotsByDate(where: $where) {\n    ...TimeSlotFragment\n    id\n  }\n}\n\nfragment TimeSlotFragment on TimeSlot {\n  _id\n  id\n  name\n  startDateTime\n  endDateTime\n  regularClassId\n  price\n  currentBookingCount\n  maximumBookingCount\n  regularClass {\n    _id\n    description\n    duration\n    name\n    price\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "97f718d770f67c9bdf22ea031e90525b";
+(node as any).hash = "ee92b95fac246e88a8fa4eb6b360c66e";
 
 export default node;

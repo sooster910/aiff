@@ -12,7 +12,7 @@ import { SelectDate } from "../SelectDate/index";
 import { SelectStore } from "../SelectStore";
 import { StoreDetailDrawer } from "../StoreDetailDrawer";
 import { useState } from "react";
-import { AvailableTimeSlots } from "../AvailableTimeSlots";
+import { RegularClasses } from "../RegularClasses";
 
 interface SuspenseBookingProps {}
 export type FormValues = {
@@ -104,7 +104,8 @@ const SuspenseBooking: React.FC<SuspenseBookingProps> = ({}) => {
           <Form style={{ width: "90%", margin: "0 auto" }}>
             <SelectDate />
             <SelectStore />
-            <AvailableTimeSlots />
+            <RegularClasses />
+       
           </Form>
         )}
       </Formik>
