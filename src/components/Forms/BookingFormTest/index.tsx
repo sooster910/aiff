@@ -553,7 +553,7 @@ export const BookingFormTest: React.FunctionComponent<
                     }}
                   >
                     {data?.stores
-                      ?.sort((a, b) => Number(a.id) - Number(b.id))
+                      ?.find((store) => Number(store.id) ===1)
                       .map((store) => {
                         return (
                           <Grid key={store?.id}>
