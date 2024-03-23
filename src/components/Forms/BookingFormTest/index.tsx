@@ -349,6 +349,9 @@ export const BookingFormTest: React.FunctionComponent<
       ?.find((r) => r.id === selectedRegularClass)
       ?.description?.split("\r\n")
       .map((v) => v.replace(/•/g, "").trim())
+
+    const SelectableStores = data?.stores.filter((store)=> store.id === 1)
+
     return (
       <>
         <Formik
@@ -552,26 +555,24 @@ export const BookingFormTest: React.FunctionComponent<
                       margin: "0 auto",
                     }}
                   >
-                    {data?.stores
-                      ?.find((store) => Number(store.id) ===1)
-                      .map((store) => {
-                        return (
-                          <Grid key={store?.id}>
-                            <Button
-                              id={store?.id}
-                              color="primary"
-                              style={{marginLeft: "2px"}}
-                              name={"store"}
-                              auto
-                              onClick={(e) =>
-                                handleLocationClicked(store?.id, setFieldValue)
-                              }
-                            >
-                              {store.name}
-                            </Button>
-                          </Grid>
+                    {SelectableStores.map((store) =>
+                         (
+                            <Grid key={store?.id}>
+                              <Button
+                                  id={store?.id}
+                                  color="primary"
+                                  style={{marginLeft: "2px"}}
+                                  name={"store"}
+                                  auto
+                                  onClick={(e) =>
+                                      handleLocationClicked(store?.id, setFieldValue)
+                                  }
+                              >
+                                {store.name}
+                              </Button>
+                            </Grid>
                         )
-                      })}
+                      )}
                   </div>
                 </Grid.Container>
 
