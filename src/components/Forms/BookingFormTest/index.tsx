@@ -192,14 +192,12 @@ export const BookingFormTest: React.FunctionComponent<
       const isOpen = data?.stores
         ?.find((v) => Number(v.id) === Number(selectedStore))
         ?.visible_months?.includes(DateTime.fromISO(selectedDate).month)
-      console.log("isOpen", isOpen)
       setVisibleSelectedMonth(isOpen)
     }
   }, [selectedStore, selectedDate])
 
   //선택한 스토어와 선택한 날짜가 visible month로 설정되어 있다면 isOpen
   const isOpen = () => {
-    console.log("isOpen function is called", data)
     const res = data?.stores
       ?.find((v) => Number(v.id) === Number(selectedStore))
       ?.visible_months?.includes(DateTime.fromISO(selectedDate).month)
@@ -343,7 +341,6 @@ export const BookingFormTest: React.FunctionComponent<
     rc = store?.regularClasses
       .filter((rc) => store.availableRegularClassIds?.includes(rc.id))
       .sort((a, b) => a.id - b.id)
-    console.log("Rc", rc)
 
     let regularClassDescriptions = rc
       ?.find((r) => r.id === selectedRegularClass)
@@ -380,8 +377,9 @@ export const BookingFormTest: React.FunctionComponent<
                   type: "error",
                 })
               }
+            
               const {totalAmount, customerFullName, store} = values
-              const storeName = data?.stores[Number(store) - 1]?.name
+              const storeName = STORE_NAME[store]
               const className = regularClassInfo?.name
               const orderId = `${
                 StorePrefix[storeName.replaceAll(" ", "")]
