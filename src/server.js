@@ -287,7 +287,7 @@ const main = async () => {
         console.log("test alimtalk err", err);
       }
     });
-
+    //=================valid api==============
     server.get("/api/order/approval", async (req, res) => {
       const { orderId, amount, phone, paymentKey, qty, customerName } =
         req.query;
@@ -349,7 +349,7 @@ const main = async () => {
       }
 
       const templateCodes = {
-        completeOrderForCust: "A00005", // updated 2024.01.01. 서초점만 사용
+        completeOrderForCust: "A00005", // updated 2024.04.03. A00005-> A00006 템플릿 신청함. 검수완료시 업데이트
         completeOrderForStore: "A00002",
       };
       const storePhoneMapper = {
@@ -362,6 +362,22 @@ const main = async () => {
       );
 
       const contents = {
+        nextforCust:`[예약 완료]
+        안녕하세요  ${customerName}님, 예약이 완료되었습니다!
+        
+        ■ 이름 : ${customerName}
+        ■ 지점명 : ${storeName}
+        ■ 클래스명 :${orderName?.split("-")[1]}
+        ■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
+        ■ 인원 : ${qty}
+        ■ 결제금액 : ${balanceAmount}
+        
+        주소: 서초동1645 삼성 라이온즈 레포츠센터1층
+
+주차: 두시간 무료-지하나 옥외에 주차 하시고 1층으로 오셔서 아티제 맞은편 입니다.
+수업시작 10분 후에는 입장 하실 수 없습니다.  😢 
+
+서초블루타이거: 025976845`,
         forCust: `[예약 완료]
         안녕하세요  ${customerName}님, 예약이 완료되었습니다!
         
@@ -370,7 +386,8 @@ const main = async () => {
         ■ 클래스명 :${orderName?.split("-")[1]}
         ■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
         ■ 인원 : ${qty}
-        ■ 결제금액 : ${balanceAmount}`,
+        ■ 결제금액 : ${balanceAmount}`
+        ,
 
         forStore: `[예약 완료]
 
