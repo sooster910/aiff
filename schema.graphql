@@ -219,7 +219,7 @@ type Query {
   storeById(id: ID): Store
 
   """stores"""
-  stores(after: String, filter: StoresFilterInput, first: Int!, where: StoresWhereInput!): [Store!]!
+  stores(after: String, filter: StoresFilterInput, first: Int, where: StoresWhereInput): [Store!]!
 
   """강제로 에러를 발생시킵니다"""
   throw: Boolean!
@@ -293,6 +293,7 @@ input RegularClassTimeSlotsWhereInput {
 input RegularClassWhereInput {
   _id: String
   className: String
+  regularClassId: Int
   storeId: String
 }
 
@@ -419,6 +420,7 @@ input StoresWhereInput {
 
 input StoreWhereInput {
   _id: String!
+  date: Date
 }
 
 """

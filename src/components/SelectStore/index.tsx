@@ -5,6 +5,8 @@ import { FormValues } from "../SuspenseBooking";
 import { ChevronRightCircle, Navigation } from "@geist-ui/icons";
 import { STORE_NAME } from "../Forms/BookingFormTest";
 import { CustomDrawer } from "@app/components/Drawer";
+import { graphql, useLazyLoadQuery } from "react-relay";
+import type { SelectStoreQuery as SelectStoreQueryType} from "../../../__generated__/SelectStoreQuery.graphql";
 
 interface SelectStoreProps {
   setFieldValue?: (
@@ -15,8 +17,24 @@ interface SelectStoreProps {
   data?: any;
 }
 
+const SelectStoreQuery = graphql`
+  query SelectStoreQuery($after: String, $filter: StoresFilterInput, $a: Int, $where: StoresWhereInput) {
+    stores(after: $after, filter: $filter, first:$a, where: $where) {
+      address
+      availableDays
+      name
+      description
+      id      
+        }
+}
+
+`;
 export const SelectStore: React.FC<SelectStoreProps> = (props) => {
   const { values, setFieldValue, errors } = useFormikContext<FormValues>();
+  const {stores}=useLazyLoadQuery<SelectStoreQueryType>(SelectStoreQuery, {});
+
+
+
   // TODO: 모든 stores가져오기 grapqhl통해서 stores에 접근하는 graphql query 작성
 
   const data = {
@@ -37,9 +55,12 @@ export const SelectStore: React.FC<SelectStoreProps> = (props) => {
   };
 
   const handleStoreClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setFieldValue("store", e.currentTarget.id);
+    console.log("clicked", e.currentTarget.id)
+    setFieldValue("store", e.currentTarget.id.split(".")[1]);
   };
   return (
+
+    <>
     <Grid.Container
       gap={1}
       justify="space-between"
@@ -49,8 +70,8 @@ export const SelectStore: React.FC<SelectStoreProps> = (props) => {
       <div style={{ display: "flex", alignItems: "center" }}>
         <Navigation size={22} />
         <Text style={{ fontWeight: "600" }} ml={1}>
-          {/*select store name */}
-          {STORE_NAME[values.store]}
+          {/*select store name 현재 서초점 밖에 없음  */}
+         {STORE_NAME[values.store]}
         </Text>
       </div>
       <div
@@ -74,36 +95,36 @@ export const SelectStore: React.FC<SelectStoreProps> = (props) => {
         </>
       )}
     </Grid.Container>
-    // <Grid.Container gap={2}>
-    //   <div
-    //     style={{
-    //       display: "flex",
-    //       borderRadius: "31px",
-    //       backgroundColor: "#ffffff",
-    //       flexWrap: "wrap",
-    //       width: "95%",
-    //       margin: "0 auto",
-    //     }}
-    //   >
-    //     {data?.stores
-    //       ?.sort((a, b) => Number(a.id) - Number(b.id))
-    //       .map((store) => {
-    //         return (
-    //           <Grid key={store?.id}>
-    //             <Button
-    //               id={store?.id}
-    //               color="primary"
-    //               style={{ marginLeft: "2px" }}
-    //               name={"store"}
-    //               auto
-    //               onClick={handleStoreClicked}
-    //             >
-    //               {store.name}
-    //             </Button>
-    //           </Grid>
-    //         );
-    //       })}
-    //   </div>
-    // </Grid.Container>
+    <Grid.Container>
+      <div
+        style={{
+          display: "flex",
+          borderRadius: "31px",
+          backgroundColor: "#ffffff",
+          flexWrap: "wrap",
+          width: "95%",
+          margin: "0 auto",
+        }}
+      >
+        {stores?.map((store,i) => {
+            return (
+              <Grid key={store?.id} padding={0.5}>
+                <Button
+                  id={store?.id}
+                  color="primary"
+                  style={{ marginLeft: "2px" }}
+                  name={"store"}
+                  auto
+                  onClick={handleStoreClicked}
+                >
+                  {store.name}
+                </Button>
+              </Grid>
+            );
+          })}
+      </div>
+    </Grid.Container>
+    </>
   );
+  
 };

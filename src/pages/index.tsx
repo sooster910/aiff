@@ -38,7 +38,7 @@ const Home: NextPage = () => {
               <Link href={`/booking`} style={{ font: "2rem" }}>
                 {"본점 시간표/예약"}
               </Link>
-            </Text>
+          </Text>
           </Card.Footer>
         </Card>
       </main>
