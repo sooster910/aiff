@@ -316,37 +316,7 @@ const main = async () => {
           );
         });
       const { orderName, requestedAt, balanceAmount, approvedAt } = resp?.body;
-      try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/payment`,
-          { qty: Number(qty), ...resp?.body }
-        );
-        const { updated } = response.data;
-        if (!updated) {
-          send({
-            orderId,
-            orderName: `${orderName} fail to update payment info`,
-            requestedAt,
-            phone,
-            paymentKey,
-            totalAmount: balanceAmount,
-            customerName,
-            qty,
-          });
-        }
-      } catch (error) {
-        send({
-          orderId,
-          orderName: `${orderName} unexpected Error`,
-          requestedAt,
-          phone,
-          paymentKey,
-          totalAmount: balanceAmount,
-          customerName,
-          qty,
-        });
-        console.log("request from toss order confirm error", error);
-      }
+      
 
       const templateCodes = {
         completeOrderForCust: "A00005", // updated 2024.04.03. A00005-> A00006 템플릿 신청함. 검수완료시 업데이트
@@ -354,6 +324,7 @@ const main = async () => {
       };
       const storePhoneMapper = {
         서초점: "01043941251",
+        용산점: "01043941251",
       };
       const storeName = orderName?.split("-")[0];
       console.log(
@@ -407,6 +378,34 @@ const main = async () => {
       };
 
       try {
+        //store name 이 없을때 에러 처리 
+        if( !storeName || !storePhoneMapper[storeName.replaceAll(" ", "")]){
+          throw new Error("No phone number found for store: ${storeName}")
+        }
+
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/payment`,
+            { qty: Number(qty), ...resp?.body }
+          );
+          const { updated } = response.data;
+
+          if (!updated) {
+            send({
+              orderId,
+              orderName: `${orderName} fail to update payment info`,
+              requestedAt,
+              phone,
+              paymentKey,
+              totalAmount: balanceAmount,
+              customerName,
+              qty,
+            });
+          }
+      
+        if(!(response.status>=200 && response.status<300)){
+          throw new Error("fail to update payment info to server")
+        }
+
         const [
           completeSlackNotification,
           completeReservationNotification,
@@ -445,7 +444,11 @@ const main = async () => {
           `/success?orderId=${orderId}&orderName=${orderName}&requestedAt=${requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${balanceAmount}&customerName=${customerName}&qty=${qty}`
         );
       } catch (error) {
-        console.log("/api/order/approval error", error);
+        // console.log("/api/order/approval error", error);
+
+        res.redirect(
+          `/fail?orderName=${orderName}&requestedAt=${requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${balanceAmount}&customerName=${customerName}&qty=${qty}`
+        );
         send({
           orderId,
           orderName: `${orderName} send notification error ${error?.message}`,

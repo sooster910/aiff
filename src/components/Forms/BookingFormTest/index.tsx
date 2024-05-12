@@ -85,7 +85,7 @@ export type PaymentRequestDTO = {
 }
 
 export const STORE_NAME = {
-  "1": "서초점",
+  "1": "용산점",
   "2": "대치점1",
   "3": "대치점2",
   "4": "도곡점",
@@ -983,7 +983,7 @@ export const BookingFormTest: React.FunctionComponent<
                     />
                   </LocationDetailLayout>
                 
-                    <Grid.Container
+                    {/* <Grid.Container
                       gap={1}
                       justify="flex-start"
                       alignItems="center"
@@ -995,8 +995,8 @@ export const BookingFormTest: React.FunctionComponent<
                       <Grid>
                         <Text>{"회원가 적용 선택"}</Text>
                       </Grid>
-                    </Grid.Container>
-
+                    </Grid.Container> */}
+{/* 
                   <Field
                     style={{
                       width: "40px",
@@ -1020,7 +1020,7 @@ export const BookingFormTest: React.FunctionComponent<
                       )
                     }
                   }
-                  />
+                  /> */}
 
                   <Grid.Container
                     gap={1}
