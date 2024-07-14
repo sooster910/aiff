@@ -325,10 +325,12 @@ const main = async () => {
       const storePhoneMapper = {
         서초점: "01043941251",
         용산점: "01043941251",
+        강남점: "01043941251", 
       };
       const storeName = orderName?.split("-")[0];
       console.log(
-        "dateee",
+        
+        "storeName , dateee",storeName, 
         DateTime.fromJSDate(new Date(orderName?.split("-")[3]))
       );
 
@@ -444,7 +446,7 @@ const main = async () => {
           `/success?orderId=${orderId}&orderName=${orderName}&requestedAt=${requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${balanceAmount}&customerName=${customerName}&qty=${qty}`
         );
       } catch (error) {
-        // console.log("/api/order/approval error", error);
+        console.log("/api/order/approval error", error);
 
         res.redirect(
           `/fail?orderName=${orderName}&requestedAt=${requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${balanceAmount}&customerName=${customerName}&qty=${qty}`

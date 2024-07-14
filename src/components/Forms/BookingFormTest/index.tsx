@@ -85,7 +85,7 @@ export type PaymentRequestDTO = {
 }
 
 export const STORE_NAME = {
-  "1": "용산점",
+  "1": "강남점",
   "2": "대치점1",
   "3": "대치점2",
   "4": "도곡점",
@@ -384,7 +384,8 @@ export const BookingFormTest: React.FunctionComponent<
               const orderId = `${
                 StorePrefix[storeName.replaceAll(" ", "")]
               }${new Date().getTime().toString()}`
-
+              console.log("orderId==========>", store)
+              console.log("storeName===========>", storeName)
               setModalEvent({
                 orderId,
                 store: storeName,
