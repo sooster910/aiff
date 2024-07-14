@@ -52,6 +52,7 @@ import { AvailableRegularClassIds } from "../../../hooks/useFetchTimeSlots";
 import { CustomDrawer } from "@app/components/Drawer";
 import { DrawerPlacement } from "@geist-ui/core/esm/drawer/helper";
 import { Spinner } from "@geist-ui/core";
+import CustomSpacer from "@app/components/\bCustomSpacer";
 
 interface BookingFormProps {}
 type StoreData = {
@@ -789,7 +790,7 @@ export const BookingFormTest: React.FunctionComponent<
                       ))}
                       {errors?.timeSlot && (
                         <>
-                          <Spacer />
+                          <Spacer y={3}/>
                           <Note label="" type="error">
                             {errors.timeSlot}
                           </Note>
@@ -953,7 +954,7 @@ export const BookingFormTest: React.FunctionComponent<
                   </Grid.Container>
                   {Object.keys(errors).length !== 0 && (
                     <>
-                      <Spacer />
+                      <CustomSpacer y={3} />
                       <Note label="" type="error">
                         {` 예약하기를 진행할 수 없어요. 위의 폼을 다시 확인 해주세요. `}
                       </Note>

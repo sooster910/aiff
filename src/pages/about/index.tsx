@@ -13,6 +13,7 @@ import {
   useAnimation,
   useInView,
 } from "framer-motion";
+import CustomSpacer from "@app/components/\bCustomSpacer";
 
 interface AboutProps {}
 
@@ -22,9 +23,12 @@ const AboutPage: NextPage = (props) => {
       <section style={{ backgroundColor: "#FFE7DF", padding: "7rem 2rem" }}>
         <ScrollHeightTransition>
           <PageLayout>
+            <div><p>hi</p></div>
+            <CustomSpacer y={8}/>
             <Text h2 style={{ marginBottom: "2rem" }}>
               1.
             </Text>
+            <CustomSpacer y={8}/>
             <Text
               color="#666"
               style={{

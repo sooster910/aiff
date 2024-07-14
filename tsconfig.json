@@ -19,8 +19,9 @@
       "@app/*": ["./*"],
       "@shared": ["./shared"],
       "@generated/*": ["./__generated__/*"],
+      "@geist-ui/core/dist/spacer": ["./node_modules/@geist-ui/core/dist/spacer"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/setupProxy.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/setupProxy.js", "types.d.ts"],
   "exclude": ["node_modules"]
 }
