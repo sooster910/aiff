@@ -42,7 +42,7 @@ type ReservationDTO = {
 };
 
 const SuspenseBookingQuery = graphql`
-  query SuspenseBookingQuery($where: AvailableTimeSlotsByDateInput!) {
+  query SuspenseBookingQuery($where: AvailableTAvailableTimeSlotsByDateInputimeSlotsByDateInput!) {
     availableTimeSlotsByDate(where: $where) {
       ...RegularClassesFragment
     }
