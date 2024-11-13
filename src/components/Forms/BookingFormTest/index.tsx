@@ -55,6 +55,7 @@ import {CustomDrawer} from "@app/components/Drawer"
 import {DrawerPlacement} from "@geist-ui/core/esm/drawer/helper"
 import {Spinner} from "@geist-ui/core"
 import {AIFFCheckboxField} from "@app/components/AIFFCheckboxField"
+import {sanitizeSpecialChars} from "@app/utils";
 
 interface BookingFormProps {}
 type StoreData = {
@@ -378,14 +379,13 @@ export const BookingFormTest: React.FunctionComponent<
                 })
               }
             
-              const {totalAmount, customerFullName, store} = values
+              const {totalAmount, customerFullName, store,timeSlot,phone,startDateTime } = values
               const storeName = STORE_NAME[store]
               const className = regularClassInfo?.name
               const orderId = `${
                 StorePrefix[storeName.replaceAll(" ", "")]
               }${new Date().getTime().toString()}`
-              console.log("orderId==========>", store)
-              console.log("storeName===========>", storeName)
+
               setModalEvent({
                 orderId,
                 store: storeName,
@@ -397,7 +397,7 @@ export const BookingFormTest: React.FunctionComponent<
               await setRequestPaymentobj({
                 amount: totalAmount,
                 orderId,
-                orderName: `${storeName}-${className}-${
+                orderName: `${storeName}-${sanitizeSpecialChars(className)}-${
                   values?.timeSlot
                 }-${DateTime.fromISO(values?.startDateTime).toLocaleString(
                   DateTime.DATETIME_SHORT
