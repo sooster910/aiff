@@ -14,7 +14,7 @@ const { REF_KEY } = require("relay-runtime");
 const { default: axios } = require("axios");
 const env = process.env.NODE_ENV;
 const dev = env !== "production";
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4200;
 const server = express();
 console.log("isDev?", dev);
 const slack = new WebClient(process.env.SLACK_API_TOKEN);
@@ -42,12 +42,7 @@ const main = async () => {
       "NEXT_PUBLIC_BACKEND_BASE_URL",
       process.env.NEXT_PUBLIC_BACKEND_BASE_URL
     );
-    // const injectAuthHeader = (proxyReq, req, res) => {
-    //   const token = req.cookies?.[COOKIES.ACCESS_TOKEN]
-    //   if (token) {
-    //     proxyReq.setHeader('Authorization', `Bearer ${token}`)
-    //   }
-    // }
+
     // proxy to backend
     const serverProxy = createProxyMiddleware("/proxy/api/**", {
       target: process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
@@ -56,17 +51,14 @@ const main = async () => {
         "^/proxy/api": "", // remove base path
       },
       secure: !dev,
-      // onProxyReq: injectAuthHeader,
+      onProxyReq:(proxyReq, req, res, options)=>{
+        //기존 5000 포트로 위장 : 백엔드에서 허용하는 포트
+        proxyReq.setHeader("host", `localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
+        proxyReq.setHeader("origin",`http://localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
+
+      }
     });
-    // NOTE: legacy code should be removed
-    // const frontProxy = createProxyMiddleware("/front/api", {
-    //   target: process.env.NEXT_PUBLIC_FRONTEND_API_URL,
-    //   changeOrigin: true,
-    //   pathRewrite: {
-    //     "^/front/api": "", // remove base path
-    //   },
-    //   secure: !dev,
-    // });
+
 
     // const serverProxy = createProxyMiddleware('/proxy/adminApi', {
     //   target: process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
