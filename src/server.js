@@ -317,7 +317,7 @@ const main = async () => {
       const storePhoneMapper = {
         서초점: "01043941251",
         용산점: "01043941251",
-        강남점: "01043941251", 
+        강남점: "01071751053",
       };
       const storeName = orderName?.split("-")[0];
       console.log(
