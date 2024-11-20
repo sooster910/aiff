@@ -45,3 +45,5 @@ db.json
 !.elasticbeanstalk/*.global.yml
 
 .idea
+.yarn/install-state.gz
+ .DS_Store

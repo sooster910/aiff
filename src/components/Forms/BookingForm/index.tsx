@@ -1,12 +1,12 @@
-import CustomInput from '@app/components/CustomInput'
-import { LocationDetailLayout } from '@app/layouts/LocationDetailLayout'
-import { Nullable, RegularClassDTO, StorePrefix } from '@app/types'
-import { StoreDTO } from '@app/types/store'
+import CustomInput from "@app/components/CustomInput"
+import {LocationDetailLayout} from "@app/layouts/LocationDetailLayout"
+import {Nullable, RegularClassDTO, StorePrefix} from "@app/types"
+import {StoreDTO} from "@app/types/store"
 import {
   NEXT_PUBLIC_PAYMENT_SUCCESS_URL,
   NEXT_PUBLIC_PAYMENT_FAIL_URL,
   NEXT_PUBLIC_TOSS_CLIENT_KEY,
-} from '@app/utils/constants'
+} from "@app/utils/constants"
 import {
   Button,
   Card,
@@ -21,20 +21,20 @@ import {
   useModal,
   useToasts,
   Image,
-} from '@geist-ui/core'
-import { Calendar, Navigation, Clock, Users, InfoFill } from '@geist-ui/icons'
-import { loadTossPayments } from '@tosspayments/payment-sdk'
-import { Formik, Form, Field } from 'formik'
-import { DateTime } from 'luxon'
-import * as React from 'react'
-import { useState, useMemo, useCallback, useEffect } from 'react'
-import * as Yup from 'yup'
-import { TimeSlotForm } from '../TimeSlotForm'
-import { ControlFlow } from './ControlFlow'
-import { TimeSlotDTO } from '@app/types/timeslot'
-import ImageComp from '../../ImageComp'
-import { config } from '../../../config'
-import { XCircle } from '@geist-ui/icons'
+} from "@geist-ui/core"
+import {Calendar, Navigation, Clock, Users, InfoFill} from "@geist-ui/icons"
+import {loadTossPayments} from "@tosspayments/payment-sdk"
+import {Formik, Form, Field} from "formik"
+import {DateTime} from "luxon"
+import * as React from "react"
+import {useState, useMemo, useCallback, useEffect} from "react"
+import * as Yup from "yup"
+import {TimeSlotForm} from "../TimeSlotForm"
+import {ControlFlow} from "./ControlFlow"
+import {TimeSlotDTO} from "@app/types/timeslot"
+import ImageComp from "../../ImageComp"
+import {config} from "../../../config"
+import {XCircle} from "@geist-ui/icons"
 
 interface BookingFormProps {
   data?: {
@@ -63,17 +63,17 @@ type PaymentRequestDTO = {
   successUrl: string
   failUrl: string
 }
-function compare(obj, date) {
-  const qsYear = DateTime.fromSQL(date as string).get('year')
-  const qsMonth = DateTime.fromSQL(date as string).get('month')
-  const qsDay = DateTime.fromSQL(date as string).get('day')
+function compare(obj: TimeSlotDTO[], date: string) {
+  const qsYear = DateTime.fromSQL(date as string).get("year")
+  const qsMonth = DateTime.fromSQL(date as string).get("month")
+  const qsDay = DateTime.fromSQL(date as string).get("day")
 
   // console.log('year',year)
 
   return obj?.filter((timeslot: TimeSlotDTO) => {
-    const year = DateTime.fromSQL(timeslot?.startDate).get('year')
-    const month = DateTime.fromSQL(timeslot?.startDate).get('month')
-    const day = DateTime.fromSQL(timeslot?.startDate).get('day')
+    const year = DateTime.fromSQL(timeslot?.startDate).get("year")
+    const month = DateTime.fromSQL(timeslot?.startDate).get("month")
+    const day = DateTime.fromSQL(timeslot?.startDate).get("day")
 
     if (qsYear === year && qsMonth === month && qsDay === day) {
       return true
@@ -81,18 +81,18 @@ function compare(obj, date) {
     return false
   })
 }
-const BookingForm: React.FunctionComponent<BookingFormProps> = ({ data }) => {
+const BookingForm: React.FunctionComponent<BookingFormProps> = ({data}) => {
   // const theme = useTheme()
-  const { setToast } = useToasts()
+  const {setToast} = useToasts()
   const confirmBooking = useModal()
   const [modalEvent, setModalEvent] = useState<Nullable<ReservationDTO>>(null)
-  const [selectedStore, setSelectedStore] = useState<string>('')
-  const [selectedRegularClass, setSelectedRegularClass] = useState<string>('')
+  const [selectedStore, setSelectedStore] = useState<string>("")
+  const [selectedRegularClass, setSelectedRegularClass] = useState<string>("")
   const [paymentModal, setPaymentModal] = useState<boolean>(false)
   const [requestPaymentObj, setRequestPaymentobj] =
-    useState<PaymentRequestDTO>(null)
+    useState<PaymentRequestDTO | null>(null)
   const [selectedDate, setSelectedDate] = useState<string>(
-    DateTime.fromJSDate(new Date()).toFormat('yyyy-MM-dd')
+    DateTime.fromJSDate(new Date()).toFormat("yyyy-MM-dd")
   )
   const [visibleBaneer, setVisibleBanner] = useState<boolean>(false)
   useEffect(() => {}, [visibleBaneer])
@@ -102,10 +102,10 @@ const BookingForm: React.FunctionComponent<BookingFormProps> = ({ data }) => {
       if (tossPayments && requestPaymentObj) {
         tossPayments
           .requestPayment(config.PaymentMethod, requestPaymentObj)
-          .catch(error => {
-            if (error.code === 'USER_CANCEL') {
+          .catch((error) => {
+            if (error.code === "USER_CANCEL") {
               // 취소 이벤트 처리
-              console.log('error', error)
+              console.log("error", error)
               setPaymentModal(false)
             }
           })
@@ -119,9 +119,12 @@ const BookingForm: React.FunctionComponent<BookingFormProps> = ({ data }) => {
   const filterTimeSlots = () => {
     const classes = data?.stores?.[Number(selectedStore) - 1]?.regularClasses
     const regularClass = classes?.filter(
-      v => v?.id === selectedRegularClass
+      (v) => v?.id === selectedRegularClass
     )?.[0]
-    const timeSlotsList = compare(regularClass?.timeSlots, selectedDate)
+    const timeSlotsList = compare(
+      (regularClass as RegularClassDTO).timeSlots,
+      selectedDate
+    )
     return timeSlotsList
   }
   const filteredTimeslots = useMemo(
@@ -145,49 +148,55 @@ const BookingForm: React.FunctionComponent<BookingFormProps> = ({ data }) => {
   ) => {
     // TODO : request get timeslot query with date
     setSelectedStore(id)
-    setFieldValue('store', id)
+    setFieldValue("store", id)
   }
 
   const handleRegularClassClickedilte = useCallback(
-    classId => {
+    (classId) => {
       setSelectedRegularClass(classId)
     },
     [selectedRegularClass]
   )
 
   const filteredLocation = useMemo(
-    () => data?.stores?.find(store => store?._id === selectedStore),
+    () => data?.stores?.find((store) => store?._id === selectedStore),
     [selectedStore]
   )
-  console.log('filteredLocation')
+  console.log("filteredLocation")
   const isSelectedStore = !!selectedStore
 
   const initialValues = {
     date: new Date(),
     store: selectedStore,
-    timeSlot: '',
+    timeSlot: "",
     qty: 0,
-    customerFullName: '',
-    phone: '',
+    customerFullName: "",
+    phone: "",
     // classPrice:
     //   filteredLocation?.regularClasses[Number(selectedRegularClass) - 1] ?? 0,
     totalAmount: 0,
   }
   const validationSchema = Yup.object().shape({
-    date: Yup.date().required('날짜를 선택해 주세요.'),
-    store: Yup.string().required('지점을 다시 선택해 주세요.'),
-    timeSlot: Yup.string().required('시간을 다시 선택해 주세요.'),
+    date: Yup.date().required("날짜를 선택해 주세요."),
+    store: Yup.string().required("지점을 다시 선택해 주세요."),
+    timeSlot: Yup.string().required("시간을 다시 선택해 주세요."),
     qty: Yup.number()
-      .min(1, '인원 수는 최소 1명 이상 이어야 해요.')
-      .required('인원 수를 선택해 주세요.'),
-    customerFullName: Yup.string().required('예약자 이름을 적어주세요.'),
-    phone: Yup.string().required('예약자 핸드폰 번호를 적어주세요.'),
+      .min(1, "인원 수는 최소 1명 이상 이어야 해요.")
+      .required("인원 수를 선택해 주세요."),
+    customerFullName: Yup.string().required("예약자 이름을 적어주세요."),
+    phone: Yup.string().required("예약자 핸드폰 번호를 적어주세요."),
   })
   return (
     <>
-      <Text h3 b style={{ textAlign: 'center', marginTop: '3rem' }}>
-        {' '}
-        클래스 예약 😀{' '}
+      <Text
+        h3
+        b
+        style={{
+          textAlign: "center",
+          marginTop: "3rem",
+        }}
+      >
+        클래스 예약 😀{" "}
       </Text>
 
       {/* <Formik
@@ -641,11 +650,15 @@ const BookingForm: React.FunctionComponent<BookingFormProps> = ({ data }) => {
 
           <Text>
             예약 날짜:
-            {DateTime.fromJSDate(modalEvent?.date).toFormat('yyyy-MM-dd')}{' '}
+            {modalEvent?.date
+              ? DateTime.fromJSDate(modalEvent?.date).toFormat("yyyy-MM-dd")
+              : "날짜정보없음"}
           </Text>
           <Text>
             예약 시간:
-            {DateTime.fromISO(modalEvent?.time).toFormat('HH:mm')}
+            {modalEvent?.time
+              ? DateTime.fromISO(modalEvent?.time).toFormat("HH:mm")
+              : "예약 시간 정보없음"}
           </Text>
           <Text>수업 가격: {modalEvent?.classPrice as number} </Text>
           <Text> 인 원 : {modalEvent?.qty} </Text>
@@ -678,27 +691,27 @@ const BookingForm: React.FunctionComponent<BookingFormProps> = ({ data }) => {
       <Drawer
         visible={!!visibleBaneer}
         onClose={() => setVisibleBanner(false)}
-        placement={'bottom'}
+        placement={"bottom"}
         disableBackdropClick={true}
-        style={{ width: '500px', margin: '0 auto' }}
+        style={{width: "500px", margin: "0 auto"}}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{display: "flex", justifyContent: "space-between"}}>
           <div></div>
           <XCircle
             size={36}
-            style={{ marginLeft: 'auto' }}
+            style={{marginLeft: "auto"}}
             onClick={() => setVisibleBanner(false)}
           />
         </div>
         <Drawer.Title> 예약 전 읽어주세요! </Drawer.Title>
 
         <Drawer.Content>
-          <div style={{ margin: '0 auto', textAlign: 'center' }}>
-            {' '}
+          <div style={{margin: "0 auto", textAlign: "center"}}>
+            {" "}
             <Image
-              height={'100%'}
-              src={'banner.svg'}
-              style={{ objectFit: 'contain' }}
+              height={"100%"}
+              src={"banner.svg"}
+              style={{objectFit: "contain"}}
             />
           </div>
         </Drawer.Content>

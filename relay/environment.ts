@@ -9,7 +9,7 @@ let relayEnvironment: Environment;
 const fetchRelay: FetchFunction = async (params, variables) => {
 
   console.log(`fetch query ${params.name} with ${JSON.stringify(variables)}`);
-  return fetchGraphQL(params.text, variables);
+  return fetchGraphQL(params?.text as string, variables);
 };
 
 const createEnvironment = () => {

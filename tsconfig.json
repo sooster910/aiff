@@ -20,6 +20,8 @@
       "@shared": ["./shared"],
       "@generated/*": ["./__generated__/*"],
       "@geist-ui/core/dist/spacer": ["./node_modules/@geist-ui/core/dist/spacer"]
+      "@shared": ["./shard"],
+      "@server/*": ["./server/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/setupProxy.js", "types.d.ts"],

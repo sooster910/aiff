@@ -14,7 +14,7 @@ const { REF_KEY } = require("relay-runtime");
 const { default: axios } = require("axios");
 const env = process.env.NODE_ENV;
 const dev = env !== "production";
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4200;
 const server = express();
 console.log("isDev?", dev);
 const slack = new WebClient(process.env.SLACK_API_TOKEN);
@@ -42,12 +42,7 @@ const main = async () => {
       "NEXT_PUBLIC_BACKEND_BASE_URL",
       process.env.NEXT_PUBLIC_BACKEND_BASE_URL
     );
-    // const injectAuthHeader = (proxyReq, req, res) => {
-    //   const token = req.cookies?.[COOKIES.ACCESS_TOKEN]
-    //   if (token) {
-    //     proxyReq.setHeader('Authorization', `Bearer ${token}`)
-    //   }
-    // }
+
     // proxy to backend
     const serverProxy = createProxyMiddleware("/proxy/api/**", {
       target: process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
@@ -56,17 +51,14 @@ const main = async () => {
         "^/proxy/api": "", // remove base path
       },
       secure: !dev,
-      // onProxyReq: injectAuthHeader,
+      onProxyReq:(proxyReq, req, res, options)=>{
+        //기존 5000 포트로 위장 : 백엔드에서 허용하는 포트
+        proxyReq.setHeader("host", `localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
+        proxyReq.setHeader("origin",`http://localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
+
+      }
     });
-    // NOTE: legacy code should be removed
-    // const frontProxy = createProxyMiddleware("/front/api", {
-    //   target: process.env.NEXT_PUBLIC_FRONTEND_API_URL,
-    //   changeOrigin: true,
-    //   pathRewrite: {
-    //     "^/front/api": "", // remove base path
-    //   },
-    //   secure: !dev,
-    // });
+
 
     // const serverProxy = createProxyMiddleware('/proxy/adminApi', {
     //   target: process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
@@ -145,6 +137,26 @@ const main = async () => {
         return res.send("no");
       }
     });
+
+    //TEST API for slack
+    server.get("/api/test/slack", async (req, res) => {
+      console.log("test slack");
+      try {
+        const result = send({
+          orderId: "test",
+          orderName: "test",
+          paymentKey: "test",
+          approvedAt: "test",
+          totalAmount: "test",
+          qty: "test",
+          customerName: "test",
+          phone: "test",
+        });
+        return res.send({ data: "done" });
+      } catch (error) {
+        console.log("error", error);
+      }
+    });
     // TEST API for kakao
     server.get("/api/test/order/approval", async (req, res) => {
       const templateCodes = {
@@ -192,11 +204,6 @@ const main = async () => {
       // const customerName = "이설아";
       // const qty = 1;
       // const balanceAmount = 60000;
-
-      console.log(
-        "dateee",
-        DateTime.fromJSDate(new Date(orderName?.split("-")[3]))
-      );
 
       const contents = {
         forCust: `
@@ -272,11 +279,11 @@ const main = async () => {
         console.log("test alimtalk err", err);
       }
     });
-
+    //=================valid api==============
     server.get("/api/order/approval", async (req, res) => {
       const { orderId, amount, phone, paymentKey, qty, customerName } =
         req.query;
-
+      console.log("orderId", orderId);
       const secretKey = process.env.NEXT_PUBLIC_TOSS_SECRET_KEY;
 
       const resp = await got
@@ -301,70 +308,51 @@ const main = async () => {
           );
         });
       const { orderName, requestedAt, balanceAmount, approvedAt } = resp?.body;
-      try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/payment`,
-          { qty: Number(qty), ...resp?.body }
-        );
-        const { updated } = response.data;
-        if (!updated) {
-          send({
-            orderId,
-            orderName: `${orderName} fail to update payment info`,
-            requestedAt,
-            phone,
-            paymentKey,
-            totalAmount: balanceAmount,
-            customerName,
-            qty,
-          });
-        }
-      } catch (error) {
-        send({
-          orderId,
-          orderName: `${orderName} unexpected Error`,
-          requestedAt,
-          phone,
-          paymentKey,
-          totalAmount: balanceAmount,
-          customerName,
-          qty,
-        });
-        console.log("request from toss order confirm error", error);
-      }
+      
 
       const templateCodes = {
-        completeOrderForCust: "A0004",
+        completeOrderForCust: "A00005", // updated 2024.04.03. A00005-> A00006 템플릿 신청함. 검수완료시 업데이트
         completeOrderForStore: "A00002",
       };
       const storePhoneMapper = {
-        용산본점: "01043941251",
-        대구점: "01057812869",
-        파주점: "01027529880",
-        판교점: "01031730082",
+        서초점: "01043941251",
+        용산점: "01043941251",
+        강남점: "01071751053",
       };
       const storeName = orderName?.split("-")[0];
       console.log(
-        "dateee",
+        
+        "storeName , dateee",storeName, 
         DateTime.fromJSDate(new Date(orderName?.split("-")[3]))
       );
+
       const contents = {
-        forCust: `
-      [예약 완료]
-안녕하세요 ${customerName}님, 예약이 완료되었습니다!
+        nextforCust:`[예약 완료]
+        안녕하세요  ${customerName}님, 예약이 완료되었습니다!
+        
+        ■ 이름 : ${customerName}
+        ■ 지점명 : ${storeName}
+        ■ 클래스명 :${orderName?.split("-")[1]}
+        ■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
+        ■ 인원 : ${qty}
+        ■ 결제금액 : ${balanceAmount}
+        
+        주소: 서초동1645 삼성 라이온즈 레포츠센터1층
 
-■ 이름 : ${customerName}
-■ 지점명 : ${storeName}
-■ 클래스명 :${orderName?.split("-")[1]}
-■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
-■ 인원 : ${qty}
-■ 결제금액 : ${balanceAmount}
+주차: 두시간 무료-지하나 옥외에 주차 하시고 1층으로 오셔서 아티제 맞은편 입니다.
+수업시작 10분 후에는 입장 하실 수 없습니다.  😢 
 
-클래스 전날 예약하신 지점에서 찾아오는 길과 주차정보를 안내해 드리겠습니다.
-
-용산점 : 070-8887-1053
-판교점 : 031-697-8707
-대구점 : 0507-1348-2869 `,
+서초블루타이거: 025976845`,
+        forCust: `[예약 완료]
+        안녕하세요  ${customerName}님, 예약이 완료되었습니다!
+        
+        ■ 이름 : ${customerName}
+        ■ 지점명 : ${storeName}
+        ■ 클래스명 :${orderName?.split("-")[1]}
+        ■ 클래스 시작 날짜 : ${orderName?.split("-")[3]}
+        ■ 인원 : ${qty}
+        ■ 결제금액 : ${balanceAmount}`
+        ,
 
         forStore: `[예약 완료]
 
@@ -384,6 +372,34 @@ const main = async () => {
       };
 
       try {
+        //store name 이 없을때 에러 처리 
+        if( !storeName || !storePhoneMapper[storeName.replaceAll(" ", "")]){
+          throw new Error("No phone number found for store: ${storeName}")
+        }
+
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/payment`,
+            { qty: Number(qty), ...resp?.body }
+          );
+          const { updated } = response.data;
+
+          if (!updated) {
+            send({
+              orderId,
+              orderName: `${orderName} fail to update payment info`,
+              requestedAt,
+              phone,
+              paymentKey,
+              totalAmount: balanceAmount,
+              customerName,
+              qty,
+            });
+          }
+      
+        if(!(response.status>=200 && response.status<300)){
+          throw new Error("fail to update payment info to server")
+        }
+
         const [
           completeSlackNotification,
           completeReservationNotification,
@@ -399,23 +415,23 @@ const main = async () => {
             customerName,
             qty,
           }),
-          //! NOTE: KAKAO MESSAGE IS BLOCKED FOR TEMPORARY
-          // sendKakaoMessage(
-          //   {
-          //     content: contents.forCust,
-          //     templateCode: templateCodes.completeOrderForCust,
-          //   },
-          //   flatPhoneNumber(phone).slice(1)
-          // ),
-          // sendKakaoMessage(
-          //   {
-          //     content: contents.forStore,
-          //     templateCode: templateCodes.completeOrderForStore,
-          //   },
-          //   `${flatPhoneNumber(
-          //     storePhoneMapper[storeName.replaceAll(" ", "")]
-          //   )}`.slice(1)
-          // ),
+
+          sendKakaoMessage(
+            {
+              content: contents.forCust,
+              templateCode: templateCodes.completeOrderForCust,
+            },
+            flatPhoneNumber(phone).slice(1)
+          ),
+          sendKakaoMessage(
+            {
+              content: contents.forStore,
+              templateCode: templateCodes.completeOrderForStore,
+            },
+            `${flatPhoneNumber(
+              storePhoneMapper[storeName.replaceAll(" ", "")]
+            )}`.slice(1)
+          ),
         ]);
 
         return res.redirect(
@@ -423,6 +439,10 @@ const main = async () => {
         );
       } catch (error) {
         console.log("/api/order/approval error", error);
+
+        res.redirect(
+          `/fail?orderName=${orderName}&requestedAt=${requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${balanceAmount}&customerName=${customerName}&qty=${qty}`
+        );
         send({
           orderId,
           orderName: `${orderName} send notification error ${error?.message}`,
@@ -475,7 +495,7 @@ const main = async () => {
           icon_emoji: "slack",
         });
         return res;
-      } catch (err) {
+      } catch (error) {
         console.log("fail to send message", error.response.data);
         slack.chat.postMessage({
           text: `error sending kakao messageID: ${error?.response?.data?.messageId}, TO:${error?.response?.data?.to} status:${error?.response?.data?.status}, text:${error?.response?.data?.text}`,
@@ -484,7 +504,7 @@ const main = async () => {
         });
         send({
           orderId,
-          orderName: `${orderName} :${err?.message} send notification error`,
+          orderName: `${orderName} :${error?.message} send notification error`,
           requestedAt,
           phone,
           paymentKey,

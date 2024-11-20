@@ -1,4 +1,6 @@
 {
   "editor.acceptSuggestionOnEnter": "on",
-  "terminal.integrated.fontFamily": "MesloLGS NF "
+  "prettier.bracketSpacing": false,
+  "javascript.format.semicolons": "ignore",
+  "prettier.semi": false
 }
