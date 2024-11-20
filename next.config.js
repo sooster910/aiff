@@ -1,21 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  // reactStrictMode: true,
-  // concurrentFeatures: true,
-  // serverComponents: true,
-  reactMode: "concurrent",
 
+const { withSentryConfig } = require("@sentry/nextjs");
+const nextConfig = {
+  reactMode: "concurrent",
   images: {
     domains: ["aiff.co.kr", "aiff-image-upload.s3.us-east-1.amazonaws.com"],
   },
 }
 
-module.exports = nextConfig;
 
 // Injected content via Sentry wizard below
-
-const { withSentryConfig } = require("@sentry/nextjs");
-
 module.exports = withSentryConfig(
   module.exports,
   {
