@@ -6,6 +6,8 @@ const nextConfig = {
   },
   experimental: {
     concurrentFeatures: true,
+    newNextLinkBehavior: true
+
   },
 };
 
