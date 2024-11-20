@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Image } from "@geist-ui/core";
-
+import Image from 'next/image'
 import { useAuth } from "@app/hooks/useAuth";
 interface INavbarProps {}
 const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
@@ -12,8 +11,8 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
           <Image
             src="/aiffschool_logo.svg"
             alt="AIFF Logo"
-            width={4}
-            // height={1}
+            width={70}
+            height={70}
           />
         </div>
       </a>
