@@ -14,6 +14,7 @@ import { StoreDetailDrawer } from "../StoreDetailDrawer";
 import { useState } from "react";
 import { RegularClasses } from "../RegularClasses";
 import type { RegularClassesQuery as RegularClassesQueryType} from "../../../__generated__/RegularClassesQuery.graphql";
+import SuspenseWrapper from "@app/components/SuspenseWrapper";
 
 interface SuspenseBookingProps {}
 export type FormValues = {
@@ -41,13 +42,16 @@ type ReservationDTO = {
   time?: string;
 };
 
-const SuspenseBookingQuery = graphql`
-  query SuspenseBookingQuery($where: AvailableTAvailableTimeSlotsByDateInputimeSlotsByDateInput!) {
-    availableTimeSlotsByDate(where: $where) {
-      ...RegularClassesFragment
-    }
-  }
-`;
+
+// const SuspenseBookingQuery = graphql`
+//   query SuspenseBookingQuery($where: AvailableTAvailableTimeSlotsByDateInputimeSlotsByDateInput!) {
+//     availableTimeSlotsByDate(where: $where) {
+//       ...RegularClassesFragment
+//     }
+//   }
+// `;
+
+
 
 const SuspenseBooking: React.FC<SuspenseBookingProps> = ({}) => {
   const [storeDrawerOpen, setStoreDrawerOpen] = useState<boolean>(false);
@@ -68,15 +72,15 @@ const SuspenseBooking: React.FC<SuspenseBookingProps> = ({}) => {
   //   );
   // };
 
-  const { values, setFieldValue } = useFormikContext<FormValues>();
+  // const { values, setFieldValue } = useFormikContext<FormValues>();
   const variables = {
     where: { date: "2024-01-01", store: "1" }, // 예시 변수
   };
 
-  const data = useLazyLoadQuery<RegularClassesQueryType>(
-    RegularClassesQuery,
-  variables
-);
+//   const data = useLazyLoadQuery<RegularClassesQueryType>(
+//     RegularClassesQuery,
+//   variables
+// );
 
   const defaultStore = "1";
   const handleOnSubmit = (values) => {
@@ -124,8 +128,10 @@ const SuspenseBooking: React.FC<SuspenseBookingProps> = ({}) => {
           <Form style={{ width: "90%", margin: "0 auto" }}>
             <SelectDate />
             <SelectStore />
-            <RegularClasses />
-       
+
+
+            {/*<RegularClasses />*/}
+
           </Form>
         )}
       </Formik>
