@@ -17,21 +17,9 @@ interface SelectStoreProps {
   data?: any;
 }
 
-const SelectStoreQuery = graphql`
-  query SelectStoreQuery($after: String, $filter: StoresFilterInput, $a: Int, $where: StoresWhereInput) {
-    stores(after: $after, filter: $filter, first:$a, where: $where) {
-      address
-      availableDays
-      name
-      description
-      id      
-        }
-}
 
-`;
 export const SelectStore: React.FC<SelectStoreProps> = (props) => {
   const { values, setFieldValue, errors } = useFormikContext<FormValues>();
-  const {stores}=useLazyLoadQuery<SelectStoreQueryType>(SelectStoreQuery, {});
 
 
 
