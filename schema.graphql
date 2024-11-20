@@ -4,6 +4,11 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
 """TimeSlot form Input"""
 input AddTimeSlotInput {
   """duration(mins)"""
@@ -144,6 +149,11 @@ input GenerateMonthlyTimeslotsInput {
   storeId: Int!
 }
 
+type Image {
+  altText: String
+  url: String!
+}
+
 """뮤테이션 (정보를 가공할 때 사용합니다)"""
 type Mutation {
   """어드민 전용 Mutation"""
@@ -245,6 +255,9 @@ type RegularClass implements Node {
   """Node ID"""
   id: ID!
 
+  """imageURL"""
+  imageURL: Image
+
   """maximumClassSize"""
   maximumClassSize: Int!
 
@@ -261,17 +274,17 @@ type RegularClass implements Node {
   storeId: ID!
 
   """timeSlots"""
-  timeSlots(filter: RegularClassTimeSlotsFilterInput, where: RegularClassTimeSlotsWhereInput): [TimeSlot!]
+  timeSlots(filter: RegularClassTimeSlotsFilterInput, where: RegularClassTimeSlotsWhereInput!): [TimeSlot!]
 }
 
 type RegularClassConnection {
-  edges: [RegularClassEdge]
-  pageInfo: PageInfo
+  edges: [RegularClassEdge!]!
+  pageInfo: PageInfo!
 }
 
 type RegularClassEdge {
   cursor: String!
-  node: RegularClass
+  node: RegularClass!
 }
 
 input RegularClassesFilterInput {
@@ -394,30 +407,7 @@ type Store implements Node {
   openTime: Time!
 
   """regularClasses"""
-  regularClasses(after: String, first: Int): RegularClassConnection!
-}
-
-type StoreConnection {
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
-  """
-  edges: [StoreEdge!]!
-
-  """Flattened list of Store type"""
-  nodes: [Store!]!
-
-  """
-  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
-  """
-  pageInfo: PageInfo!
-}
-
-type StoreEdge {
-  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
-  cursor: String!
-
-  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
-  node: Store!
+  regularClasses(after: String, date: Date, first: Int): RegularClassConnection!
 }
 
 input StoresFilterInput {
@@ -425,12 +415,11 @@ input StoresFilterInput {
 }
 
 input StoresWhereInput {
-  notUsedyet: String
+  _id: String!
 }
 
 input StoreWhereInput {
   _id: String!
-  date: Date
 }
 
 """
