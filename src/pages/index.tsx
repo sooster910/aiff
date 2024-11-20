@@ -4,11 +4,13 @@ import Head from "next/head";
 import { Card, Text, Image } from "@geist-ui/core";
 import PageLayout from "@app/layouts/PageLayout";
 import Link from "next/link";
+import {useQueryLoader} from "react-relay";
+import {BookingQuery} from "@app/pages/booking";
+import {useEffect} from "react";
 // import { NEXT_PUBLIC_FRONTEND_BASE_URL } from '../utils/constants'
 
 const Home: NextPage = () => {
-  console.log("version 2");
-  // const RedirectLink = () => <Link href="/booking">클래스 예약 하러 가기</Link>
+  const [queryRef, loadQuery] = useQueryLoader(BookingQuery);
   return (
     <PageLayout>
       <Head>
@@ -35,7 +37,9 @@ const Home: NextPage = () => {
           </Text>
           <Card.Footer>
             <Text h3>
-              <Link href={`/booking`} style={{ font: "2rem" }}>
+              <Link  onMouseEnter={()=>{
+                loadQuery({});
+              }} href= {"/booking"} style={{ font: "2rem" }} >
                 {"본점 시간표/예약"}
               </Link>
           </Text>
