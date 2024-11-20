@@ -19,8 +19,7 @@
       "@app/*": ["./*"],
       "@shared": ["./shared"],
       "@generated/*": ["./__generated__/*"],
-      "@geist-ui/core/dist/spacer": ["./node_modules/@geist-ui/core/dist/spacer"]
-      "@shared": ["./shard"],
+      "@geist-ui/core/dist/spacer": ["./node_modules/@geist-ui/core/dist/spacer"],
       "@server/*": ["./server/*"]
     }
   },
