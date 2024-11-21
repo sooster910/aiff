@@ -1,19 +1,22 @@
 import React, { Suspense } from 'react'
+import dynamic from "next/dynamic";
+
 interface SuspenseWrapperProps {
 	fallback: JSX.Element
 	children: React.ReactNode
 }
-const isBrowser = typeof window !== 'undefined'
-const SuspenseWrapper: React.FunctionComponent<SuspenseWrapperProps> = ({
-	fallback,
-	children,
-	...restProps
-}) => {
-	if (isBrowser) {
-		console.log('isBrowser', isBrowser)
-		return <Suspense fallback={fallback}>{children}</Suspense>
-	}
-	console.log("not browser")
-	return <>{fallback}</>
+
+interface SuspenseWrapperProps {
+	fallback: JSX.Element
+	children: React.ReactNode
 }
+const SuspenseWrapper = dynamic(
+	() =>Promise.resolve(({ children, fallback }: SuspenseWrapperProps) => (
+		<Suspense fallback={fallback}>{children}</Suspense>
+	)),
+	{
+		ssr: false,
+	}
+)
 export default SuspenseWrapper
+
