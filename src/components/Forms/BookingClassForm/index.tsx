@@ -1,14 +1,15 @@
-import React, {Suspense} from 'react';
-import {graphql, usePreloadedQuery} from "react-relay";
+import React from 'react';
+import { PreloadedQuery, usePreloadedQuery} from "react-relay";
 import StoreList from "@app/components/StoreList";
 import {BookingQuery} from "@app/pages/booking";
+import {bookingQuery as BookingQueryType} from "../../../../__generated__/bookingQuery.graphql";
 
+type BookingClassFormProps = {
+    queryRef: PreloadedQuery<BookingQueryType>
+}
 
-
-
-function BookingClassForm({queryRef}) {
+function BookingClassForm({queryRef}:BookingClassFormProps) {
     const data = usePreloadedQuery(BookingQuery, queryRef);
-    console.log("BookingClassForm", data)
 
     return (
         <>

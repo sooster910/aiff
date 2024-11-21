@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<915181b4914b0340bf22da92830c1cc1>>
+ * @generated SignedSource<<48c233dad94768d7a9df30d4eb427e62>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingQuery$variables = {};
 export type bookingQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"StoreListFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"StoreList_query">;
 };
 export type bookingQuery = {
   response: bookingQuery$data;
@@ -29,7 +29,7 @@ const node: ConcreteRequest = {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "StoreListFragment"
+        "name": "StoreList_query"
       }
     ],
     "type": "Query",
@@ -69,15 +69,15 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "cacheID": "8057724fa9b3bbee43b96dbfe419e5a6",
+    "cacheID": "6006bfb9dbe7acfe1b9686e1543aa45d",
     "id": null,
     "metadata": {},
     "name": "bookingQuery",
     "operationKind": "query",
-    "text": "query bookingQuery {\n  ...StoreListFragment\n}\n\nfragment StoreListFragment on Query {\n  stores {\n    id\n    name\n  }\n}\n"
+    "text": "query bookingQuery {\n  ...StoreList_query\n}\n\nfragment StoreList_query on Query {\n  stores {\n    id\n    name\n  }\n}\n"
   }
 };
 
-(node as any).hash = "881b545f9a191241369bac6ec29dd7b0";
+(node as any).hash = "a3ff7e1876d9f28751d87ea4d4f8c911";
 
 export default node;
