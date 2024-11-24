@@ -99,3 +99,33 @@ export const SLACK_API_TOKEN = process.env.SLACK_API_TOKEN as string;
  */
 
 export const SENTRY_DSN = process.env.SENTRY_DSN as string;
+
+/**
+ * Biz plus clientId
+ */
+
+export const BIZ_PLUS_CLIENT_ID = process.env.BIZ_PLUSH_CLIENT_ID as string;
+
+/**
+ * BIZ_PLUSH_CLIENT_PW
+ */
+export const BIZ_PLUSH_CLIENT_PW = process.env.BIZ_PLUSH_CLIENT_PW as string;
+
+/**
+ * BIZ_PLUS_SENDER_ID
+ */
+
+export const BIZ_PLUS_SENDER_ID = process.env.BIZ_PLUS_SENDER_ID as string;
+
+/**
+ * BIZ_SENDER_KEY
+ */
+
+export const BIZ_SENDER_KEY = process.env.BIZ_SENDER_KEY as string;
+
+/**
+ * bzPlusURL
+ */
+
+export const bzPlusURL = process.env.bzPlusURL as string;
+
