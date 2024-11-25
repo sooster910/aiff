@@ -2,7 +2,6 @@ import {WebClient} from "@slack/web-api";
 import {
     SlackNotificationSender
 } from "@server/gateways/SlackNotificationSender";
-import {slackNotificationService} from "@server/service/slackNotificationService";
 
 jest.mock("@slack/web-api");
 
@@ -10,11 +9,13 @@ describe("SlackNotificationSender gateway 테스트 ", ()=>{
     let slackNotificationSender: SlackNotificationSender;
     let mockSlackClient: WebClient;
     let spyNotifyAdmin: jest.SpyInstance;  // spy 추가
-    let service:slackNotificationService;
+    let mockPostMessage: jest.Mock;
+
     beforeEach(() => {
+        mockPostMessage = jest.fn().mockResolvedValue({ok:true})
         mockSlackClient = {
             chat:{
-                postMessage:jest.fn().mockResolvedValue({ok:true})
+                postMessage:mockPostMessage
             }
         } as unknown as WebClient
 
