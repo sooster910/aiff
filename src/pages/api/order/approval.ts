@@ -16,9 +16,6 @@ import {KakaoNotificationSender} from "@server/gateways/KakaoNotificationSender"
 import {TossPaymentError} from "@server/errors/TossPaymentError";
 
 export default async function handler(req:NextApiRequest, res:NextApiResponse) {
-    console.log("Req", req)
-    console.log("res",res)
-
     if(!isValidOrderDTO(req.query)){
         throw new Error(`OrderDTO 유효성 검증 실패`)
     }
@@ -41,8 +38,21 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
 
     try{
         //토스결제가 완료되면 무조건 리다이렉트를 하고 나머지 sms, slack 전송에서 에러 난 경우는 slack으로 에러를 보내져야 한다.
-        const approveResult = await orderService.processOrderApproval(order);
-        res.redirect(`/success?orderId=${orderId}&orderName=${approveResult?.orderName}&requestedAt=${approveResult?.requestedAt}&phone=${phone}&paymentKey=${paymentKey}&totalAmount=${approveResult?.balanceAmount}&customerName=${customerName}&qty=${qty}`)
+        const approvedResult = await orderService.processOrderApproval(order);
+        const redirectParams = {
+            orderId: String(approvedResult?.orderId||""),
+            orderName:encodeURIComponent(approvedResult?.orderName?.split("-")?.[1]||""),
+            requestedAt:encodeURIComponent(approvedResult?.requestedAt ||""),
+            phone:String(phone),
+            paymentKey: String(paymentKey),
+            totalAmount: String(approvedResult?.totalAmount),
+            customerNameL:String(customerName),
+            qty:String(qty)
+
+        }
+
+        const redirectURL  = `/success?${new URLSearchParams(redirectParams).toString()}`
+        res.redirect(redirectURL)
 
     }catch(error){
         if(error instanceof TossPaymentError){
@@ -50,8 +60,13 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
                 `/fail?code=${error?.code}&message=${error.message}`
             );
         }
+        if(error instanceof Error){
+            return res.status(500).json({
+                error: 'Internal Server Error',
+                message: error.message
+            });
+        }
     }
-    res.status(200).json({ created:true });
 }
 
 
