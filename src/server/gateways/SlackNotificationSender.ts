@@ -1,10 +1,10 @@
 import {ChatPostMessageArguments, WebClient} from "@slack/web-api";
-import {NotificationSender} from "@server/service/NotificationService";
+import {SlackNotification} from "@server/service/NotificationService";
 import {WithRequired} from "@app/types";
 
 export type MessagePayloadWithTextRequired=  WithRequired<ChatPostMessageArguments,"text" >
 
-export class SlackNotificationSender implements NotificationSender{
+export class SlackNotificationSender implements SlackNotification{
     private readonly defaultOptions = {
         channel: "#order",
         icon_emoji: "slack"
@@ -15,7 +15,6 @@ export class SlackNotificationSender implements NotificationSender{
     async sendSlackMessage(messagePayload: MessagePayloadWithTextRequired) {
         try {
             const response = await this.slack.chat.postMessage({...this.defaultOptions, ...messagePayload})
-            console.log("response",response)
             if(!response.ok)
                 throw new Error(`slack 메시지 전송 실패 :Slack API error : ${response.error || '알 수 없는 에러'}`)
 
