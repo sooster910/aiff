@@ -53,7 +53,7 @@ const PaymentGateway = {
   ): Promise<TossPaymentsSuccessResponse>  {
     try {
     const {orderId, amount, paymentKey} = order
-      const resp = got.post<TossPaymentsSuccessResponse| TossPaymentsErrorResponse>("https://api.tosspayments.com/v1/payments/confirm" + paymentKey, {
+      const resp = got.post<TossPaymentsSuccessResponse| TossPaymentsErrorResponse>("https://api.tosspayments.com/v1/payments/" + paymentKey, {
         headers: {
           Authorization:
             "Basic " +
@@ -67,22 +67,22 @@ const PaymentGateway = {
         responseType: "json",
       })
       const paymentApprovalResult = (await resp).body
-
       if(isSuccessResponse(paymentApprovalResult)){
         return paymentApprovalResult
       }
 
-      const { code, message} = paymentApprovalResult
-        throw new TossPaymentError(code, message, orderId)
+          const { code, message} = paymentApprovalResult
+            throw new TossPaymentError(code, message, orderId)
 
     } catch (error) {
       if( error instanceof TossPaymentError){
         throw error
       }
-
-      throw new Error(`/PaymentGateway/processpayment 에러 : ${error}` )
+      if(error instanceof Error){
+        throw new Error(`/PaymentGateway/processpayment 토스 페이먼츠 연결 중 에러 : ${error.message}` )
+      }
+      throw error
     }
-
   },
 }
 
