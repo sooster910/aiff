@@ -33,7 +33,8 @@ type BodyContent= {phone:string, content:string, templateCode:string}
 
 export class KakaoNotificationSender implements KakaoNotification {
     
-    constructor( private readonly bzPlusURL: string, 
+    constructor(
+        private readonly bzPlusURL: string,
         private readonly bzPlusClientID:string,
         private readonly bzPlusClientPW :string,
         private readonly bzPlusSenderID: string,
