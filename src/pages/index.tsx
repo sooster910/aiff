@@ -4,11 +4,15 @@ import Head from "next/head"
 import {Card, Text, Image} from "@geist-ui/core"
 import PageLayout from "@app/layouts/PageLayout"
 import Link from "next/link"
-// import { NEXT_PUBLIC_FRONTEND_BASE_URL } from '../utils/constants'
-
+import mixpanel from "mixpanel-browser";
 const Home: NextPage = () => {
+
+  const handleClickLink = ()=>{
+    mixpanel.track("goToReservation",{
+      "position":"bottom"
+    })
+  }
   console.log("version 2")
-  // const RedirectLink = () => <Link href="/booking">클래스 예약 하러 가기</Link>
   return (
     <PageLayout>
       <Head>
@@ -40,7 +44,7 @@ const Home: NextPage = () => {
             클래스 예약
           </Text>
           <Card.Footer>
-            <Link href={`/booking`}>
+            <Link href={`/booking`} onClick={handleClickLink}>
               <Text style={{fontSize: "1.4rem", fontFamily: "inherit"}}>
                 {"지점 시간표 / 예약"}
               </Text>

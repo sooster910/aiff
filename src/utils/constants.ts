@@ -129,3 +129,7 @@ export const BIZ_SENDER_KEY = process.env.BIZ_SENDER_KEY as string;
 
 export const bzPlusURL = process.env.bzPlusURL as string;
 
+/**
+ * NEXT_PUBLIC_MIXPANEL_TOKEN
+ */
+export const NEXT_PUBLIC_MIXPANEL_TOKEN =process.env.NEXT_PUBLIC_MIXPANEL_TOKEN as string;
