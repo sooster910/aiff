@@ -12,7 +12,7 @@
     "dev-json": "yarn run next dev",
     "lint": "next lint",
     "clean": "rm -rf .next",
-    "start": "node ./src/server.js start -p 8081",
+    "start": "next start",
     "build": "yarn run clean && next build",
     "deploy-dev": "yarn install && yarn run build && eb deploy production-aiff-front",
     "test": "jest"
