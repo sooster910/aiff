@@ -11,7 +11,7 @@
     "dev-json": "yarn run next dev",
     "lint": "next lint",
     "clean": "rm -rf .next",
-    "start": "next start",
+    "start": "next start -p 8080",
     "build": "next build",
     "deploy-dev": "yarn install && yarn run build && eb deploy production-aiff-front",
     "test": "jest"
