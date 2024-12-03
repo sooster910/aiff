@@ -26,7 +26,7 @@ import {
 import {loadTossPayments} from "@tosspayments/payment-sdk"
 import {DateTime} from "luxon"
 import {config} from "../../../config"
-import {useState, useEffect, useMemo, useCallback} from "react"
+import React, {useState, useEffect, useMemo, useCallback} from "react"
 import * as Yup from "yup"
 import CustomInput from "@app/components/CustomInput"
 import ImageComp from "@app/components/ImageComp"

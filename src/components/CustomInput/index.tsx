@@ -32,7 +32,6 @@ const CustomInput: React.FunctionComponent<Props> = ({
 }) => {
   const isError = errors?.[name] && touched?.[name]
   return (
-    <>
       <Grid>
         <Input
           id={name}
@@ -55,7 +54,6 @@ const CustomInput: React.FunctionComponent<Props> = ({
           </Note>
         )}
       </Grid>
-    </>
   )
 }
 
