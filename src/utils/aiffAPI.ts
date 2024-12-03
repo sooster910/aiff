@@ -52,7 +52,7 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
 const TossSecretToBase64 =  Buffer.from(`${NEXT_PUBLIC_TOSS_SECRET_KEY}:`).toString('base64')
 
 export const aiffBackendAPI = axios.create({
-  baseURL:`${NEXT_PUBLIC_BACKEND_BASE_URL}`,
+  baseURL: NEXT_PUBLIC_BACKEND_BASE_URL,
   headers: { 'Content-Type': 'application/json',
     'Authorization': `Basic ${TossSecretToBase64}`,
     withCredentials: true,
@@ -76,6 +76,12 @@ export const aiffAPISSR = () => axios.create({
        },
   })
 
+
+aiffBackendAPI.interceptors.request.use(request=>{
+  console.log("RequestURL", request.baseURL + request.url)
+  return request;
+})
+  
 aiffAPI.interceptors.request.use(onRequest, onRequestError)
 aiffAPI.interceptors.response.use(onResponse, onResponseError)
 
