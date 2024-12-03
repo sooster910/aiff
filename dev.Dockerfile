@@ -16,4 +16,4 @@ EXPOSE 3000
 ENV NODE_ENV=development
 
 # 개발 서버 실행
-CMD ["yarn", "develop"]
+CMD ["yarn", "dev"]
