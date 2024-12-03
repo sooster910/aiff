@@ -1,0 +1,21 @@
+branch-defaults:
+  develop:
+    environment: production-aiff-front
+  implement-github-action:
+    environment: development-aiff-front
+environment-defaults:
+  production-aiff-front:
+    branch: null
+    repository: null
+global:
+  application_name: aiff-front
+  default_ec2_keyname: null
+  default_platform: Node.js 16 running on 64bit Amazon Linux 2
+  default_region: ap-northeast-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: git
+  workspace_type: Application
