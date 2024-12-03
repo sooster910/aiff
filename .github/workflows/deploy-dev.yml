@@ -16,10 +16,15 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: yarn install
+        run: |
+          yarn install --frozen-lockfile
+          ls -la node_modules/.bin/next  # next 바이너리 존재 확인
+          ls -la node_modules/next      # next 모듈 존재 확인
       #build
       - name: Build
-        run: yarn build
+        run: |
+          yarn build
+          ls -la .next                 # 빌드 결과물 확인
       # check aws credential
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -31,6 +36,7 @@ jobs:
       - name: Generate deployment package
         run: |
           zip -r deploy.zip . -x "*.git*"
+          unzip -l deploy.zip | grep next  # zip 파일 내용 확인
       # deploy
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
