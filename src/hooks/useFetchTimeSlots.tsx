@@ -22,6 +22,7 @@ export const useFetchTimeSlots = (date: string, storeId: string) => {
     {
       fetcher: async (key) => {
         const res = await aiffBackendAPI.get(key);
+        console.log(" aiffBackendAPI.defaults.baseURL", aiffBackendAPI.defaults.baseURL)
         return { stores: res.data };
       },
     }
