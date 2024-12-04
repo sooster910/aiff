@@ -78,6 +78,8 @@ export const aiffAPISSR = () => axios.create({
 
 
 aiffBackendAPI.interceptors.request.use(request=>{
+  console.log("NEXT_PUBLIC_BACKEND_BASE_URL",NEXT_PUBLIC_BACKEND_BASE_URL)
+  console.log("process.env.NEXT_PUBLIC_BACKEND_BASE_URL", process.env.NEXT_PUBLIC_BACKEND_BASE_URL)
   console.log("RequestURL", request.baseURL + request.url)
   return request;
 })
