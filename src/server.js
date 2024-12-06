@@ -53,8 +53,11 @@ const main = async () => {
       secure: !dev,
       onProxyReq:(proxyReq, req, res, options)=>{
         //기존 5000 포트로 위장 : 백엔드에서 허용하는 포트
-        proxyReq.setHeader("host", `localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
-        proxyReq.setHeader("origin",`http://localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
+        if(dev){
+          proxyReq.setHeader("host", `localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
+          proxyReq.setHeader("origin",`http://localhost:${process.env.CORS_ALLOWED_ORIGIN_PORT}`)
+        }
+        
 
       }
     });

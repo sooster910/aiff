@@ -6,7 +6,7 @@ const nextConfig = {
   reactMode: "concurrent",
 
   images: {
-    domains: ["aiff.co.kr", "aiff-image-upload.s3.us-east-1.amazonaws.com"],
+    domains: ["aiff.co.kr", "aiff-image-upload.s3.us-east-1.amazonaws.com","aiff-image-upload.s3.ap-northeast-2.amazonaws.com"],
   },
 }
 
