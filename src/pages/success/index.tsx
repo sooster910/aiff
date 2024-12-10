@@ -26,11 +26,10 @@ const SuccessPage: React.FunctionComponent<SuccessPageProps> = (props) => {
       setSuccessPayment({ ...router.query });
     }
   }, [router.query]);
-  const approvedDateFormat = DateTime.fromISO(successPayment?.requestedAt)
+  const approvedDateFormat = DateTime.fromISO(successPayment?.requestedAt||"")
     .setZone()
     .setLocale("ko")
     .toLocaleString(DateTime.DATETIME_MED);
-  console.log("approvedFormat", approvedDateFormat);
 
   return (
     <>

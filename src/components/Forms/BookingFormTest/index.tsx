@@ -93,11 +93,6 @@ export const STORE_NAME = {
   "5": "압구정점",
 } as const
 
-const storeList = Array.from(
-  {length: 5},
-  (v, i) => STORE_NAME[(i + 1).toString()]
-)
-
 function compare(obj, date) {
   const qsYear = DateTime.fromSQL(date as string).get("year")
   const qsMonth = DateTime.fromSQL(date as string).get("month")

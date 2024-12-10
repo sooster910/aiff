@@ -1,6 +1,5 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { RelayEnvironmentProvider } from "react-relay/hooks";
 import { GeistProvider, CssBaseline } from "@geist-ui/core";
 import { SWRConfig } from "swr";
 import { aiffAPI } from "@app/utils/aiffAPI";
@@ -11,8 +10,9 @@ import { useEnvironment } from "@app/../relay/environment";
 import Footer from "@app/components/Footer";
 import Script from "next/script";
 import mixpanel from "mixpanel-browser";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { NEXT_PUBLIC_MIXPANEL_TOKEN } from "@app/utils/constants";
+import RelayProvider from "@app/pages/RelayProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const environment = useEnvironment(pageProps);
@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                   gtag('config', 'G-X4P14LC53Q');`,
         }}
       />
-      <RelayEnvironmentProvider environment={environment}>
+      <RelayProvider environment={environment} >
         <GeistProvider>
           <CssBaseline>
             <SWRConfig
@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             </SWRConfig>
           </CssBaseline>
         </GeistProvider>
-      </RelayEnvironmentProvider>
+      </RelayProvider>
     </>
   );
 }
