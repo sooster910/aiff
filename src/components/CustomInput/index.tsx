@@ -1,6 +1,7 @@
 import {Grid, Input, Note, Spacer} from "@geist-ui/core"
 import {FormikErrors, FormikTouched} from "formik"
 import * as React from "react"
+import mixpanel from "mixpanel-browser";
 
 type Props = {
   label: string
@@ -30,9 +31,7 @@ const CustomInput: React.FunctionComponent<Props> = ({
   ...rest
 }) => {
   const isError = errors?.[name] && touched?.[name]
-  console.log("isError", isError)
   return (
-    <>
       <Grid>
         <Input
           id={name}
@@ -41,6 +40,9 @@ const CustomInput: React.FunctionComponent<Props> = ({
           min={min}
           max={max}
           scale={4 / 3}
+          onClick={()=>{
+              mixpanel.track(`focus_${name}`)
+          }}
           {...rest}
         >
           {label}
@@ -52,7 +54,6 @@ const CustomInput: React.FunctionComponent<Props> = ({
           </Note>
         )}
       </Grid>
-    </>
   )
 }
 

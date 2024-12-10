@@ -11,7 +11,7 @@ const SuspenseBooking = dynamic(
 )
 
 const Test: React.FunctionComponent<ITestProps> = props => {
-  return (
+  return(
     <>
       {/* A component that uses Suspense-based */}
       <SuspenseBooking />

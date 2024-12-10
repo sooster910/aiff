@@ -1,4 +1,4 @@
-import { aiffAPI } from "@app/utils/aiffAPI";
+import {aiffAPI, aiffBackendAPI} from "@app/utils/aiffAPI";
 import { DateTime } from "luxon";
 import useSWR from "swr";
 import { number } from "yup";
@@ -9,7 +9,7 @@ export const multiFetcher = async (...urls) => {
   console.log("urls", urls);
   return Promise.all(
     urls.map((url) => {
-      return aiffAPI.get(url);
+      return aiffBackendAPI.get(url);
     })
   );
 };
@@ -21,7 +21,8 @@ export const useFetchTimeSlots = (date: string, storeId: string) => {
     }`,
     {
       fetcher: async (key) => {
-        const res = await aiffAPI.get(key);
+        const res = await aiffBackendAPI.get(key);
+        console.log(" aiffBackendAPI.defaults.baseURL", aiffBackendAPI.defaults.baseURL)
         return { stores: res.data };
       },
     }

@@ -10,3 +10,9 @@ export const createSanitizer:CreateSanitizer = (pattern)=>(input)=>{
 }
 
 export const sanitizeSpecialChars = createSanitizer(/[^a-zA-Z가-힣0-9]/g)
+
+
+
+export const flatPhoneNumber = (phoneNumber:string) => {
+    return phoneNumber.toString().trim().replace(/\D/g,"");
+};
