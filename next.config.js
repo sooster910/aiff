@@ -1,14 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // reactStrictMode: true,
-  // concurrentFeatures: true,
-  // serverComponents: true,
-  // reactMode: "concurrent",
-
   images: {
     domains: ["aiff.co.kr", "aiff-image-upload.s3.us-east-1.amazonaws.com","aiff-image-upload.s3.ap-northeast-2.amazonaws.com"],
   },
-}
+  env: {
+    NEXT_PUBLIC_BACKEND_BASE_URL:process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
+    NEXT_PUBLIC_FRONTEND_BASE_URL:process.env.NEXT_PUBLIC_FRONTEND_BASE_URL,
+    NEXT_PUBLIC_MIXPANEL_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
+    NEXT_PUBLIC_PAYMENT_FAIL_URL:process.env.NEXT_PUBLIC_PAYMENT_FAIL_URL,
+    NEXT_PUBLIC_PAYMENT_SUCCESS_URL:process.env.NEXT_PUBLIC_PAYMENT_SUCCESS_URL,
+    NEXT_PUBLIC_TOSS_SECRET_KEY:process.env.NEXT_PUBLIC_TOSS_SECRET_KEY,
+    NEXT_PUBLIC_TOSS_CLIENT_KEY:process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY,
+  },
+  }
 
 module.exports = nextConfig
 
