@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+console.log("🔍 BUILD ENV VARIABLES", process.env.NEXT_PUBLIC_BACKEND_BASE_URL);
+
 const nextConfig = {
   images: {
     domains: ["aiff.co.kr", "aiff-image-upload.s3.us-east-1.amazonaws.com","aiff-image-upload.s3.ap-northeast-2.amazonaws.com"],
