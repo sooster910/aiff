@@ -22,11 +22,18 @@ jobs:
           yarn install --frozen-lockfile
           ls -la node_modules/.bin/next  # next 바이너리 존재 확인
           ls -la node_modules/next      # next 모듈 존재 확인
+      # env 파일 가져온 후 git secret으로
+      - name: Export ENV Variables from .env.production
+        run: |
+          export $(grep -v '^#' .env.production | xargs)
+          grep -v '^#' .env.production >> $GITHUB_ENV
+
       #build
       - name: Build
         run: |
           yarn build
           ls -la .next                 # 빌드 결과물 확인
+
       # check aws credential
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
