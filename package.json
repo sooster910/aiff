@@ -13,6 +13,8 @@
     "clean": "rm -rf .next",
     "start": "next start -p 8080",
     "build": "next build",
+    "docker:build": "docker build --build-arg NODE_ENV=production -t my-app:latest .",
+    "docker:run": "docker run -p 3000:3000 production-aiff-front-docker:latest",
     "deploy-dev": "yarn install && yarn run build && eb deploy production-aiff-front",
     "test": "jest"
   },
