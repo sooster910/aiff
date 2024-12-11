@@ -3,6 +3,8 @@ branch-defaults:
     environment: production-aiff-front
   implement-github-action:
     environment: development-aiff-front
+  main:
+    environment: production-aiff-front
 environment-defaults:
   production-aiff-front:
     branch: null
