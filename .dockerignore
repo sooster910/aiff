@@ -10,11 +10,11 @@ out
 
 # 환경 설정 파일
 .env
-.env.local
+.env.development
 .env.development
 .env.test
 .env.production
-.env*.local
+.env.development
 
 # 버전 관리
 .git
