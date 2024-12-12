@@ -26,7 +26,7 @@ import {
 import {loadTossPayments} from "@tosspayments/payment-sdk"
 import {DateTime} from "luxon"
 import {config} from "../../../config"
-import {useState, useEffect, useMemo, useCallback} from "react"
+import React, {useState, useEffect, useMemo, useCallback} from "react"
 import * as Yup from "yup"
 import CustomInput from "@app/components/CustomInput"
 import ImageComp from "@app/components/ImageComp"
@@ -56,7 +56,7 @@ import {DrawerPlacement} from "@geist-ui/core/esm/drawer/helper"
 import {Spinner} from "@geist-ui/core"
 import {AIFFCheckboxField} from "@app/components/AIFFCheckboxField"
 import {sanitizeSpecialChars} from "@app/utils";
-
+import mixpanel from "mixpanel-browser"
 interface BookingFormProps {}
 type StoreData = {
   stores?: StoreDTO[]
@@ -92,11 +92,6 @@ export const STORE_NAME = {
   "4": "도곡점",
   "5": "압구정점",
 } as const
-
-const storeList = Array.from(
-  {length: 5},
-  (v, i) => STORE_NAME[(i + 1).toString()]
-)
 
 function compare(obj, date) {
   const qsYear = DateTime.fromSQL(date as string).get("year")
@@ -153,9 +148,11 @@ export const BookingFormTest: React.FunctionComponent<
           .requestPayment(config?.PaymentMethod, requestPaymentObj)
           .catch((error) => {
             if (error.code === "USER_CANCEL") {
-              // 취소 이벤트 처리
-              console.log("error", error)
+              // 취소 이벤트 처리 결제 모달이 닫혔을 때
+              console.info("error", error)
+
               setPaymentModal(false)
+              mixpanel.track("stop_tosspayments_modal")
               return
             }
             if (error.code === "INVALID_ORDER_NAME") {
@@ -226,10 +223,14 @@ export const BookingFormTest: React.FunctionComponent<
     // TODO : request get timeslot query with date
     setSelectedStore(id)
     setFieldValue("store", id)
+    mixpanel.track("select_store", {
+     value: id
+    })
   }
 
   const handleRegularClassClicked = (classId) => {
     setSelectedRegularClass(classId)
+
   }
 
   const isSelectedStore = !!selectedStore
@@ -359,6 +360,7 @@ export const BookingFormTest: React.FunctionComponent<
           validateOnChange={false}
           onSubmit={async (values, help) => {
             try {
+              mixpanel.track("submit_reservation_form")
               const regularClassInfo = rc?.find(
                 (singleClass) =>
                   Number(singleClass.id) === Number(selectedRegularClass)
@@ -456,6 +458,9 @@ export const BookingFormTest: React.FunctionComponent<
                       max="2030-01-01"
                       size={20}
                       style={{width: "100%", height: "40px"}}
+                      onClick={()=>{
+                        mixpanel.track("open_calendar")
+                      }}
                       onChange={(e) => {
                         if (e.currentTarget.validity.valid) {
                           const newValue = DateTime.fromISO(
@@ -467,6 +472,9 @@ export const BookingFormTest: React.FunctionComponent<
                             )
                           )
                           setFieldValue("date", newValue)
+                          mixpanel.track("select_date", {startDate: DateTime.fromISO(e.currentTarget.value).toFormat(
+                                "yyyy-MM-dd"
+                            )})
                         }
                       }}
                     />
@@ -501,6 +509,7 @@ export const BookingFormTest: React.FunctionComponent<
                     style={{display: "flex", alignItems: "center"}}
                     onClick={() => {
                       setStoreInfoOpen(() => true)
+                      mixpanel.track("open_store_info")
                     }}
                   >
                     <Text mr={0.2} style={{fontWeight: "600"}}>
@@ -787,7 +796,8 @@ export const BookingFormTest: React.FunctionComponent<
                                               : "#fff",
                                           border: "1px solid #0070f3",
                                         }}
-                                        onClick={async () => {
+                                        onClick={async (e) => {
+
                                           handleRegularClassClicked(
                                             singleClass?.id
                                           )
@@ -823,6 +833,10 @@ export const BookingFormTest: React.FunctionComponent<
                                                 Number(values?.classPrice)
                                             )
                                           }
+                                          mixpanel.track("select_timeslot", {
+                                            "startDateTime":timeslot?.startDateTime,
+                                            "timeSlotId":  timeslot?.id
+                                          })
                                         }}
                                       >
                                         {/* <span className="time"> */}
@@ -972,6 +986,11 @@ export const BookingFormTest: React.FunctionComponent<
                       errors={errors}
                       touched={touched}
                       placeholder="인원/명"
+                      onFocus = {
+                        (e)=>{
+                          mixpanel.track("focus_qty")
+                        }
+                      }
                       onChange={(e) => {
                         setFieldValue("qty", e.target.value)
                         setFieldValue(
@@ -980,6 +999,7 @@ export const BookingFormTest: React.FunctionComponent<
                             ? Number(e.target.value) * config.DISCOUNT_PRICE
                             : Number(e.target.value) * Number(values.classPrice)
                         )
+
                       }}
                     />
                   </LocationDetailLayout>
@@ -1046,6 +1066,7 @@ export const BookingFormTest: React.FunctionComponent<
                         errors={errors}
                         touched={touched}
                         style={{width: "100%"}}
+
                       />
                     </Grid>
                     <Grid xs={24} mt={1}>
@@ -1217,12 +1238,16 @@ export const BookingFormTest: React.FunctionComponent<
             <Text> 인 원 : {modalEvent?.qty} </Text>
             <Text> 총 가격 : {modalEvent?.totalAmount} </Text>
           </Modal.Content>
-          <Modal.Action onClick={() => confirmBooking.setVisible(false)}>
+          <Modal.Action onClick={() => {
+            confirmBooking.setVisible(false)
+            mixpanel.track("cancel_reservation_modal")
+          }}>
             취소
           </Modal.Action>
           <Modal.Action
             onClick={async () => {
               try {
+                mixpanel.track("confirm_reservation_modal")
                 confirmHandler()
                 // setToasts({
                 //   type: 'success',

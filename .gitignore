@@ -34,16 +34,16 @@ jspm_packages
 .next
 
 db.json
-.env
-.env*.local
+.env.*
 # Sentry Config File
 .sentryclirc
 
+.idea
+#VS Code의 Local History 익스텐션
+.history 
+#macOS 전용 메타데이터 파일
+.DS_Store
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-
-.idea
-.yarn/install-state.gz
- .DS_Store
