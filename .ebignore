@@ -1,0 +1,10 @@
+# .ebignore 예시
+node_modules
+.DS_Store
+coverage
+dist
+build
+
+# .env 파일은 무시하지만, .env.production은 허용
+.env
+!.env.production  # !로 예외 처리

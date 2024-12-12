@@ -34,13 +34,24 @@ README.md
 docs
 *.md
 
-# Docker 관련
-Dockerfile
-.dockerignore
-docker-compose*
-
 # 기타
 *.log
 .cache
 dist
 build
+
+# 보안 정책
+.env
+!.env.production
+
+# AWS EB 관리 파일
+.elasticbeanstalk/
+.ebextensions/
+
+# Docker 관리 파일
+.dockerignore
+Dockerfile*
+
+
+
+
