@@ -12,6 +12,7 @@ import mixpanel from "mixpanel-browser";
 import React, { useEffect } from "react";
 import { NEXT_PUBLIC_MIXPANEL_TOKEN } from "@app/utils/constants";
 import {RelayEnvironmentProvider} from "react-relay/hooks";
+import {NextUIProvider} from "@nextui-org/react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const environment = useEnvironment(pageProps);
@@ -41,21 +42,20 @@ function MyApp({ Component, pageProps }: AppProps) {
         }}
       />
         <RelayEnvironmentProvider environment={environment} >
-        <GeistProvider>
-
-            <SWRConfig
-              value={{
-                fetcher: (resource) =>
-                  aiffAPI.get(resource).then((res) => res.data),
-              }}
-            >
+            <NextUIProvider>
+                    <SWRConfig
+                    value={{
+                    fetcher: (resource) =>
+                        aiffAPI.get(resource).then((res) => res.data),
+                    }}
+                    >
                 <MobileLayout maxWidth={"28rem"}>
                   <Navbar />
                   <Component {...pageProps} />
                   <Footer />
                 </MobileLayout>
             </SWRConfig>
-        </GeistProvider>
+            </NextUIProvider>
       </RelayEnvironmentProvider>
     </>
   );
