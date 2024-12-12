@@ -1,24 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 @font-face {
   font-family: "NanumSquare";
-  src: local("NanumSquare")
-    url("../../asset/NanumFontSetup_TTF_SQUARE/NanumSquareR.ttf")
-    format("truetype");
-  src: local("NanumSquare")
-    url("../../asset/NanumFontSetup_TTF_SQUARE/NanumSquareB.ttf")
-    format("truetype");
-
+  src: local("NanumSquare Regular"),
+  url("/asset/NanumFontSetup_TTF_SQUARE/NanumSquareR.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "NanumSquare";
-  src: local("NanumSquare")
-    url("../../asset/NanumFontSetup_OTF_SQUARE/NanumSquareR.otf") format("woff");
-  src: url("../../asset/NanumFontSetup_OTF_SQUARE/NanumSquareB.otf")
-    format("woff");
-
-  font-weight: 400;
+  src: local("NanumSquare Bold"),
+  url("/asset/NanumFontSetup_TTF_SQUARE/NanumSquareB.ttf") format("truetype");
+  font-weight: 700;
   font-style: normal;
 }
 
@@ -110,16 +107,16 @@ footer {
   background-repeat: no-repeat;
 }
 
-.applyBtn {
-  color: "#FFE7DF" !important;
-  background-color: "transparent" !important;
-  border: "1px solid #FFE7DF" !important;
-  borderradius: "10px" !important;
-  cursor: "pointer" !important;
-  padding: "1rem 2rem" !important;
-  fontweight: "bold" !important ;
-}
+/*.applyBtn {*/
+/*  color: "#FFE7DF" !important;*/
+/*  background-color: "transparent" !important;*/
+/*  border: "1px solid #FFE7DF" !important;*/
+/*  borderradius: "10px" !important;*/
+/*  cursor: "pointer" !important;*/
+/*  padding: "1rem 2rem" !important;*/
+/*  fontweight: "bold" !important ;*/
+/*}*/
 
-.applyBtn:hover {
-  background-color: "#FFE7DF" !important;
-}
+/*.applyBtn:hover {*/
+/*  background-color: "#FFE7DF" !important;*/
+/*}*/

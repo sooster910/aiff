@@ -1,9 +1,8 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import '../../styles/globals.css'
 import { GeistProvider, CssBaseline } from "@geist-ui/core";
 import { SWRConfig } from "swr";
 import { aiffAPI } from "@app/utils/aiffAPI";
-import { AuthProvider } from "@app/context/AuthProvider";
 import Navbar from "@app/components/Navbar";
 import MobileLayout from "@app/layouts/MobileLayout";
 import { useEnvironment } from "@app/../relay/environment";
@@ -12,11 +11,12 @@ import Script from "next/script";
 import mixpanel from "mixpanel-browser";
 import React, { useEffect } from "react";
 import { NEXT_PUBLIC_MIXPANEL_TOKEN } from "@app/utils/constants";
-import RelayProvider from "@app/pages/RelayProvider";
+import {RelayEnvironmentProvider} from "react-relay/hooks";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const environment = useEnvironment(pageProps);
-
+  const storeData = environment.getStore().getSource().toJSON()
+  console.log("Relay Store Data", storeData)
   useEffect(() => {
     mixpanel.init(NEXT_PUBLIC_MIXPANEL_TOKEN, {
       debug: true,
@@ -40,26 +40,23 @@ function MyApp({ Component, pageProps }: AppProps) {
                   gtag('config', 'G-X4P14LC53Q');`,
         }}
       />
-      <RelayProvider environment={environment} >
+        <RelayEnvironmentProvider environment={environment} >
         <GeistProvider>
-          <CssBaseline>
+
             <SWRConfig
               value={{
                 fetcher: (resource) =>
                   aiffAPI.get(resource).then((res) => res.data),
               }}
             >
-              <AuthProvider>
                 <MobileLayout maxWidth={"28rem"}>
                   <Navbar />
                   <Component {...pageProps} />
                   <Footer />
                 </MobileLayout>
-              </AuthProvider>
             </SWRConfig>
-          </CssBaseline>
         </GeistProvider>
-      </RelayProvider>
+      </RelayEnvironmentProvider>
     </>
   );
 }
