@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "prettier"
+    // Prettier와 충돌하는 규칙을 비활성화
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off"
+  }
+}
