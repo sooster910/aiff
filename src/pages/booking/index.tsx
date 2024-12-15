@@ -7,13 +7,9 @@ import { bookingQuery as BookingQueryType } from '../../../__generated__/booking
 import { useRouter } from 'next/router'
 
 export const BookingQuery = graphql`
-    query bookingQuery($storeId:String!){
+    query bookingQuery{
         ...StoreList_query,
-        store(where: {_id:$storeId}){
-            _id,
-            name,
-            description
-        }
+
     }
 `
 
@@ -22,7 +18,7 @@ const BookingPage = () => {
   const [queryRef, loadQuery] = useQueryLoader<BookingQueryType>(BookingQuery)
   useEffect(() => {
     if (!queryRef) {
-      loadQuery({ storeId: (router.query.storeId as string) ?? '1' })
+      loadQuery({})
     }
   }, [])
 
