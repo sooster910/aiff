@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<48c233dad94768d7a9df30d4eb427e62>>
+ * @generated SignedSource<<d391ab7e3b9d60e41b3c54cb2798d432>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,15 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type bookingQuery$variables = {};
+export type bookingQuery$variables = {
+  storeId: string;
+};
 export type bookingQuery$data = {
+  readonly store: {
+    readonly _id: string;
+    readonly description: string | null;
+    readonly name: string;
+  } | null;
   readonly " $fragmentSpreads": FragmentRefs<"StoreList_query">;
 };
 export type bookingQuery = {
@@ -19,9 +26,58 @@ export type bookingQuery = {
   variables: bookingQuery$variables;
 };
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "storeId"
+  }
+],
+v1 = [
+  {
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "_id",
+        "variableName": "storeId"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "where"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "_id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "description",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "bookingQuery",
@@ -30,6 +86,20 @@ const node: ConcreteRequest = {
         "args": null,
         "kind": "FragmentSpread",
         "name": "StoreList_query"
+      },
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Store",
+        "kind": "LinkedField",
+        "name": "store",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/)
+        ],
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -37,7 +107,7 @@ const node: ConcreteRequest = {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "bookingQuery",
     "selections": [
@@ -49,35 +119,40 @@ const node: ConcreteRequest = {
         "name": "stores",
         "plural": true,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          }
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v5/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Store",
+        "kind": "LinkedField",
+        "name": "store",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "6006bfb9dbe7acfe1b9686e1543aa45d",
+    "cacheID": "0421660e2bf0b1eec54f844a463de820",
     "id": null,
     "metadata": {},
     "name": "bookingQuery",
     "operationKind": "query",
-    "text": "query bookingQuery {\n  ...StoreList_query\n}\n\nfragment StoreList_query on Query {\n  stores {\n    id\n    name\n  }\n}\n"
+    "text": "query bookingQuery(\n  $storeId: String!\n) {\n  ...StoreList_query\n  store(where: {_id: $storeId}) {\n    _id\n    name\n    description\n    id\n  }\n}\n\nfragment StoreList_query on Query {\n  stores {\n    _id\n    name\n    id\n  }\n}\n"
   }
 };
+})();
 
-(node as any).hash = "a3ff7e1876d9f28751d87ea4d4f8c911";
+(node as any).hash = "f68560fd642be1917ddda52900b4f94b";
 
 export default node;
