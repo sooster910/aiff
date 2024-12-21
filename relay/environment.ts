@@ -16,6 +16,7 @@ const createEnvironment = () => {
   return new Environment({
     network: Network.create(fetchRelay),
     store: new Store(new RecordSource()),
+    log:process.env.NODE_ENV !=="production"? console.log:null
   });
 };
 
