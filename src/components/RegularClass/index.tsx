@@ -6,7 +6,9 @@ import { Card, CardBody, CardHeader, Image } from '@nextui-org/react'
 import { TimeSlots } from '@app/components/TimeSlots'
 
 const regularClassFragment = graphql`
-    fragment RegularClassFragment on RegularClass{
+    fragment RegularClassFragment on RegularClass
+    @argumentDefinitions( date: { type: "Date!"})
+    {
         _id,
         id,
         name,
@@ -20,7 +22,6 @@ const regularClassFragment = graphql`
             ...TimeSlotFragment
         }
     }
-
 `
 type RegularClassProps = {
   regularClass: RegularClassFragment$key
