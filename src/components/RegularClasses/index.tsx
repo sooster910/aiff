@@ -16,17 +16,17 @@ const regularClassesFragment = graphql`
 
     @refetchable(queryName: "RegularClassesPaginationQuery")
     @argumentDefinitions(
-        after: { type: "String", defaultValue: "" }
-        selectedDate: { type: "Date", defaultValue: "2024-12-25" },
+        after: { type: "String", }
+        date: { type: "Date!" },
         first: { type: "Int", defaultValue: 1 },
     )
     {
-        regularClasses(after: $after,first: $first)
+        regularClasses( after: $after,first: $first)
         @connection(key:"RegularClasses_regularClasses"){
             edges {
                 cursor,
                 node {
-                    ...RegularClassFragment @arguments(date:$selectedDate)
+                    ...RegularClassFragment @arguments(date:$date)
                 }
             }
             pageInfo {
