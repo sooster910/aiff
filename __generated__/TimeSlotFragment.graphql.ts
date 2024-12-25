@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6ba26633ff609fc66b756369b034f001>>
+ * @generated SignedSource<<4f662e889636eef5a20724a4e7340183>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TimeSlotFragment$data = {
   readonly _id: string;
@@ -16,7 +16,7 @@ export type TimeSlotFragment$data = {
   readonly endDateTime: any;
   readonly id: string;
   readonly maximumBookingCount: number;
-  readonly name: string | null;
+  readonly name: string | null | undefined;
   readonly price: number;
   readonly regularClass: {
     readonly _id: string;
@@ -24,7 +24,7 @@ export type TimeSlotFragment$data = {
     readonly duration: number;
     readonly name: string;
     readonly price: number;
-  } | null;
+  } | null | undefined;
   readonly regularClassId: number;
   readonly startDateTime: any;
   readonly " $fragmentType": "TimeSlotFragment";

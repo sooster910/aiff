@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfb0ccd737f6646bf3214f516722eb0f>>
+ * @generated SignedSource<<ea5786d4678ad90284299cefea36f6a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,8 +8,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
-export type SuspenseRelayQuery$variables = {};
+import { ConcreteRequest } from 'relay-runtime';
+export type SuspenseRelayQuery$variables = Record<PropertyKey, never>;
 export type SuspenseRelayQuery$data = {
   readonly ping: boolean;
 };
