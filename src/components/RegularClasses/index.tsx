@@ -1,53 +1,45 @@
+import { RegularClass } from '@app/components/RegularClass'
 import { LocationDetailLayout } from '@app/layouts/LocationDetailLayout'
 import { Text } from '@geist-ui/core'
 import { Clock } from '@geist-ui/icons'
+import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-compiler'
-import { useFragment, usePaginationFragment } from 'react-relay'
-import type {
-  RegularClassesFragment$key,
-} from '../../../__generated__/RegularClassesFragment.graphql'
-import { RegularClass } from '@app/components/RegularClass'
-import { d } from '@nextui-org/slider/dist/use-slider-a94a4c83'
+import { RegularClassesFragment$key } from '../../../__generated__/RegularClassesFragment.graphql'
 
-
-//TODO: fragment를 사용해야 함.
 const regularClassesFragment = graphql`
-    fragment RegularClassesFragment on Store
-
-    @refetchable(queryName: "RegularClassesPaginationQuery")
-    @argumentDefinitions(
-        after: { type: "String", }
-        date: { type: "Date!" },
-        first: { type: "Int", defaultValue: 1 },
-    )
-    {
-        regularClasses( after: $after,first: $first)
-        @connection(key:"RegularClasses_regularClasses"){
-            edges {
-                cursor,
-                node {
-                    ...RegularClassFragment @arguments(date:$date)
-                }
-            }
-            pageInfo {
-                hasNextPage
-                endCursor
-            }
+  fragment RegularClassesFragment on Store
+  @refetchable(queryName: "RegularClassesPaginationQuery")
+  @argumentDefinitions(
+    after: { type: "String" }
+    date: { type: "Date!" }
+    first: { type: "Int", defaultValue: 1 }
+  ) {
+    regularClasses(date: $date, after: $after, first: $first)
+      @connection(key: "RegularClasses_regularClasses") {
+      edges {
+        cursor
+        node {
+          id
+          _id
+          ...RegularClassFragment @arguments(date: $date)
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
-
+  }
 `
 type RegularClassesProps = {
-  store: RegularClassesFragment$key
+  regularClasses: RegularClassesFragment$key
 }
-export const RegularClasses = ({ store }: RegularClassesProps) => {
-  const {
-    data,
-    loadNext,
-    hasNext,
-    isLoadingNext,
-  } = usePaginationFragment(regularClassesFragment, store)
-
+export const RegularClasses = ({ regularClasses }: RegularClassesProps) => {
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment(
+    regularClassesFragment,
+    regularClasses
+  )
+  console.log('regularClassesPagination', data)
   const handleLoadMore = () => {
     if (hasNext && !isLoadingNext) {
       loadNext(1)
@@ -60,12 +52,9 @@ export const RegularClasses = ({ store }: RegularClassesProps) => {
         <Text>{'클래스/시간 선택'}</Text>
       </div>
       <div className={' mx-auto '}>
-
-        {data.regularClasses.edges.map((edge, i) =>
-          <RegularClass key={i} regularClass={edge.node} />,
-        )}
-
-
+        {data.regularClasses.edges.map((edge, i) => (
+          <RegularClass key={i} regularClass={edge.node} />
+        ))}
       </div>
       {hasNext && (
         <button

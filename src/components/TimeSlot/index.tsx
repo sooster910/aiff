@@ -2,8 +2,6 @@ import { DateTime } from 'luxon'
 import * as React from 'react'
 import { graphql, useFragment } from 'react-relay'
 import { TimeSlotFragment$key } from '../../../__generated__/TimeSlotFragment.graphql'
-import { FormValues } from '../SuspenseBooking'
-import { useFormikContext } from 'formik'
 
 interface TimeSlotProps {
   timeSlot: TimeSlotFragment$key;
