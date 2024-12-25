@@ -5,6 +5,13 @@
     // Prettier와 충돌하는 규칙을 비활성화
   ],
   "rules": {
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "off",
+      {
+        "varsIgnorePattern": "^\\$",
+        "argsIgnorePattern": "^\\$"
+      }
+    ]
   }
 }
