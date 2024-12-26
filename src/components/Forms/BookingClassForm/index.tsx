@@ -1,5 +1,6 @@
 import { RegularClasses } from '@app/components/RegularClasses'
 import { SelectDate } from '@app/components/SelectDate'
+import SuspenseWrapper from '@app/components/SuspenseWrapper'
 import { useFormik } from 'formik'
 import { DateTime } from 'luxon'
 import { useState } from 'react'
@@ -16,7 +17,7 @@ export const BookingClassFormQuery = graphql`
       _id
       id
       description
-      ...RegularClassesFragment @arguments(date: $date, after: null, first: 1)
+      ...RegularClassesFragment @arguments(date: $date, after: null, first: 2)
     }
   }
 `
@@ -47,6 +48,7 @@ export const BookingClassForm = () => {
   const handleOnStoreClick = (storeId) => {
     formik.setFieldValue('store', storeId, true)
   }
+
   function handleOnDayClick(selected: Date) {
     setQueryVariables((prev) => ({
       ...prev,
@@ -54,14 +56,18 @@ export const BookingClassForm = () => {
     }))
     formik.setFieldValue('date', selected, true)
   }
+
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className={'flex flex-col items-center justify-center w-full'}
+      className={'relative flex-1 flex-col items-center justify-center w-full'}
     >
       {/* <StoreList queryRef={data} onChange={handleOnStoreClick} value={formik.values.store} /> */}
       <SelectDate onChange={handleOnDayClick} value={formik.values.date} />
-      <RegularClasses regularClasses={data.stores[0]} />
+      <SuspenseWrapper fallback={<p>RegularClass 로딩 </p>}>
+        <RegularClasses regularClasses={data.stores[0]} />
+      </SuspenseWrapper>
+
       {/*<StoreDetail store={data.stores[0]} />*/}
     </form>
   )
