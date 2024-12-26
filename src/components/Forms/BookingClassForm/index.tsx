@@ -3,7 +3,7 @@ import { SelectDate } from '@app/components/SelectDate'
 import SuspenseWrapper from '@app/components/SuspenseWrapper'
 import { useFormik } from 'formik'
 import { DateTime } from 'luxon'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { graphql, PreloadedQuery, useLazyLoadQuery } from 'react-relay'
 import type { BookingClassFormQuery as BookingQueryType } from '../../../../__generated__/BookingClassFormQuery.graphql'
 
@@ -27,6 +27,7 @@ export type FormValues = {
 }
 
 export const BookingClassForm = () => {
+  const [isPending, startTransition] = useTransition()
   const [queryVariables, setQueryVariables] = useState({
     storeId: '1',
     date: DateTime.now().setZone('Asia/Seoul').toISODate(),
@@ -50,11 +51,13 @@ export const BookingClassForm = () => {
   }
 
   function handleOnDayClick(selected: Date) {
-    setQueryVariables((prev) => ({
-      ...prev,
-      date: DateTime.fromJSDate(selected).setZone('Asia/Seoul').toISODate(),
-    }))
-    formik.setFieldValue('date', selected, true)
+    startTransition(() => {
+      setQueryVariables((prev) => ({
+        ...prev,
+        date: DateTime.fromJSDate(selected).setZone('Asia/Seoul').toISODate(),
+      }))
+    })
+    // formik.setFieldValue('date', selected, true)
   }
 
   return (
@@ -63,10 +66,12 @@ export const BookingClassForm = () => {
       className={'relative flex-1 flex-col items-center justify-center w-full'}
     >
       {/* <StoreList queryRef={data} onChange={handleOnStoreClick} value={formik.values.store} /> */}
-      <SelectDate onChange={handleOnDayClick} value={formik.values.date} />
-      <SuspenseWrapper fallback={<p>RegularClass 로딩 </p>}>
-        <RegularClasses regularClasses={data.stores[0]} />
-      </SuspenseWrapper>
+      <SelectDate
+        onChange={handleOnDayClick}
+        value={DateTime.fromISO(queryVariables.date).toJSDate()}
+      />
+
+      <RegularClasses regularClasses={data.stores[0]} />
 
       {/*<StoreDetail store={data.stores[0]} />*/}
     </form>
