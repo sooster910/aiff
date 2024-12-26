@@ -6,7 +6,7 @@
 @font-face {
   font-family: "NanumSquare";
   src: local("NanumSquare Regular"),
-  url("/asset/NanumFontSetup_TTF_SQUARE/NanumSquareR.ttf") format("truetype");
+  url("/public/fonts/NanumFontSetup_TTF_SQUARE/NanumSquareR.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @font-face {
   font-family: "NanumSquare";
   src: local("NanumSquare Bold"),
-  url("/asset/NanumFontSetup_TTF_SQUARE/NanumSquareB.ttf") format("truetype");
+  url("/public/fonts/NanumFontSetup_TTF_SQUARE/NanumSquareB.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
@@ -23,19 +23,27 @@ html > body {
   padding: 0;
   margin: 0;
   font-family: NanumSquare, sans-serif;
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+
 }
+
 .normal {
   font-weight: 400;
 }
+
 .bold {
   font-weight: 700;
 }
+
 .bolder {
   font-weight: 800;
 }
+
 .light {
   font-weight: 300;
 }
+
 a {
   font-family: inherit;
   color: inherit;
@@ -82,21 +90,8 @@ footer {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-.timeslot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 6px;
-  border: solid 1px #0070f3;
-  /* background-color: #0070f3; */
-  color: #0070f3;
-  overflow: hidden;
-  width: 76px;
-  height: 36px;
-  text-align: center;
-  font-weight: 500;
-  cursor: pointer;
-}
+
+
 .time {
   line-height: 36px;
   vertical-align: middle;
@@ -107,16 +102,3 @@ footer {
   background-repeat: no-repeat;
 }
 
-/*.applyBtn {*/
-/*  color: "#FFE7DF" !important;*/
-/*  background-color: "transparent" !important;*/
-/*  border: "1px solid #FFE7DF" !important;*/
-/*  borderradius: "10px" !important;*/
-/*  cursor: "pointer" !important;*/
-/*  padding: "1rem 2rem" !important;*/
-/*  fontweight: "bold" !important ;*/
-/*}*/
-
-/*.applyBtn:hover {*/
-/*  background-color: "#FFE7DF" !important;*/
-/*}*/
