@@ -1,7 +1,0 @@
-directive @arguments on FRAGMENT_SPREAD
-directive @argumentDefinitions on FRAGMENT_DEFINITION
-directive @connection(
-    key: String!
-    filters: [String!]
-) on FIELD
-directive @refetchable(queryName: String!) on FRAGMENT_DEFINITION

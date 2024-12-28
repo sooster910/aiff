@@ -1,6 +1,10 @@
-"""Exposes a URL that specifies the behavior of this scalar."""
+"""
+Exposes a URL that specifies the behavior of this scalar.
+"""
 directive @specifiedBy(
-  """The URL that specifies the behavior of this scalar."""
+  """
+  The URL that specifies the behavior of this scalar.
+  """
   url: String!
 ) on SCALAR
 
@@ -9,60 +13,100 @@ Indicates exactly one field must be supplied and this field must not be `null`.
 """
 directive @oneOf on INPUT_OBJECT
 
-"""TimeSlot form Input"""
+"""
+TimeSlot form Input
+"""
 input AddTimeSlotInput {
-  """duration(mins)"""
+  """
+  duration(mins)
+  """
   duration: Int!
 
-  """endDateTime"""
+  """
+  endDateTime
+  """
   endDateTime: DateTime!
 
-  """maximumBookingCount"""
+  """
+  maximumBookingCount
+  """
   maximumBookingCount: Int!
 
-  """name"""
+  """
+  name
+  """
   name: String
 
-  """price"""
+  """
+  price
+  """
   price: Float!
 
-  """regularClassId"""
+  """
+  regularClassId
+  """
   regularClassId: Int!
 
-  """startDateTime"""
+  """
+  startDateTime
+  """
   startDateTime: DateTime!
 
-  """status"""
+  """
+  status
+  """
   status: TimeSlotStatus!
 
-  """storeId"""
+  """
+  storeId
+  """
   storeId: Int!
 }
 
-"""어드민 전용 Mutation"""
+"""
+어드민 전용 Mutation
+"""
 type AdminMutation {
-  """타임슬롯을 생성합니다"""
+  """
+  타임슬롯을 생성합니다
+  """
   addTimeSlot(data: AddTimeSlotInput!): ResultAddTimeSlot
 
-  """위클리 타임슬롯을 베이스로 한 monthly타임슬롯을 생성합니다."""
-  generateMonthlyTimeslots(input: GenerateMonthlyTimeslotsInput!): ResultAddTimeSlot
+  """
+  위클리 타임슬롯을 베이스로 한 monthly타임슬롯을 생성합니다.
+  """
+  generateMonthlyTimeslots(
+    input: GenerateMonthlyTimeslotsInput!
+  ): ResultAddTimeSlot
 
-  """true를 반환합니다"""
+  """
+  true를 반환합니다
+  """
   ping: Boolean!
 }
 
-"""어드민 전용 Query"""
+"""
+어드민 전용 Query
+"""
 type AdminQuery {
-  """avaiableTimeSlotsByDate"""
+  """
+  avaiableTimeSlotsByDate
+  """
   availableTimeSlotsByDate(where: AvailableTimeSlotsByDateInput!): [TimeSlot!]
 
-  """ID 값으로 Object를 가져옵니다 (Global Object Identification)"""
+  """
+  ID 값으로 Object를 가져옵니다 (Global Object Identification)
+  """
   node(id: ID!): Node
 
-  """ID 값의 목록으로 Object를 Batch 합니다 (Global Object Identification)"""
+  """
+  ID 값의 목록으로 Object를 Batch 합니다 (Global Object Identification)
+  """
   nodesByIds(ids: [ID!]!): [Node]!
 
-  """true를 반환합니다"""
+  """
+  true를 반환합니다
+  """
   ping: Boolean!
 }
 
@@ -71,16 +115,24 @@ type AdminQuery {
 상점 어드민
 """
 type AdminUser implements Node {
-  """_id"""
+  """
+  _id
+  """
   _id: String!
 
-  """Node ID"""
+  """
+  Node ID
+  """
   id: ID!
 
-  """name"""
+  """
+  name
+  """
   name: String!
 
-  """phone"""
+  """
+  phone
+  """
   phone: String!
 }
 
@@ -119,33 +171,53 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
 """
 scalar DateTime
 
-"""요일"""
+"""
+요일
+"""
 enum Day {
-  """금요일"""
+  """
+  금요일
+  """
   FRI
 
-  """월요일"""
+  """
+  월요일
+  """
   MON
 
-  """토요일"""
+  """
+  토요일
+  """
   SAT
 
-  """일요일"""
+  """
+  일요일
+  """
   SUN
 
-  """목요일"""
+  """
+  목요일
+  """
   THU
 
-  """화요일"""
+  """
+  화요일
+  """
   TUE
 
-  """수요일"""
+  """
+  수요일
+  """
   WED
 }
 
-"""Generate monthly timeslots input"""
+"""
+Generate monthly timeslots input
+"""
 input GenerateMonthlyTimeslotsInput {
-  """storeId"""
+  """
+  storeId
+  """
   storeId: Int!
 }
 
@@ -154,17 +226,25 @@ type Image {
   url: String!
 }
 
-"""뮤테이션 (정보를 가공할 때 사용합니다)"""
+"""
+뮤테이션 (정보를 가공할 때 사용합니다)
+"""
 type Mutation {
-  """어드민 전용 Mutation"""
+  """
+  어드민 전용 Mutation
+  """
   admin: AdminMutation!
 
-  """강제로 에러를 발생시킵니다"""
+  """
+  강제로 에러를 발생시킵니다
+  """
   throw: Boolean!
 }
 
 interface Node {
-  """스키마에서 유일한 ID 값입니다 (Global Object Identification)"""
+  """
+  스키마에서 유일한 ID 값입니다 (Global Object Identification)
+  """
   id: ID!
 }
 
@@ -193,88 +273,160 @@ type PageInfo {
   startCursor: String
 }
 
-"""쿼리 (정보를 가져올때 사용합니다)"""
+"""
+쿼리 (정보를 가져올때 사용합니다)
+"""
 type Query {
-  """어드민 전용 Query"""
+  """
+  어드민 전용 Query
+  """
   admin: AdminQuery!
 
-  """allRegularClasses"""
+  """
+  allRegularClasses
+  """
   allRegularClasses: [RegularClass]
 
-  """availableTimeSlots"""
-  availableTimeSlotsByClass(filter: AvailableTimeSlotsFilterInput, where: AvailableTimeSlotsWhereInput): [TimeSlot!]
+  """
+  availableTimeSlots
+  """
+  availableTimeSlotsByClass(
+    filter: AvailableTimeSlotsFilterInput
+    where: AvailableTimeSlotsWhereInput
+  ): [TimeSlot!]
 
-  """avaiableTimeSlotsByDate"""
+  """
+  avaiableTimeSlotsByDate
+  """
   availableTimeSlotsByDate(where: AvailableTimeSlotsByDateInput!): [TimeSlot!]
 
-  """ID 값으로 Object를 가져옵니다 (Global Object Identification)"""
+  """
+  ID 값으로 Object를 가져옵니다 (Global Object Identification)
+  """
   node(id: ID!): Node
 
-  """true를 반환합니다"""
+  """
+  true를 반환합니다
+  """
   ping: Boolean!
 
-  """regularClass by condition"""
+  """
+  regularClass by condition
+  """
   regularClass(where: RegularClassWhereInput!): RegularClass
 
-  """regularClassById by Global ID"""
+  """
+  regularClassById by Global ID
+  """
   regularClassById(id: ID): RegularClass
 
-  """regularClasses"""
-  regularClasses(after: String, filter: RegularClassesFilterInput, first: Int!, where: RegularClassesWhereInput): [RegularClass!]!
+  """
+  regularClasses
+  """
+  regularClasses(
+    after: String
+    filter: RegularClassesFilterInput
+    first: Int!
+    where: RegularClassesWhereInput
+  ): [RegularClass!]!
 
-  """storeById by condition"""
+  """
+  storeById by condition
+  """
   store(where: StoreWhereInput!): Store
 
-  """storeById by Global ID"""
+  """
+  storeById by Global ID
+  """
   storeById(id: ID): Store
 
-  """stores"""
-  stores(after: String, filter: StoresFilterInput, first: Int, where: StoresWhereInput): [Store!]!
+  """
+  stores
+  """
+  stores(
+    after: String
+    filter: StoresFilterInput
+    first: Int
+    where: StoresWhereInput
+  ): [Store!]!
 
-  """강제로 에러를 발생시킵니다"""
+  """
+  강제로 에러를 발생시킵니다
+  """
   throw: Boolean!
 
-  """single timeSlot"""
+  """
+  single timeSlot
+  """
   timeSlot(where: TimeSlotWhereInput!): TimeSlot!
 
-  """현재 서버의 버전 (Git Hash 값)"""
+  """
+  현재 서버의 버전 (Git Hash 값)
+  """
   version: String!
 }
 
-"""정규 클래스"""
+"""
+정규 클래스
+"""
 type RegularClass implements Node {
-  """_id"""
+  """
+  _id
+  """
   _id: String!
 
-  """description"""
+  """
+  description
+  """
   description: String!
 
-  """duration(mins)"""
+  """
+  duration(mins)
+  """
   duration: Int!
 
-  """Node ID"""
+  """
+  Node ID
+  """
   id: ID!
 
-  """imageURL"""
+  """
+  imageURL
+  """
   imageURL: Image
 
-  """maximumClassSize"""
+  """
+  maximumClassSize
+  """
   maximumClassSize: Int!
 
-  """minimumClassSize"""
+  """
+  minimumClassSize
+  """
   minimumClassSize: Int!
 
-  """name"""
+  """
+  name
+  """
   name: String!
 
-  """price"""
+  """
+  price
+  """
   price: Float!
 
-  """storeId"""
+  """
+  storeId
+  """
   storeId: ID!
 
-  """timeSlots"""
-  timeSlots(filter: RegularClassTimeSlotsFilterInput, where: RegularClassTimeSlotsWhereInput!): [TimeSlot!]
+  """
+  timeSlots
+  """
+  timeSlots(
+    filter: RegularClassTimeSlotsFilterInput
+    where: RegularClassTimeSlotsWhereInput!
+  ): [TimeSlot!]
 }
 
 type RegularClassConnection {
@@ -303,13 +455,19 @@ input RegularClassTimeSlotsFilterInput {
 }
 
 input RegularClassTimeSlotsWhereInput {
-  """예약일"""
+  """
+  예약일
+  """
   day: Date!
 
-  """클래스 ID"""
+  """
+  클래스 ID
+  """
   regularClass: String
 
-  """가맹점 ID"""
+  """
+  가맹점 ID
+  """
   store: String
 }
 
@@ -320,30 +478,48 @@ input RegularClassWhereInput {
   storeId: String
 }
 
-"""예약"""
+"""
+예약
+"""
 type Reservation implements Node {
-  """_id"""
+  """
+  _id
+  """
   _id: String!
 
-  """Node ID"""
+  """
+  Node ID
+  """
   id: ID!
 
-  """numberOfSeats"""
+  """
+  numberOfSeats
+  """
   numberOfSeats: Int!
 
-  """regularClass"""
+  """
+  regularClass
+  """
   regularClass: RegularClass!
 
-  """reservationAt"""
+  """
+  reservationAt
+  """
   reservationAt: DateTime!
 
-  """store"""
+  """
+  store
+  """
   store: Store!
 
-  """totalPaymentPrice"""
+  """
+  totalPaymentPrice
+  """
   totalPaymentPrice: Float!
 
-  """user"""
+  """
+  user
+  """
   user: User!
 }
 
@@ -353,7 +529,9 @@ type ReservationConnection {
   """
   edges: [ReservationEdge!]!
 
-  """Flattened list of Reservation type"""
+  """
+  Flattened list of Reservation type
+  """
   nodes: [Reservation!]!
 
   """
@@ -363,10 +541,14 @@ type ReservationConnection {
 }
 
 type ReservationEdge {
-  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor
+  """
   cursor: String!
 
-  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Node
+  """
   node: Reservation!
 }
 
@@ -374,39 +556,63 @@ type ResultAddTimeSlot {
   isUpdated: Boolean!
 }
 
-"""상점"""
+"""
+상점
+"""
 type Store implements Node {
-  """_id"""
+  """
+  _id
+  """
   _id: String!
 
-  """address"""
+  """
+  address
+  """
   address: String!
 
-  """availableDays"""
+  """
+  availableDays
+  """
   availableDays: [Day!]!
 
-  """breakTime"""
+  """
+  breakTime
+  """
   breakTimes: [Time!]
 
-  """closeTime"""
+  """
+  closeTime
+  """
   closeTime: Time!
 
-  """description"""
+  """
+  description
+  """
   description: String
 
-  """holidays"""
+  """
+  holidays
+  """
   holidays: [Date!]
 
-  """Node ID"""
+  """
+  Node ID
+  """
   id: ID!
 
-  """name"""
+  """
+  name
+  """
   name: String!
 
-  """openTime"""
+  """
+  openTime
+  """
   openTime: Time!
 
-  """regularClasses"""
+  """
+  regularClasses
+  """
   regularClasses(after: String, date: Date, first: Int): RegularClassConnection!
 }
 
@@ -430,70 +636,114 @@ representation of dates and times using the Gregorian calendar.
 scalar Time
 
 type TimeSlot implements Node {
-  """_id"""
+  """
+  _id
+  """
   _id: String!
 
-  """currentBookingCount"""
+  """
+  currentBookingCount
+  """
   currentBookingCount: Int!
 
-  """duration(mins)"""
+  """
+  duration(mins)
+  """
   duration: Int!
 
-  """endDateTime"""
+  """
+  endDateTime
+  """
   endDateTime: DateTime!
 
-  """Node ID"""
+  """
+  Node ID
+  """
   id: ID!
 
-  """isBusinessDay"""
+  """
+  isBusinessDay
+  """
   isBusinessDay: Boolean!
 
-  """isHoliday"""
+  """
+  isHoliday
+  """
   isHoliday: Boolean!
 
-  """isUnset"""
+  """
+  isUnset
+  """
   isUnset: Boolean
 
-  """maximumBookingCount"""
+  """
+  maximumBookingCount
+  """
   maximumBookingCount: Int!
 
-  """minimumBookingCount"""
+  """
+  minimumBookingCount
+  """
   minimumBookingCount: Int!
 
-  """name"""
+  """
+  name
+  """
   name: String
 
-  """price"""
+  """
+  price
+  """
   price: Float!
 
-  """regularClass"""
+  """
+  regularClass
+  """
   regularClass: RegularClass
 
-  """regularClassId"""
+  """
+  regularClassId
+  """
   regularClassId: Int!
 
-  """skip"""
+  """
+  skip
+  """
   skip: Boolean
 
-  """startDateTime"""
+  """
+  startDateTime
+  """
   startDateTime: DateTime!
 
-  """status"""
+  """
+  status
+  """
   status: TimeSlotStatus!
 
-  """store"""
+  """
+  store
+  """
   store: Store
 
-  """storeId"""
+  """
+  storeId
+  """
   storeId: Int!
 }
 
-"""TimeSlotStatus"""
+"""
+TimeSlotStatus
+"""
 enum TimeSlotStatus {
-  """예약 가능"""
+  """
+  예약 가능
+  """
   ON_SALE
 
-  """임시 휴게"""
+  """
+  임시 휴게
+  """
   TEMPORARY_BREAK
 }
 
@@ -502,21 +752,32 @@ input TimeSlotWhereInput {
   skip: Boolean!
 }
 
-"""유저"""
+"""
+유저
+"""
 type User implements Node {
-  """_id"""
+  """
+  _id
+  """
   _id: String!
 
-  """address"""
+  """
+  address
+  """
   address: String!
 
-  """Node ID"""
+  """
+  Node ID
+  """
   id: ID!
 
-  """myReservations"""
+  """
+  myReservations
+  """
   myReservations: ReservationConnection!
 
-  """name"""
+  """
+  name
+  """
   name: String!
 }
-
