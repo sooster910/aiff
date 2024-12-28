@@ -1,22 +1,30 @@
-FROM node:20
+FROM node:20-alpine
 
-# 환경 변수 설정
-ARG NODE_ENV
-ENV NODE_ENV=$NODE_ENV
+# Set production environment
+ENV NODE_ENV=development
 
-# 환경 변수 파일 복사
-COPY .env.production /app/.env.production
-
-# 애플리케이션 코드 복사
+# Set working directory
 WORKDIR /app
-COPY . /app
 
-# 의존성 설치 및 빌드
+# Install dependencies first (better layer caching)
 COPY package.json yarn.lock ./
-RUN yarn install && yarn build
+RUN yarn install --frozen-lockfile
 
-# 포트 공개 (Elastic Beanstalk의 기본 포트는 8080)
+# Copy source files
+COPY . .
+
+# Copy development env for staging deployment
+# development 환경 변수를 사용하므로 .env.development를 복사
+COPY .env.development .env
+
+# Build Relay
+RUN yarn relay
+
+# Build Next.js
+RUN yarn build
+
+# Expose port for Elastic Beanstalk
 EXPOSE 8080
 
-# 서버 실행
+# Start the application
 CMD ["yarn", "start"]
