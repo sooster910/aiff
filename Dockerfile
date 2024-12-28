@@ -8,8 +8,7 @@ WORKDIR /app
 
 # Install dependencies first (better layer caching)
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-
+RUN yarn cache clean && yarn install --frozen-lockfile
 # Copy source files
 COPY . .
 
@@ -19,7 +18,7 @@ COPY . .
 RUN cp .env.development .env
 
 # Build Relay
-RUN yarn relay
+RUN rm -rf __generated__ && yarn relay
 
 # Build Next.js
 RUN yarn build
