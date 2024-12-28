@@ -1,13 +1,8 @@
-import React, { Suspense } from 'react'
+import React, {ReactNode, Suspense} from 'react'
 import dynamic from "next/dynamic";
 
 interface SuspenseWrapperProps {
-	fallback: JSX.Element
-	children: React.ReactNode
-}
-
-interface SuspenseWrapperProps {
-	fallback: JSX.Element
+	fallback: ReactNode
 	children: React.ReactNode
 }
 const SuspenseWrapper = dynamic(

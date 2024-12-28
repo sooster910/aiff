@@ -5,11 +5,8 @@ export const InfiniteScrollTrigger = ({
   hasNext,
   isLoadingNext,
 }) => {
-  // observer를 이용한 무한 스크롤 구현
-  // end에 닿으면 onEndReached 호출
-  // 닿는걸 인지하기 위해, ref를 이용해 observer 등록
   const endRef = useRef<HTMLDivElement>(null)
-
+  //TODO: refactor custom hook
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -39,7 +36,7 @@ export const InfiniteScrollTrigger = ({
     <>
       {
         <div className="w-full absolute bottom-0" ref={endRef}>
-          {isLoadingNext ? 'Loading...' : 'end of list'}
+          {isLoadingNext && 'Loading...'}
         </div>
       }
     </>
