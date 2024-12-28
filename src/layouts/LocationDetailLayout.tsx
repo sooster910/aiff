@@ -7,5 +7,5 @@ type LocationDetailLayoutProps = {
 export const LocationDetailLayout: React.FunctionComponent<
   LocationDetailLayoutProps
 > = ({ children }) => {
-  return <div>{children}</div>
+  return <div className={'flex flex-col'}>{children}</div>
 }

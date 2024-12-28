@@ -1,5 +1,6 @@
-import * as React from "react"
-import {useRouter} from "next/router"
+import * as React from 'react'
+import { useRouter } from 'next/router'
+import booking from '@app/pages/booking'
 
 export interface MobileLayoutProps {
   children: React.ReactNode
@@ -15,16 +16,16 @@ const MobileLayout: React.FunctionComponent<MobileLayoutProps> = ({
 
   return (
     <div
-      className={router.pathname === "/booking" ? "bg" : "mobile"}
+      className={`min-h-screen flex flex-col ${
+        router.pathname === '/booking' ? 'bg' : 'mobile'
+      }`}
       style={{
         maxWidth:
-          router.pathname === "/adminDashboard" ||
-          router.pathname === "/adminWeeklySchedule"
-            ? "1200px"
+          router.pathname === '/adminDashboard' ||
+          router.pathname === '/adminWeeklySchedule'
+            ? '1200px'
             : maxWidth,
-        margin: "0 auto",
-        // boxShadow: "0 0 20px rgb(0 0 0 / 5%)",
-        // background: "#FAFBFC",
+        margin: '0 auto',
       }}
     >
       {children}

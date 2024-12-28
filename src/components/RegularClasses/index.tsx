@@ -1,6 +1,6 @@
+import { InfiniteScrollTrigger } from '@app/components/InfiniteScrollTrigger'
 import { RegularClass } from '@app/components/RegularClass'
 import { LocationDetailLayout } from '@app/layouts/LocationDetailLayout'
-import { Text } from '@geist-ui/core'
 import { Clock } from '@geist-ui/icons'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-compiler'
@@ -39,32 +39,31 @@ export const RegularClasses = ({ regularClasses }: RegularClassesProps) => {
     regularClassesFragment,
     regularClasses
   )
-  console.log('regularClassesPagination', data)
-  const handleLoadMore = () => {
+
+  const onEndReached = () => {
     if (hasNext && !isLoadingNext) {
       loadNext(1)
     }
   }
+
   return (
     <LocationDetailLayout>
       <div className={'flex items-center justify-start'}>
         <Clock size={24} />
-        <Text>{'클래스/시간 선택'}</Text>
+        <p>{'클래스/시간 선택'}</p>
       </div>
-      <div className={' mx-auto '}>
-        {data.regularClasses.edges.map((edge, i) => (
-          <RegularClass key={i} regularClass={edge.node} />
-        ))}
+      <div className={'relative flex-1  mx-auto py-4'}>
+        <div className={'flex flex-col items-center'}>
+          {data.regularClasses.edges.map((edge, i) => (
+            <RegularClass key={i} regularClass={edge.node} />
+          ))}
+        </div>
       </div>
-      {hasNext && (
-        <button
-          onClick={handleLoadMore}
-          disabled={isLoadingNext}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          {isLoadingNext ? '로딩 중...' : '더 보기'}
-        </button>
-      )}
+      <InfiniteScrollTrigger
+        onEndReached={onEndReached}
+        hasNext={hasNext}
+        isLoadingNext={isLoadingNext}
+      />
     </LocationDetailLayout>
   )
 }
