@@ -18,7 +18,8 @@ COPY . .
 RUN cp .env.development .env
 
 # Build Relay
-RUN rm -rf __generated__ && yarn relay
+RUN rm -rf __generated__ || true
+RUN mkdir -p __generated__ && yarn relay
 
 # Build Next.js
 RUN yarn build
