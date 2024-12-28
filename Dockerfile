@@ -15,7 +15,8 @@ COPY . .
 
 # Copy development env for staging deployment
 # development 환경 변수를 사용하므로 .env.development를 복사
-COPY .env.development .env
+#COPY .env.development .env
+RUN cp .env.development .env
 
 # Build Relay
 RUN yarn relay
