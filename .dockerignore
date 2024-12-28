@@ -46,6 +46,7 @@ build
 # 하지만 .env.development는 컨텍스트에 포함
 !.env.development
 
+#
 # AWS EB 관리 파일
 .elasticbeanstalk/
 .ebextensions/
