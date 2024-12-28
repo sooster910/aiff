@@ -1,13 +1,12 @@
-import * as React from "react";
+import * as React from 'react'
 import Image from 'next/image'
-import { useAuth } from "@app/hooks/useAuth";
-interface INavbarProps {}
-const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
-  const auth = useAuth();
+import Link from 'next/link'
+
+const Navbar = () => {
   return (
-    <header style={{ display: "flex", justifyContent: "start" }}>
-      <a href="/" style={{ position: "relative" }}>
-        <div style={{ display: "flex", alignItems: "center" }}>
+    <header style={{ display: 'flex', justifyContent: 'start' }}>
+      <Link href="/" style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Image
             src="/aiffschool_logo.svg"
             alt="AIFF Logo"
@@ -15,10 +14,9 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
             height={70}
           />
         </div>
-      </a>
-      <nav>{!auth?.user && <a></a>}</nav>
+      </Link>
     </header>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
