@@ -1,39 +1,40 @@
-import type { AppProps } from "next/app";
+import Footer from '@app/components/Footer'
+import Navbar from '@app/components/Navbar'
+import MobileLayout from '@app/layouts/MobileLayout'
+import { aiffAPI } from '@app/utils/aiffAPI'
+import { NEXT_PUBLIC_MIXPANEL_TOKEN } from '@app/utils/constants'
+import { NextUIProvider } from '@nextui-org/react'
+import { ErrorBoundary } from '@sentry/react'
+import mixpanel from 'mixpanel-browser'
+import type { AppProps } from 'next/app'
+import Script from 'next/script'
+import { useEffect, useMemo } from 'react'
+import { RelayEnvironmentProvider } from 'react-relay'
+import { SWRConfig } from 'swr'
+import { initRelayEnvironment } from '../../relayEnvironment'
 import '../../styles/globals.css'
-import { GeistProvider, CssBaseline } from "@geist-ui/core";
-import { SWRConfig } from "swr";
-import { aiffAPI } from "@app/utils/aiffAPI";
-import Navbar from "@app/components/Navbar";
-import MobileLayout from "@app/layouts/MobileLayout";
-import { useEnvironment } from "@app/../relay/environment";
-import Footer from "@app/components/Footer";
-import Script from "next/script";
-import mixpanel from "mixpanel-browser";
-import React, { useEffect } from "react";
-import { NEXT_PUBLIC_MIXPANEL_TOKEN } from "@app/utils/constants";
-import {RelayEnvironmentProvider} from "react-relay/hooks";
-import {NextUIProvider} from "@nextui-org/react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const environment = useEnvironment(pageProps);
-  const storeData = environment.getStore().getSource().toJSON()
-  console.log("Relay Store Data", storeData)
+  const environment = useMemo(initRelayEnvironment, [])
+
   useEffect(() => {
     mixpanel.init(NEXT_PUBLIC_MIXPANEL_TOKEN, {
       debug: true,
       track_pageview: true,
-      persistence: "localStorage",
-    });
-  }, []);
+      persistence: 'localStorage',
+    })
+  }, [])
 
   return (
     <>
       <Script
+        id={'googletag'}
         strategy="afterInteractive"
-        src={"https://www.googletagmanager.com/gtag/js?id=G-X4P14LC53Q"}
+        src={'https://www.googletagmanager.com/gtag/js?id=G-X4P14LC53Q'}
       />
 
       <Script
+        id={'gtag'}
         dangerouslySetInnerHTML={{
           __html: `window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
@@ -41,24 +42,19 @@ function MyApp({ Component, pageProps }: AppProps) {
                   gtag('config', 'G-X4P14LC53Q');`,
         }}
       />
-        <RelayEnvironmentProvider environment={environment} >
-            <NextUIProvider>
-                    <SWRConfig
-                    value={{
-                    fetcher: (resource) =>
-                        aiffAPI.get(resource).then((res) => res.data),
-                    }}
-                    >
-                <MobileLayout maxWidth={"28rem"}>
-                  <Navbar />
-                  <Component {...pageProps} />
-                  <Footer />
-                </MobileLayout>
-            </SWRConfig>
-            </NextUIProvider>
+      <RelayEnvironmentProvider environment={environment}>
+        <NextUIProvider>
+          <MobileLayout maxWidth={'28rem'}>
+            <ErrorBoundary fallback={<p> 문제가 생겼어요.</p>}>
+              <Navbar />
+              <Component {...pageProps} />
+              <Footer />
+            </ErrorBoundary>
+          </MobileLayout>
+        </NextUIProvider>
       </RelayEnvironmentProvider>
     </>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp
