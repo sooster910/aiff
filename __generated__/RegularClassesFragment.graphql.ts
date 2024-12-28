@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<922e425f5e969c419acde6465a5a1036>>
+ * @generated SignedSource<<9276e2b8e7db6c349b4820d2a5407e2b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,8 @@ export type RegularClassesFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly cursor: string;
       readonly node: {
+        readonly _id: string;
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"RegularClassFragment">;
       };
     }>;
@@ -41,7 +43,14 @@ v1 = [
     "name": "date",
     "variableName": "date"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -122,6 +131,14 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v2/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "_id",
+                  "storageKey": null
+                },
                 {
                   "args": (v1/*: any*/),
                   "kind": "FragmentSpread",
@@ -168,19 +185,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v2/*: any*/)
   ],
   "type": "Store",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "17816807a2a84fc9aa576ce6b03f3ff9";
+(node as any).hash = "f65c843bab13cc846e8fcb4bb05a7e75";
 
 export default node;

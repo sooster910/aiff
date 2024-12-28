@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2daeb2ec64b6e58d8dc93214463c5275>>
+ * @generated SignedSource<<169048d5e9b229cf4d39bbcbb23dc04e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -192,8 +192,8 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v5/*: any*/),
                           (v4/*: any*/),
+                          (v5/*: any*/),
                           (v6/*: any*/),
                           (v7/*: any*/),
                           {
@@ -369,16 +369,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "67b1980d821ea4fc88c397bb6379b71d",
+    "cacheID": "406eede102c925e48c93a201af2683cf",
     "id": null,
     "metadata": {},
     "name": "RegularClassesPaginationQuery",
     "operationKind": "query",
-    "text": "query RegularClassesPaginationQuery(\n  $after: String\n  $date: Date!\n  $first: Int = 1\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...RegularClassesFragment_1x4vzc\n    id\n  }\n}\n\nfragment RegularClassFragment_19b1FI on RegularClass {\n  _id\n  id\n  name\n  description\n  maximumClassSize\n  imageURL {\n    altText\n    url\n  }\n  timeSlots(where: {day: $date}) {\n    ...TimeSlotFragment\n    id\n  }\n}\n\nfragment RegularClassesFragment_1x4vzc on Store {\n  regularClasses(date: $date, after: $after, first: $first) {\n    edges {\n      cursor\n      node {\n        ...RegularClassFragment_19b1FI\n        id\n        __typename\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n  id\n}\n\nfragment TimeSlotFragment on TimeSlot {\n  _id\n  id\n  name\n  startDateTime\n  endDateTime\n  regularClassId\n  price\n  currentBookingCount\n  maximumBookingCount\n  regularClass {\n    _id\n    description\n    duration\n    name\n    price\n    id\n  }\n}\n"
+    "text": "query RegularClassesPaginationQuery(\n  $after: String\n  $date: Date!\n  $first: Int = 1\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...RegularClassesFragment_1x4vzc\n    id\n  }\n}\n\nfragment RegularClassFragment_19b1FI on RegularClass {\n  _id\n  id\n  name\n  description\n  maximumClassSize\n  imageURL {\n    altText\n    url\n  }\n  timeSlots(where: {day: $date}) {\n    ...TimeSlotFragment\n    id\n  }\n}\n\nfragment RegularClassesFragment_1x4vzc on Store {\n  regularClasses(date: $date, after: $after, first: $first) {\n    edges {\n      cursor\n      node {\n        id\n        _id\n        ...RegularClassFragment_19b1FI\n        __typename\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n  id\n}\n\nfragment TimeSlotFragment on TimeSlot {\n  _id\n  id\n  name\n  startDateTime\n  endDateTime\n  regularClassId\n  price\n  currentBookingCount\n  maximumBookingCount\n  regularClass {\n    _id\n    description\n    duration\n    name\n    price\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "17816807a2a84fc9aa576ce6b03f3ff9";
+(node as any).hash = "f65c843bab13cc846e8fcb4bb05a7e75";
 
 export default node;
