@@ -40,9 +40,11 @@ docs
 dist
 build
 
-# 보안 정책
-.env
-.env.*
+# 기본적으로 모든 .env 파일 무시
+*.env*
+
+# 하지만 .env.development는 컨텍스트에 포함
+!.env.development
 
 # AWS EB 관리 파일
 .elasticbeanstalk/
