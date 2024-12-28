@@ -42,7 +42,7 @@ build
 
 # 보안 정책
 .env
-!.env.*
+.env.*
 
 # AWS EB 관리 파일
 .elasticbeanstalk/
