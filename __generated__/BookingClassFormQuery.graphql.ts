@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad2879a075c79bd95977c98d86cde207>>
+ * @generated SignedSource<<e71b69a2360e80f8181bf3f0f745d22e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -72,27 +72,26 @@ v5 = {
   "name": "description",
   "storageKey": null
 },
-v6 = {
-  "kind": "Variable",
-  "name": "date",
-  "variableName": "date"
-},
-v7 = [
-  (v6/*: any*/),
+v6 = [
+  {
+    "kind": "Variable",
+    "name": "date",
+    "variableName": "date"
+  },
   {
     "kind": "Literal",
     "name": "first",
-    "value": 1
+    "value": 2
   }
 ],
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -121,9 +120,7 @@ return {
           (v4/*: any*/),
           (v5/*: any*/),
           {
-            "args": [
-              (v6/*: any*/)
-            ],
+            "args": (v6/*: any*/),
             "kind": "FragmentSpread",
             "name": "RegularClassesFragment"
           }
@@ -156,7 +153,7 @@ return {
           (v5/*: any*/),
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v6/*: any*/),
             "concreteType": "RegularClassConnection",
             "kind": "LinkedField",
             "name": "regularClasses",
@@ -185,9 +182,9 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
                       (v4/*: any*/),
-                      (v8/*: any*/),
+                      (v3/*: any*/),
+                      (v7/*: any*/),
                       (v5/*: any*/),
                       {
                         "alias": null,
@@ -243,7 +240,7 @@ return {
                         "selections": [
                           (v3/*: any*/),
                           (v4/*: any*/),
-                          (v8/*: any*/),
+                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -265,7 +262,7 @@ return {
                             "name": "regularClassId",
                             "storageKey": null
                           },
-                          (v9/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -297,8 +294,8 @@ return {
                                 "name": "duration",
                                 "storageKey": null
                               },
+                              (v7/*: any*/),
                               (v8/*: any*/),
-                              (v9/*: any*/),
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -349,7 +346,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v6/*: any*/),
             "filters": [
               "date"
             ],
@@ -364,16 +361,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6bcbf2c961dafb855b9a3312d8d19430",
+    "cacheID": "6676ca41985e36936d903e450b64349f",
     "id": null,
     "metadata": {},
     "name": "BookingClassFormQuery",
     "operationKind": "query",
-    "text": "query BookingClassFormQuery(\n  $storeId: String!\n  $date: Date!\n) {\n  stores(where: {_id: $storeId}) {\n    _id\n    id\n    description\n    ...RegularClassesFragment_19b1FI\n  }\n}\n\nfragment RegularClassFragment_19b1FI on RegularClass {\n  _id\n  id\n  name\n  description\n  maximumClassSize\n  imageURL {\n    altText\n    url\n  }\n  timeSlots(where: {day: $date}) {\n    ...TimeSlotFragment\n    id\n  }\n}\n\nfragment RegularClassesFragment_19b1FI on Store {\n  regularClasses(date: $date, first: 1) {\n    edges {\n      cursor\n      node {\n        ...RegularClassFragment_19b1FI\n        id\n        __typename\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n  id\n}\n\nfragment TimeSlotFragment on TimeSlot {\n  _id\n  id\n  name\n  startDateTime\n  endDateTime\n  regularClassId\n  price\n  currentBookingCount\n  maximumBookingCount\n  regularClass {\n    _id\n    description\n    duration\n    name\n    price\n    id\n  }\n}\n"
+    "text": "query BookingClassFormQuery(\n  $storeId: String!\n  $date: Date!\n) {\n  stores(where: {_id: $storeId}) {\n    _id\n    id\n    description\n    ...RegularClassesFragment_xq4jM\n  }\n}\n\nfragment RegularClassFragment_19b1FI on RegularClass {\n  _id\n  id\n  name\n  description\n  maximumClassSize\n  imageURL {\n    altText\n    url\n  }\n  timeSlots(where: {day: $date}) {\n    ...TimeSlotFragment\n    id\n  }\n}\n\nfragment RegularClassesFragment_xq4jM on Store {\n  regularClasses(date: $date, first: 2) {\n    edges {\n      cursor\n      node {\n        id\n        _id\n        ...RegularClassFragment_19b1FI\n        __typename\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n  id\n}\n\nfragment TimeSlotFragment on TimeSlot {\n  _id\n  id\n  name\n  startDateTime\n  endDateTime\n  regularClassId\n  price\n  currentBookingCount\n  maximumBookingCount\n  regularClass {\n    _id\n    description\n    duration\n    name\n    price\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a3a6d062f3b36a2c3ea1b470146bf2ac";
+(node as any).hash = "382ac746d0b83e683b4552cad5744a85";
 
 export default node;
