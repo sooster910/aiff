@@ -22,12 +22,21 @@ jobs:
           yarn install --frozen-lockfile
           ls -la node_modules/.bin/next  # next 바이너리 존재 확인
           ls -la node_modules/next      # next 모듈 존재 확인
+      # Relay 컴파일
+      - name: Run Relay compiler
+        run: |
+          yarn relay
 
       #build
       - name: Build
         run: |
           yarn build
-          ls -la .next                 # 빌드 결과물 확인
+          ls -la .next   
+          # 빌드 결과물 확인
+
+      # Grant execute permissions to hooks
+      - name: Grant execute permissions to hooks
+        run: chmod +x .platform/hooks/prebuild/01_yarn_install.sh
 
       # check aws credential
       - name: Configure AWS credentials
