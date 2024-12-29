@@ -6,4 +6,4 @@
 #yarn install
 #!/bin/bash
 cd /var/app/staging
-yarn install --frozen-lockfile
+yarn install --frozen-lockfile --production
