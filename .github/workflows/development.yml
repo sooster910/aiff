@@ -41,7 +41,7 @@ jobs:
       # 배포 패키지 생성 (ZIP 파일)
       - name: Generate deployment package
         run: |
-          zip -r deploy.zip . -x "*.git*" -x "node_modules/*"
+          zip -r deploy.zip . -x "*.git*"
 
       # AWS 자격 증명 설정
       - name: Configure AWS credentials
