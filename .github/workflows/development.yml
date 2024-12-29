@@ -31,7 +31,7 @@ jobs:
 
       # check aws credential
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -40,11 +40,11 @@ jobs:
       - name: Generate deployment package
         run: |
           zip -r deploy.zip . -x "*.git*"
-          unzip -l deploy.zip | grep next  # zip 파일 내용 확인
+      #          unzip -l deploy.zip | grep next  # zip 파일 내용 확인
       # deploy
       - name: Deploy to EB (Develop)
         if: github.ref == 'refs/heads/develop'
-        uses: einaregilsson/beanstalk-deploy@v21
+        uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -57,7 +57,7 @@ jobs:
 
       - name: Deploy to EB (Production)
         if: github.ref == 'refs/heads/main'  # main 브랜치일 때 실행
-        uses: einaregilsson/beanstalk-deploy@v21
+        uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
