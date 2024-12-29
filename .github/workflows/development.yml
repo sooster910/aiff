@@ -37,6 +37,7 @@ jobs:
       - name: Build the project
         run: |
           yarn build
+          ls -la .next  # 빌드 결과물 확인
 
       # 배포 패키지 생성 (ZIP 파일)
       - name: Generate deployment package
