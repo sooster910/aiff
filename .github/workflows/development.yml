@@ -1,69 +1,78 @@
-name: Deploy to Staging
+name: Deploy to Elastic Beanstalk
 
 on:
   push:
     branches:
       - develop
-
-env:
-  AWS_REGION: ap-northeast-2
-  EB_APPLICATION_NAME: aiff-front
-  EB_ENVIRONMENT_NAME: production-aiff-front-docker
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      # 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v4.1.3
 
+      # Node.js 설정
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: '20'
+
+      # 의존성 설치
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+          ls -la node_modules/.bin/next  # next 바이너리 확인
+          ls -la node_modules/next      # next 모듈 확인
+
+      # Relay 컴파일
+      - name: Run Relay compiler
+        run: |
+          yarn relay
+
+      # 빌드
+      - name: Build the project
+        run: |
+          yarn build
+
+      # 배포 패키지 생성 (ZIP 파일)
+      - name: Generate deployment package
+        run: |
+          zip -r deploy.zip . -x "*.git*" -x "node_modules/*"
+
+      # AWS 자격 증명 설정
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ap-northeast-2
 
-      # 환경 변수 파일 생성
-      - name: Create env file
-        run: |
-          echo "${{ secrets.ENV_DEVELOPMENT }}" > .env.development
-          ls -la .env*  # 파일이 제대로 생성되었는지 확인
-
-      # Docker 빌드 전 컨텍스트 확인
-      - name: Check Docker context
-        run: |
-          pwd
-          ls -la
-
-      # Docker 빌드
-      - name: Build Docker image
-        run: |
-          docker build -t aiff-staging .
-          docker save aiff-staging:latest > docker-image.tar
-
-      # 배포 패키지 생성
-      - name: Generate deployment package
-        run: |
-          mkdir -p deploy
-          cp docker-image.tar deploy/
-          cd deploy
-          echo "container_commands:" > Dockerrun.aws.json
-          echo "  00_load_image:" >> Dockerrun.aws.json
-          echo "    command: docker load -i docker-image.tar" >> Dockerrun.aws.json
-          echo "  01_run_container:" >> Dockerrun.aws.json
-          echo "    command: docker run -d -p 8080:8080 aiff-staging:latest" >> Dockerrun.aws.json
-          zip -r ../deploy.zip .
-
-      # Elastic Beanstalk 배포
-      - name: Deploy to Elastic Beanstalk
+      # Elastic Beanstalk에 배포 (Develop 환경)
+      - name: Deploy to Elastic Beanstalk (Develop)
+        if: github.ref == 'refs/heads/develop'
         uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ${{ env.EB_APPLICATION_NAME }}
-          environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
-          version_label: "ver-${{ github.sha }}"
-          region: ${{ env.AWS_REGION }}
+          application_name: aiff-front
+          environment_name: development-aiff-front
+          version_label: ${{ github.sha }}
+          region: ap-northeast-2
           deployment_package: deploy.zip
-          wait_for_deployment: true
+
+      # Elastic Beanstalk에 배포 (Production 환경)
+      - name: Deploy to Elastic Beanstalk (Production)
+        if: github.ref == 'refs/heads/main'
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: aiff-front
+          environment_name: production-aiff-front
+          version_label: ${{ github.sha }}
+          region: ap-northeast-2
+          deployment_package: deploy.zip
