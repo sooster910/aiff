@@ -2,10 +2,12 @@ import { Button } from '@nextui-org/react'
 import { DateTime } from 'luxon'
 import { graphql, useFragment } from 'react-relay'
 import { TimeSlotFragment$key } from '../../../__generated__/TimeSlotFragment.graphql'
+import { Spinner } from '../Spinner'
 
 interface TimeSlotProps {
   timeSlot: TimeSlotFragment$key
   onClick: (timeSlotId: string) => void
+  isPending: boolean
 }
 
 export const TimeSlotFragment = graphql`
@@ -28,7 +30,7 @@ export const TimeSlotFragment = graphql`
     }
   }
 `
-export const TimeSlot = ({ timeSlot, onClick }: TimeSlotProps) => {
+export const TimeSlot = ({ timeSlot, onClick, isPending }: TimeSlotProps) => {
   const data = useFragment(TimeSlotFragment, timeSlot)
   return (
     <div className={'flex flex-nowrap items-center py-4'}>
@@ -36,8 +38,15 @@ export const TimeSlot = ({ timeSlot, onClick }: TimeSlotProps) => {
         color="primary"
         variant={'ghost'}
         key={data.id}
+        disabled={isPending}
         onPress={() => onClick(data._id)}
-      >{`${DateTime.fromISO(data.startDateTime).toFormat('HH:mm')}`}</Button>
+      >
+        {isPending ? (
+          <Spinner />
+        ) : (
+          `${DateTime.fromISO(data.startDateTime).toFormat('HH:mm')}`
+        )}
+      </Button>
     </div>
   )
 }

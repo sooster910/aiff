@@ -1,9 +1,10 @@
 import { TimeSlot } from '@app/components/TimeSlot'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { graphql, useQueryLoader } from 'react-relay'
 import { TimeSlotFragment$key } from '../../../__generated__/TimeSlotFragment.graphql'
 import { TimeSlotsReservationQuery as TimeSlotsReservationQueryType } from '../../../__generated__/TimeSlotsReservationQuery.graphql'
 import { ReservationBottomSheet } from '../ReservationModal'
+
 type TimeSlotsProps = {
   timeSlots: ReadonlyArray<TimeSlotFragment$key>
 }
@@ -17,6 +18,7 @@ export const timeSlotReservationQuery = graphql`
 `
 
 export const TimeSlots = ({ timeSlots }: TimeSlotsProps) => {
+  const [isPending, startTransition] = useTransition()
   const [queryReference, loadQuery] =
     useQueryLoader<TimeSlotsReservationQueryType>(timeSlotReservationQuery)
   //TODO: Refactor hook for modal
@@ -26,9 +28,10 @@ export const TimeSlots = ({ timeSlots }: TimeSlotsProps) => {
   }
 
   const handleTimeSlotClicked = (id: string) => {
-    console.log('click')
     setModalOpen(true)
-    loadQuery({ timeSlotId: id })
+    startTransition(() => {
+      loadQuery({ timeSlotId: id })
+    })
   }
 
   return (
@@ -38,6 +41,7 @@ export const TimeSlots = ({ timeSlots }: TimeSlotsProps) => {
           key={`timeslot-${idx}`}
           timeSlot={timeSlot}
           onClick={handleTimeSlotClicked}
+          isPending={isPending}
         />
       ))}
       {modalOpen && queryReference && (

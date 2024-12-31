@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader, Image } from '@nextui-org/react'
 import { useFragment } from 'react-relay'
-import { graphql } from 'relay-runtime'
+import { graphql } from 'relay-compiler'
 import { RegularClassFragment$key } from '../../../__generated__/RegularClassFragment.graphql'
 import { TimeSlots } from '../TimeSlots'
 const regularClassFragment = graphql`
@@ -20,7 +20,6 @@ const regularClassFragment = graphql`
     }
   }
 `
-
 type RegularClassProps = {
   regularClass: RegularClassFragment$key
 }
@@ -41,7 +40,7 @@ export const RegularClass = ({ regularClass }: RegularClassProps) => {
         <Image
           alt="Card background"
           className="object-cover rounded-xl"
-          src="https://nextui.org/images/hero-card-complete.jpeg"
+          src={data.imageURL?.url ?? '/aiffschool_logo.svg'}
           width={270}
           height={160}
         />
