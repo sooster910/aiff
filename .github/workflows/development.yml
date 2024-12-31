@@ -53,9 +53,13 @@ jobs:
       #build
       - name: Build
         run: |
-          yarn build
-          ls -la .next   
+               yarn build
           # 빌드 결과물 확인
+               ls -la .next
+        # 빌드 실패 시 바로 종료하고 이후 작업을 진행하지 않음
+        continue-on-error: false
+
+
       # remove node_modules
       - name: remove node_modules
         run: rm -rf node_modules
