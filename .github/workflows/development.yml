@@ -53,9 +53,9 @@ jobs:
       #build
       - name: Build
         run: |
-               yarn build
+          yarn build
           # 빌드 결과물 확인
-               ls -la .next
+          ls -la .next
         # 빌드 실패 시 바로 종료하고 이후 작업을 진행하지 않음
         continue-on-error: false
 
@@ -75,6 +75,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
+
       # zip
       - name: Generate deployment package
         run: |
