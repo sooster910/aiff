@@ -1,10 +1,10 @@
-import { InfiniteScrollTrigger } from '@app/components/InfiniteScrollTrigger'
 import { RegularClass } from '@app/components/RegularClass'
 import { LocationDetailLayout } from '@app/layouts/LocationDetailLayout'
 import { Clock } from '@geist-ui/icons'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-compiler'
 import { RegularClassesFragment$key } from '../../../__generated__/RegularClassesFragment.graphql'
+import { InfiniteScrollTrigger } from '../InfiniteScrollTrigger'
 
 const regularClassesFragment = graphql`
   fragment RegularClassesFragment on Store
@@ -52,7 +52,7 @@ export const RegularClasses = ({ regularClasses }: RegularClassesProps) => {
         <Clock size={24} />
         <p>{'클래스/시간 선택'}</p>
       </div>
-      <div className={'relative flex-1  mx-auto py-4'}>
+      <div className={'relative mx-auto py-4 mb-10 min-h-[400px] '}>
         <div className={'flex flex-col items-center'}>
           {data.regularClasses.edges.map((edge, i) => (
             <RegularClass key={i} regularClass={edge.node} />

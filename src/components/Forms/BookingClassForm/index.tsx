@@ -1,9 +1,8 @@
 import { RegularClasses } from '@app/components/RegularClasses'
 import { SelectDate } from '@app/components/SelectDate'
-import { useFormik } from 'formik'
 import { DateTime } from 'luxon'
 import { useState, useTransition } from 'react'
-import { graphql, PreloadedQuery, useLazyLoadQuery } from 'react-relay'
+import { graphql, useLazyLoadQuery } from 'react-relay'
 import type { BookingClassFormQuery as BookingQueryType } from '../../../../__generated__/BookingClassFormQuery.graphql'
 
 export const BookingClassFormQuery = graphql`

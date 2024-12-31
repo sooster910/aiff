@@ -1,44 +1,41 @@
 import { useEffect, useRef } from 'react'
 
+interface Props {
+  onEndReached: () => void
+  hasNext: boolean
+  isLoadingNext: boolean
+}
+
 export const InfiniteScrollTrigger = ({
   onEndReached,
   hasNext,
   isLoadingNext,
-}) => {
-  const endRef = useRef<HTMLDivElement>(null)
-  //TODO: refactor custom hook
+}: Props) => {
+  const observerRef = useRef<HTMLDivElement | null>(null)
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        console.log('entries', entries)
-
-        if (entries[0].isIntersecting && hasNext) {
-          console.log('touched')
+        console.log(entries[0])
+        if (entries[0].isIntersecting && hasNext && !isLoadingNext) {
+          console.log('isIntersection')
           onEndReached()
         }
       },
       { threshold: 0.5 }
     )
 
-    const isEnd = endRef.current
-    if (endRef && isEnd) {
-      observer.observe(isEnd)
+    if (observerRef.current) {
+      observer.observe(observerRef.current)
     }
 
     return () => {
-      if (endRef && isEnd) {
-        observer.unobserve(isEnd)
+      if (observerRef.current) {
+        console.log('unobserve')
+        observer.unobserve(observerRef.current)
       }
     }
-  }, [hasNext, onEndReached])
+  }, [])
 
-  return (
-    <>
-      {
-        <div className="w-full absolute bottom-0" ref={endRef}>
-          {isLoadingNext && 'Loading...'}
-        </div>
-      }
-    </>
-  )
+  return <div ref={observerRef} style={{ height: '10px' }} />
 }
