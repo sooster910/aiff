@@ -18,7 +18,7 @@
     "docker:run": "docker run -p 3000:3000 production-aiff-front-docker:latest",
     "deploy-dev": "yarn install && yarn run build && eb deploy production-aiff-front",
     "relay:watch": "relay-compiler --watch",
-    "test": "jest"
+    "test:e2e": "yarn playwright test --ui"
   },
   "dependencies": {
     "@emotion/css": "^11.9.0",
@@ -58,6 +58,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@types/express": "^4.17.21",
