@@ -1,3 +1,4 @@
+import tailwindScrollbar from 'tailwind-scrollbar'
 /** @type {import('tailwindcss').Config} */
 import { nextui } from '@nextui-org/react'
 
@@ -46,7 +47,7 @@ module.exports = {
   darkMode: 'class',
   plugins: [
     nextui(),
-    require('tailwind-scrollbar'),
+    tailwindScrollbar,
     function ({ addUtilities }) {
       addUtilities({
         '.scrollbar-gutter-stable': {
