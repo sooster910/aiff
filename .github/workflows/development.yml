@@ -55,15 +55,13 @@ jobs:
 
       #build
       - name: Build
-        run: |
-          yarn build
-          # 빌드 결과물 확인
-          ls -la .next
-        # 빌드 실패 시 바로 종료하고 이후 작업을 진행하지 않음
-        continue-on-error: false
+        run: yarn build
 
+      # 빌드 결과물 확인
+      - name: Verify Build Artifacts
+        run: ls -la .next
 
-      # remove node_modules
+      # Remove node_modules
       - name: remove node_modules
         run: rm -rf node_modules
 
