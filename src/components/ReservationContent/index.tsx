@@ -7,22 +7,24 @@ export const ReservationContent = ({
   step,
   setStep,
   formData,
-  setFormData,
   handlePayment,
+  register,
+  control,
 }) => {
   return (
     <>
       <ClassInfo queryData={queryData.timeSlot} />
       {step === 1 && (
         <ReservationForm
-          formData={formData}
-          onFormChange={setFormData}
+          control={control}
           onNext={() => setStep(2)}
+          register={register}
         />
       )}
       {step === 2 && (
         <ReservationConfirmation
-          classInfo={queryData}
+          queryData={queryData.timeSlot}
+          classInfo={queryData.timeSlot}
           formData={formData}
           onBack={() => setStep(1)}
           onPayment={handlePayment}

@@ -16,6 +16,7 @@ export const ReservationBottomSheet = ({
   selectedQueryReference,
 }: ReservationModalProps) => {
   const reservation = useReservation()
+
   const data = usePreloadedQuery(
     timeSlotReservationQuery,
     selectedQueryReference

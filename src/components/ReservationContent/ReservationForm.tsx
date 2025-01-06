@@ -1,12 +1,13 @@
+import { useReservation } from '@app/hooks/useReservation'
 import {
   Accordion,
   AccordionItem,
   Checkbox,
   Input,
   Select,
+  SelectItem,
   Textarea,
 } from '@nextui-org/react'
-import { register } from 'mixpanel-browser'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 export type ReservationFormType = {
@@ -14,33 +15,29 @@ export type ReservationFormType = {
   phone: string
 }
 export type ReservationFormProps = {
-  formData: ReservationFormType
-  onFormChange: (data: { name: string; phone: string }) => void
   onNext: () => void
+  register: any
+  control: any
 }
 
 export interface FormDataType {
   name: string
-  phoneNumber: string
+  phone: string
   qty: number
 }
 
 export const ReservationForm = ({
-  formData,
-  onFormChange,
   onNext,
+  control,
+  register,
 }: ReservationFormProps) => {
-  const { control, handleSubmit } = useForm<FormDataType>({
-    defaultValues: {
-      qty: 1,
-      name: '',
-      phoneNumber: '',
-    },
-  })
-  const onSubmit: SubmitHandler<FormDataType> = (data) => console.log(data)
+  const onSubmit = (e) => {
+    e.preventDefault()
+    onNext()
+  }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <div className="space-y-6">
         <h4 className="text-lg font-medium">예약 정보 입력</h4>
         <div className="space-y-4">
@@ -53,8 +50,14 @@ export const ReservationForm = ({
                   label="인원을 선택해 주세요"
                   className="max-w-xs"
                   {...field}
-                  items={[...Array(10)]}
-                ></Select>
+                >
+                  {Array.from({ length: 10 }, (_, i) => ({
+                    key: (i + 1).toString(),
+                    label: (i + 1).toString(),
+                  })).map((item) => (
+                    <SelectItem key={item.key}>{item.label}</SelectItem>
+                  ))}
+                </Select>
               )}
             />
           </div>
@@ -63,7 +66,7 @@ export const ReservationForm = ({
               label={'이름을 작성해 주세요.'}
               type="text"
               required
-              {...register}
+              {...register('name')}
             />
           </div>
 
@@ -72,7 +75,7 @@ export const ReservationForm = ({
               label={'연락처를 작성해 주세요.'}
               type="tel"
               required
-              {...register}
+              {...register('phone')}
             />
           </div>
           <div>
@@ -112,7 +115,7 @@ export const ReservationForm = ({
         </div>
 
         <button
-          onClick={onNext}
+          onClick={onSubmit}
           className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
         >
           다음 단계
