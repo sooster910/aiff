@@ -61,6 +61,12 @@ jobs:
       - name: Verify Build Artifacts
         run: ls -la .next
 
+      # 현재 BACKEND_BASE_URL 확인
+      - name: Print NEXT_PUBLIC_BACKEND_BASE_URL
+        run: echo "NEXT_PUBLIC_BACKEND_BASE_URL is $NEXT_PUBLIC_BACKEND_BASE_URL"
+        env:
+          NEXT_PUBLIC_BACKEND_BASE_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_BASE_URL }}
+
       # Remove node_modules
       - name: remove node_modules
         run: rm -rf node_modules
