@@ -5,12 +5,15 @@ import { Card, Text, Image } from '@geist-ui/core'
 import PageLayout from '@app/layouts/PageLayout'
 import Link from 'next/link'
 import mixpanel from 'mixpanel-browser'
+import { useEffect } from 'react'
 
 const Home: NextPage = () => {
-
+  useEffect(() => {
+    console.log('Backend URL:', process.env.NEXT_PUBLIC_BACKEND_BASE_URL)
+  }, [])
   const handleClickLink = () => {
     mixpanel.track('goToReservation', {
-      'position': 'bottom',
+      position: 'bottom',
     })
   }
   return (
