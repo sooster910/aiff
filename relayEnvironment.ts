@@ -7,7 +7,7 @@ import {
 } from 'relay-runtime'
 import { NEXT_PUBLIC_BACKEND_BASE_URL } from '@app/utils/constants'
 
-const HTTP_ENDPOINT = `${NEXT_PUBLIC_BACKEND_BASE_URL}/graphql`
+const HTTP_ENDPOINT = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/graphql`
 
 const fetchFn: FetchFunction = async (request, variables) => {
   const resp = await fetch(HTTP_ENDPOINT, {
