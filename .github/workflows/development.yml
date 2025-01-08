@@ -48,6 +48,13 @@ jobs:
           yarn install --frozen-lockfile
           ls -la node_modules/.bin/next  # next 바이너리 존재 확인
           ls -la node_modules/next      # next 모듈 존재 확인
+
+      # env 파일 생성
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV_DEVELOPMENT }}" > .env
+        shell: bash
+
       # Relay 컴파일
       - name: Run Relay compiler
         run: |
